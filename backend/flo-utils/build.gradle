@@ -1,0 +1,13 @@
+plugins {
+    id 'buildlogic.java-library'
+}
+
+dependencies {
+    annotationProcessor libs.lombok
+
+    compileOnly libs.lombok
+
+    testImplementation libs.junit.jupiter
+
+    testRuntimeOnly libs.junit.platform.launcher
+}

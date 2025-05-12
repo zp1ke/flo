@@ -1,0 +1,45 @@
+spring:
+  application:
+    name: flo-api
+  datasource:
+    driverClassName: org.postgresql.Driver
+  jackson:
+    defaultPropertyInclusion: NON_NULL
+    serialization:
+      failOnEmptyBeans: false
+  jpa:
+    hibernate:
+      ddlAuto: validate
+      formatSql: true
+    openInView: false
+    showSql: true
+    properties:
+      hibernate:
+        defaultSchema: flo
+        formatSql: true
+        showSql: true
+  liquibase:
+    changeLog: classpath:db/changelog.yml
+    defaultSchema: flo
+    enabled: true
+    liquibaseSchema: liquibase
+  output:
+    ansi:
+      enabled: always
+
+springdoc:
+  apiDocs:
+    path: /api/v1/docs
+  swaggerUi:
+    path: /api/v1/docs/ui.html
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: info,health
+
+logging:
+  level:
+    root: INFO
+    com.zp1ke.flo: DEBUG

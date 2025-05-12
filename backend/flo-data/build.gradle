@@ -1,0 +1,20 @@
+plugins {
+    id 'buildlogic.java-spring'
+}
+
+dependencies {
+    annotationProcessor libs.lombok
+
+    compileOnly libs.lombok
+
+    developmentOnly libs.spring.dev
+
+    implementation project(':flo-utils')
+    implementation libs.spring.jpa
+    implementation libs.spring.security
+    implementation libs.spring.validation
+
+    testImplementation libs.spring.security.test
+
+    testRuntimeOnly libs.junit.platform.launcher
+}

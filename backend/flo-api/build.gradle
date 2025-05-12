@@ -1,0 +1,41 @@
+plugins {
+    id 'buildlogic.java-spring'
+}
+
+dependencies {
+    annotationProcessor libs.lombok
+
+    compileOnly libs.lombok
+
+    developmentOnly libs.spring.dev
+
+    implementation project(':flo-utils')
+    implementation project(':flo-data')
+    implementation libs.jjwt.api
+    implementation libs.liquibase
+    implementation libs.openapi.ui
+    implementation libs.preliquibase
+    implementation libs.spring.actuator
+    implementation libs.spring.data
+    implementation libs.spring.security
+    implementation libs.spring.validation
+    implementation libs.spring.web
+
+    runtimeOnly libs.jjwt.impl
+    runtimeOnly libs.jjwt.jackson
+    runtimeOnly libs.postgres
+
+    testImplementation libs.karate.junit
+    testImplementation libs.spring.security.test
+    testImplementation libs.spring.testcontainers
+    testImplementation libs.testcontainers.junit
+    testImplementation libs.testcontainers.postgres
+
+    testRuntimeOnly libs.junit.platform.launcher
+}
+
+springBoot {
+    buildInfo {
+        properties {}
+    }
+}

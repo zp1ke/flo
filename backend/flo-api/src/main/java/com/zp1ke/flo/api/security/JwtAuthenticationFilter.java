@@ -1,0 +1,97 @@
+package com.zp1ke.flo.api.security;
+
+import com.zp1ke.flo.data.domain.Profile;
+import com.zp1ke.flo.data.domain.User;
+import com.zp1ke.flo.data.model.UserProfile;
+import com.zp1ke.flo.data.service.ProfileService;
+import com.zp1ke.flo.data.service.UserService;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.regex.Pattern;
+import lombok.RequiredArgsConstructor;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
+
+@Component
+@RequiredArgsConstructor
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
+
+    private static final Pattern PROFILE_CODE_PATTERN = Pattern.compile("/api/v+/\\w+/(\\w+)(/.*)?");
+
+    private final JwtTokenProvider jwtTokenProvider;
+
+    private final UserService userService;
+
+    private final ProfileService profileService;
+
+    @Override
+    protected void doFilterInternal(@NonNull HttpServletRequest request,
+                                    @NonNull HttpServletResponse response,
+                                    @NonNull FilterChain filterChain) throws ServletException, IOException {
+        var token = resolveToken(request);
+        if (token != null && jwtTokenProvider.validateToken(token)) {
+            var username = jwtTokenProvider.parseUsername(token);
+            if (username != null) {
+                generateAuthentication(username, token, request.getRequestURI());
+            }
+        }
+        filterChain.doFilter(request, response);
+    }
+
+    private void generateAuthentication(@NonNull String username, @NonNull String token, @NonNull String path) {
+        var user = userService.findByUsername(username);
+        if (user != null) {
+            Object principal = null;
+
+            if (pathRequiresProfile(path)) {
+                var profile = profileOf(user, path);
+                if (profile != null) {
+                    principal = new UserProfile(user, profile);
+                }
+            } else {
+                principal = user;
+            }
+
+            if (principal != null) {
+                var authentication = new UsernamePasswordAuthenticationToken(principal, token, Collections.emptyList());
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
+        }
+    }
+
+    @Nullable
+    private String resolveToken(@NonNull HttpServletRequest request) {
+        String token = request.getHeader("Authorization");
+        if (token != null) {
+            String prefix = "Bearer ";
+            if (token.startsWith(prefix)) {
+                token = token.substring(prefix.length());
+            }
+            return token;
+        }
+        return null;
+    }
+
+    private boolean pathRequiresProfile(@NonNull String path) {
+        var matcher = PROFILE_CODE_PATTERN.matcher(path);
+        return matcher.matches();
+    }
+
+    @Nullable
+    private Profile profileOf(@NonNull User user, @NonNull String path) {
+        var matcher = PROFILE_CODE_PATTERN.matcher(path);
+        if (matcher.matches()) {
+            var profileCode = matcher.group(1);
+            return profileService.profileOfUserByCode(user, profileCode).orElse(null);
+        }
+        return null;
+    }
+}

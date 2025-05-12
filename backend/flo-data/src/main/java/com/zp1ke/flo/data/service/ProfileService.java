@@ -1,0 +1,51 @@
+package com.zp1ke.flo.data.service;
+
+import com.zp1ke.flo.data.domain.Profile;
+import com.zp1ke.flo.data.domain.User;
+import com.zp1ke.flo.data.repository.ProfileRepository;
+import com.zp1ke.flo.utils.StringUtils;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Validator;
+import java.util.List;
+import java.util.Optional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.lang.NonNull;
+import org.springframework.stereotype.Service;
+
+@Service
+@RequiredArgsConstructor
+public class ProfileService {
+
+    private final Validator validator;
+
+    private final ProfileRepository profileRepository;
+
+    @NonNull
+    public void save(@NonNull Profile profile) {
+        var violations = validator.validate(profile);
+        if (!violations.isEmpty()) {
+            throw new ConstraintViolationException("profile.invalid", violations);
+        }
+
+        if (StringUtils.isBlank(profile.getCode())) {
+            // Generate a random unique code
+            String code;
+            do {
+                code = StringUtils.generateRandomCode(8);
+            } while (profileRepository.existsByCode(code));
+
+            profile.setCode(code);
+        }
+
+        profileRepository.save(profile);
+    }
+
+    public Optional<Profile> profileOfUserByCode(@NonNull User user, @NonNull String code) {
+        return profileRepository.findByUserAndCode(user, code);
+    }
+
+    @NonNull
+    public List<Profile> profilesOfUser(@NonNull User user) {
+        return profileRepository.findAllByUser(user);
+    }
+}

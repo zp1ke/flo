@@ -1,0 +1,31 @@
+[versions]
+jjwt = "0.12.6"
+junit = "5.12.2"
+karate = "1.5.1"
+lombok = "1.18.38"
+openapi = "2.8.6"
+preliquibase = "1.6.0"
+
+[libraries]
+jjwt-api = { module = "io.jsonwebtoken:jjwt-api", version.ref = "jjwt" }
+jjwt-impl = { module = "io.jsonwebtoken:jjwt-impl", version.ref = "jjwt" }
+jjwt-jackson = { module = "io.jsonwebtoken:jjwt-jackson", version.ref = "jjwt" }
+junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit" }
+junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
+karate-junit = { module = "io.karatelabs:karate-junit5", version.ref = "karate" }
+liquibase = { module = "org.liquibase:liquibase-core" }
+lombok = { module = "org.projectlombok:lombok", version.ref = "lombok" }
+openapi-ui = { module = "org.springdoc:springdoc-openapi-starter-webmvc-ui", version.ref = "openapi" }
+postgres = { module = "org.postgresql:postgresql" }
+preliquibase = { module = "net.lbruun.springboot:preliquibase-spring-boot-starter", version.ref = "preliquibase" }
+spring-actuator = { module = "org.springframework.boot:spring-boot-starter-actuator" }
+spring-dev = { module = "org.springframework.boot:spring-boot-devtools" }
+spring-data = { module = "org.springframework.data:spring-data-commons" }
+spring-jpa = { module = "org.springframework.boot:spring-boot-starter-data-jpa" }
+spring-security = { module = "org.springframework.boot:spring-boot-starter-security" }
+spring-security-test = { module = "org.springframework.security:spring-security-test" }
+spring-testcontainers = { module = "org.springframework.boot:spring-boot-testcontainers" }
+spring-validation = { module = "org.springframework.boot:spring-boot-starter-validation" }
+spring-web = { module = "org.springframework.boot:spring-boot-starter-web" }
+testcontainers-junit = { module = "org.testcontainers:junit-jupiter" }
+testcontainers-postgres = { module = "org.testcontainers:postgresql" }

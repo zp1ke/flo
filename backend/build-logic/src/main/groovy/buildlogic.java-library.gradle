@@ -1,0 +1,4 @@
+plugins {
+    id 'buildlogic.java-common'
+    id 'java-library'
+}
