@@ -1,12 +1,12 @@
 package com.zp1ke.flo.api.controller.v1;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zp1ke.flo.api.TestcontainersConfig;
 import com.zp1ke.flo.api.dto.UserDto;
 import com.zp1ke.flo.api.model.AuthRequest;
 import com.zp1ke.flo.api.model.AuthResponse;
 import com.zp1ke.flo.data.domain.User;
-import com.zp1ke.flo.data.repository.UserRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.zp1ke.flo.data.service.ProfileService;
 import com.zp1ke.flo.data.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,16 +15,16 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
+@ActiveProfiles("test")
 @AutoConfigureMockMvc
 @Import(TestcontainersConfig.class)
+@SpringBootTest
 class AuthControllerTests {
 
     @Autowired
@@ -37,10 +37,11 @@ class AuthControllerTests {
     private UserService userService;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    private ProfileService profileService;
 
     @BeforeEach
     void setup() {
+        profileService.clearAll();
         userService.clearAll();
     }
 
@@ -53,7 +54,7 @@ class AuthControllerTests {
             .build();
         var requestBody = objectMapper.writeValueAsString(userDto);
 
-        var result = mockMvc.perform(post("/api/v1/auth/signup")
+        var result = mockMvc.perform(post("/api/v1/auth/sign-up")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody))
             .andExpect(status().isCreated())
@@ -64,7 +65,7 @@ class AuthControllerTests {
         assertNotNull(response.token());
 
         var savedUser = userService.findByEmailOrUsername(userDto.getEmail());
-        assertTrue(savedUser != null);
+        assertNotNull(savedUser);
     }
 
     @Test
@@ -81,7 +82,7 @@ class AuthControllerTests {
             .build();
         var requestBody = objectMapper.writeValueAsString(userDto);
 
-        mockMvc.perform(post("/api/v1/auth/signup")
+        mockMvc.perform(post("/api/v1/auth/sign-up")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody))
             .andExpect(status().isBadRequest());
@@ -92,14 +93,14 @@ class AuthControllerTests {
         var password = "password123";
         var user = User.builder()
             .email("user@example.com")
-            .password(passwordEncoder.encode(password))
+            .password(password)
             .build();
         userService.create(user);
 
         var authRequest = new AuthRequest(user.getEmail(), password);
         var requestBody = objectMapper.writeValueAsString(authRequest);
 
-        var result = mockMvc.perform(post("/api/v1/auth/signin")
+        var result = mockMvc.perform(post("/api/v1/auth/sign-in")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody))
             .andExpect(status().isOk())
@@ -115,7 +116,7 @@ class AuthControllerTests {
         var authRequest = new AuthRequest("nonexistent@example.com", "password123");
         var requestBody = objectMapper.writeValueAsString(authRequest);
 
-        mockMvc.perform(post("/api/v1/auth/signin")
+        mockMvc.perform(post("/api/v1/auth/sign-in")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody))
             .andExpect(status().isBadRequest());
@@ -125,14 +126,14 @@ class AuthControllerTests {
     void signin_returnsBadRequest_whenPasswordIsIncorrect() throws Exception {
         var user = User.builder()
             .email("user2@example.com")
-            .password(passwordEncoder.encode("correctpassword"))
+            .password("correctpassword")
             .build();
         userService.create(user);
 
         var authRequest = new AuthRequest(user.getEmail(), "wrongpassword");
         var requestBody = objectMapper.writeValueAsString(authRequest);
 
-        mockMvc.perform(post("/api/v1/auth/signin")
+        mockMvc.perform(post("/api/v1/auth/sign-in")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody))
             .andExpect(status().isBadRequest());

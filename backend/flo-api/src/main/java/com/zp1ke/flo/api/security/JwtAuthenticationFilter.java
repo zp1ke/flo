@@ -24,7 +24,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private static final Pattern PROFILE_CODE_PATTERN = Pattern.compile("/api/v+/\\w+/(\\w+)(/.*)?");
+    private static final Pattern PROFILE_CODE_PATTERN = Pattern.compile("/api/v.+/\\w+/(\\w+)(/.*)?");
 
     private final JwtTokenProvider jwtTokenProvider;
 
@@ -80,7 +80,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         return null;
     }
 
-    private boolean pathRequiresProfile(@NonNull String path) {
+    public static boolean pathRequiresProfile(@NonNull String path) {
         var matcher = PROFILE_CODE_PATTERN.matcher(path);
         return matcher.matches();
     }

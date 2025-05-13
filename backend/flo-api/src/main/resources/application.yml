@@ -15,12 +15,10 @@ spring:
     showSql: true
     properties:
       hibernate:
-        defaultSchema: flo
         formatSql: true
         showSql: true
   liquibase:
     changeLog: classpath:db/changelog.yml
-    defaultSchema: flo
     enabled: true
     liquibaseSchema: liquibase
   output:

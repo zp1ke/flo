@@ -9,50 +9,24 @@ Feature: Profiles API testing
     Given url baseUrl + '/api/v1/profiles'
     When method get
     Then status 200
-    And match response.code == '#string'
-    And match response.profiles == '#[1]'
-    And match response.profiles[0].name == username
+    And match response.list == '#[1]'
+    And match response.list[0].name == username
 
   Scenario: Update profile data
     * def profileCode = karate.properties['profileCode']
 
     Given url baseUrl + '/api/v1/profiles/' + profileCode
-    And request { 'name': 'Karate Test', 'avatar': 'Karate' }
+    And request { 'name': 'Karate Test' }
     When method put
     Then status 200
-    And match response.profiles == '#[1]'
-    And match response.profiles[0].name == 'Karate Test'
-    And match response.profiles[0].avatar == 'Karate'
+    And match response.list == '#[1]'
+    And match response.list[0].name == 'Karate Test'
 
   Scenario: Add profile data
     Given url baseUrl + '/api/v1/profiles'
-    And request { 'name': 'Karate Test 2', 'avatar': 'Karate 2' }
+    And request { 'name': 'Karate Test 2' }
     When method post
     Then status 200
-    And match response.profiles == '#[2]'
-    And match response.profiles[0].name == 'Karate Test'
-    And match response.profiles[0].avatar == 'Karate'
-    And match response.profiles[1].name == 'Karate Test 2'
-    And match response.profiles[1].avatar == 'Karate 2'
-
-  Scenario: Add profile game favorite
-    * def profileCode = karate.properties['profileCode']
-    * def gameCode = karate.properties['gameCode']
-
-    Given url baseUrl + '/api/v1/profiles/' + profileCode + '/favorites/' + gameCode
-    When method post
-    Then status 200
-    And match response.code == '#string'
-    And match response.profiles == '#array'
-    And match response.profiles[0].favorites == '#[1]'
-
-  Scenario: Remove profile game favorite
-    * def profileCode = karate.properties['profileCode']
-    * def gameCode = karate.properties['gameCode']
-
-    Given url baseUrl + '/api/v1/profiles/' + profileCode + '/favorites/' + gameCode
-    When method delete
-    Then status 200
-    And match response.code == '#string'
-    And match response.profiles == '#array'
-    And match response.profiles[0].favorites == '#[0]'
+    And match response.list == '#[2]'
+    And match response.list[0].name == 'Karate Test'
+    And match response.list[1].name == 'Karate Test 2'

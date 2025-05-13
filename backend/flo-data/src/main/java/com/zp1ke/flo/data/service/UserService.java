@@ -6,8 +6,6 @@ import com.zp1ke.flo.data.repository.UserRepository;
 import com.zp1ke.flo.utils.StringUtils;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;

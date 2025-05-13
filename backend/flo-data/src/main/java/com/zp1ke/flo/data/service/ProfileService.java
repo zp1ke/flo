@@ -48,4 +48,8 @@ public class ProfileService {
     public List<Profile> profilesOfUser(@NonNull User user) {
         return profileRepository.findAllByUser(user);
     }
+
+    public void clearAll() {
+        profileRepository.deleteAll();
+    }
 }

@@ -1,7 +1,7 @@
 package com.zp1ke.flo.api.controller.v1;
 
+import com.zp1ke.flo.api.dto.ListDto;
 import com.zp1ke.flo.api.dto.ProfileDto;
-import com.zp1ke.flo.api.dto.UserDto;
 import com.zp1ke.flo.data.domain.User;
 import com.zp1ke.flo.data.model.UserProfile;
 import com.zp1ke.flo.data.service.ProfileService;
@@ -24,31 +24,34 @@ public class ProfileController {
     private final ProfileService profileService;
 
     @GetMapping
-    @Operation(summary = "Get user data")
-    public ResponseEntity<UserDto> getUser(@AuthenticationPrincipal User user) {
-        return ResponseEntity.ok(UserDto.fromUser(user));
+    @Operation(summary = "Get profiles")
+    public ResponseEntity<ListDto<ProfileDto>> getProfiles(@AuthenticationPrincipal User user) {
+        var profiles = profileService.profilesOfUser(user).stream()
+            .map(ProfileDto::fromProfile)
+            .toList();
+        return ResponseEntity.ok(new ListDto<>(profiles));
     }
 
     @PostMapping
     @Operation(summary = "Add profile data")
-    public ResponseEntity<UserDto> addProfile(@AuthenticationPrincipal User user,
-                                              @RequestBody ProfileDto request) {
+    public ResponseEntity<ListDto<ProfileDto>> addProfile(@AuthenticationPrincipal User user,
+                                                          @RequestBody ProfileDto request) {
         var profile = request.toProfile();
         profile.setUser(user);
         profileService.save(profile);
-        return ResponseEntity.ok(UserDto.fromUser(user));
+        return getProfiles(user);
     }
 
     @PutMapping("/{code}")
     @Operation(summary = "Update profile data")
-    public ResponseEntity<UserDto> updateProfile(@AuthenticationPrincipal UserProfile userProfile,
-                                                 @RequestBody ProfileDto request) {
+    public ResponseEntity<ListDto<ProfileDto>> updateProfile(@AuthenticationPrincipal UserProfile userProfile,
+                                                             @RequestBody ProfileDto request) {
         if (userProfile.profile() != null) {
             var profileToUpdate = userProfile.profile().toBuilder()
                 .name(request.getName())
                 .build();
             profileService.save(profileToUpdate);
-            return ResponseEntity.ok(UserDto.fromUser(userProfile.user()));
+            return getProfiles(userProfile.user());
         }
         return ResponseEntity.notFound().build();
     }
