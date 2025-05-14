@@ -1,0 +1,75 @@
+databaseChangeLog:
+  - changeSet:
+      id: flo-0003
+      author: zp1ke
+      changes:
+        - createTable:
+            tableName: settings
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp with time zone
+                  constraints:
+                    nullable: false
+              - column:
+                  name: code
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: value
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+        - createIndex:
+            columns:
+              - column:
+                  name: code
+              - column:
+                  name: user_id
+            indexName: settings_unq_code_user
+            tableName: settings
+            unique: true
+        - createIndex:
+            columns:
+              - column:
+                  name: user_id
+            indexName: settings_idx_user_id
+            tableName: settings
+        - createIndex:
+            columns:
+              - column:
+                  descending: true
+                  name: created_at
+            indexName: settings_idx_created_at
+            tableName: settings
+        - createIndex:
+            columns:
+              - column:
+                  descending: true
+                  name: updated_at
+            indexName: settings_idx_updated_at
+            tableName: settings
+        - addForeignKeyConstraint:
+            baseColumnNames: user_id
+            baseTableName: settings
+            constraintName: settings_fx_user_id
+            referencedColumnNames: id
+            referencedTableName: users

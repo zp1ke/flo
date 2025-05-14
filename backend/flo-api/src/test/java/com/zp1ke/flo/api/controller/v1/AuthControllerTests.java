@@ -7,6 +7,7 @@ import com.zp1ke.flo.api.model.AuthRequest;
 import com.zp1ke.flo.api.model.AuthResponse;
 import com.zp1ke.flo.data.domain.User;
 import com.zp1ke.flo.data.service.ProfileService;
+import com.zp1ke.flo.data.service.SettingService;
 import com.zp1ke.flo.data.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,8 +40,12 @@ class AuthControllerTests {
     @Autowired
     private ProfileService profileService;
 
+    @Autowired
+    private SettingService settingService;
+
     @BeforeEach
     void setup() {
+        settingService.clearAll();
         profileService.clearAll();
         userService.clearAll();
     }

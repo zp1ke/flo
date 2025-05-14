@@ -24,6 +24,8 @@ public class UserService {
 
     private final ProfileService profileService;
 
+    private final SettingService settingService;
+
     @Nullable
     public User findByUsername(@NonNull String username) {
         return userRepository.findByUsername(username).orElse(null);
@@ -50,6 +52,7 @@ public class UserService {
         var saved = userRepository.save(user);
 
         profileService.save(Profile.fromUser(saved));
+        settingService.saveDefaultSettings(saved);
 
         return saved;
     }

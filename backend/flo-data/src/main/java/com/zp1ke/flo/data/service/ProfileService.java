@@ -2,6 +2,7 @@ package com.zp1ke.flo.data.service;
 
 import com.zp1ke.flo.data.domain.Profile;
 import com.zp1ke.flo.data.domain.User;
+import com.zp1ke.flo.data.model.SettingCode;
 import com.zp1ke.flo.data.repository.ProfileRepository;
 import com.zp1ke.flo.utils.StringUtils;
 import jakarta.validation.ConstraintViolationException;
@@ -20,11 +21,25 @@ public class ProfileService {
 
     private final ProfileRepository profileRepository;
 
+    private final SettingService settingService;
+
     @NonNull
     public void save(@NonNull Profile profile) {
         var violations = validator.validate(profile);
         if (!violations.isEmpty()) {
             throw new ConstraintViolationException("profile.invalid", violations);
+        }
+
+        if (profile.getId() == null) {
+            // Check if a profile with the same name already exists for the user
+            if (profileRepository.existsByUserAndName(profile.getUser(), profile.getName())) {
+                throw new IllegalArgumentException("profile.name-duplicate");
+            }
+
+            var maxProfiles = settingService.getIntegerValue(profile.getUser(), SettingCode.MAX_PROFILES);
+            if (maxProfiles != null && profileRepository.countByUser(profile.getUser()) >= maxProfiles) {
+                throw new IllegalArgumentException("profile.max-profiles-reached");
+            }
         }
 
         if (StringUtils.isBlank(profile.getCode())) {

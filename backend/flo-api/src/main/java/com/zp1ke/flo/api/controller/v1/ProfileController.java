@@ -42,7 +42,7 @@ public class ProfileController {
         return getProfiles(user);
     }
 
-    @PutMapping("/{code}")
+    @PutMapping("/{profileCode}")
     @Operation(summary = "Update profile data")
     public ResponseEntity<ListDto<ProfileDto>> updateProfile(@AuthenticationPrincipal UserProfile userProfile,
                                                              @RequestBody ProfileDto request) {
