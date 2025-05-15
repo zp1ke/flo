@@ -24,7 +24,7 @@ public class ProfileService {
     private final SettingService settingService;
 
     @NonNull
-    public void save(@NonNull Profile profile) {
+    public Profile save(@NonNull Profile profile) {
         var violations = validator.validate(profile);
         if (!violations.isEmpty()) {
             throw new ConstraintViolationException("profile.invalid", violations);
@@ -36,9 +36,14 @@ public class ProfileService {
                 throw new IllegalArgumentException("profile.name-duplicate");
             }
 
-            var maxProfiles = settingService.getIntegerValue(profile.getUser(), SettingCode.MAX_PROFILES);
+            var maxProfiles = settingService.getIntegerValue(profile.getUser(), SettingCode.USER_MAX_PROFILES);
             if (maxProfiles != null && profileRepository.countByUser(profile.getUser()) >= maxProfiles) {
                 throw new IllegalArgumentException("profile.max-profiles-reached");
+            }
+        } else {
+            // Check if a profile with the same name already exists for the user
+            if (profileRepository.existsByUserAndNameAndIdNot(profile.getUser(), profile.getName(), profile.getId())) {
+                throw new IllegalArgumentException("profile.name-duplicate");
             }
         }
 
@@ -47,12 +52,12 @@ public class ProfileService {
             String code;
             do {
                 code = StringUtils.generateRandomCode(8);
-            } while (profileRepository.existsByCode(code));
+            } while (profileRepository.existsByUserAndCode(profile.getUser(), code));
 
             profile.setCode(code);
         }
 
-        profileRepository.save(profile);
+        return profileRepository.save(profile);
     }
 
     public Optional<Profile> profileOfUserByCode(@NonNull User user, @NonNull String code) {

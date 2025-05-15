@@ -14,7 +14,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ProfileRepository extends JpaRepository<Profile, Long> {
 
-    boolean existsByCode(@NonNull String code);
+    boolean existsByUserAndCode(@NonNull User user, @NonNull String code);
 
     Optional<Profile> findByUserAndCode(@NonNull User user, @NonNull String code);
 
@@ -23,4 +23,6 @@ public interface ProfileRepository extends JpaRepository<Profile, Long> {
     boolean existsByUserAndName(@NotNull User user, @NonNull String name);
 
     Integer countByUser(@NonNull User user);
+
+    boolean existsByUserAndNameAndIdNot(@NonNull User user, @NonNull String name, @NonNull Long id);
 }

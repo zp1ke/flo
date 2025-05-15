@@ -1,10 +1,10 @@
 databaseChangeLog:
   - changeSet:
-      id: flo-0002
+      id: flo-0004
       author: zp1ke
       changes:
         - createTable:
-            tableName: profiles
+            tableName: categories
             columns:
               - column:
                   name: id
@@ -34,7 +34,7 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                  name: user_id
+                  name: profile_id
                   type: bigint
                   constraints:
                     nullable: false
@@ -43,33 +43,33 @@ databaseChangeLog:
               - column:
                   name: code
               - column:
-                  name: user_id
-            indexName: profiles_unq_code_user
-            tableName: profiles
+                  name: profile_id
+            indexName: categories_unq_code_profile
+            tableName: categories
             unique: true
         - createIndex:
             columns:
               - column:
-                  name: user_id
-            indexName: profiles_idx_user_id
-            tableName: profiles
+                  name: profile_id
+            indexName: categories_idx_profile_id
+            tableName: categories
         - createIndex:
             columns:
               - column:
                   descending: true
                   name: created_at
-            indexName: profiles_idx_created_at
-            tableName: profiles
+            indexName: categories_idx_created_at
+            tableName: categories
         - createIndex:
             columns:
               - column:
                   descending: true
                   name: updated_at
-            indexName: profiles_idx_updated_at
-            tableName: profiles
+            indexName: categories_idx_updated_at
+            tableName: categories
         - addForeignKeyConstraint:
-            baseColumnNames: user_id
-            baseTableName: profiles
-            constraintName: profiles_fx_user_id
+            baseColumnNames: profile_id
+            baseTableName: categories
+            constraintName: categories_fx_profile_id
             referencedColumnNames: id
             referencedTableName: users

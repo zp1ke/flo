@@ -2,7 +2,6 @@ package com.zp1ke.flo.api.security;
 
 import com.zp1ke.flo.data.domain.Profile;
 import com.zp1ke.flo.data.domain.User;
-import com.zp1ke.flo.data.model.UserProfile;
 import com.zp1ke.flo.data.service.ProfileService;
 import com.zp1ke.flo.data.service.UserService;
 import jakarta.servlet.FilterChain;
@@ -48,22 +47,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private void generateAuthentication(@NonNull String username, @NonNull String token, @NonNull String path) {
         var user = userService.findByUsername(username);
+        if (user != null && pathRequiresProfile(path) && profileOf(user, path) == null) {
+            user = null;
+        }
+
         if (user != null) {
-            Object principal = null;
-
-            if (pathRequiresProfile(path)) {
-                var profile = profileOf(user, path);
-                if (profile != null) {
-                    principal = new UserProfile(user, profile);
-                }
-            } else {
-                principal = user;
-            }
-
-            if (principal != null) {
-                var authentication = new UsernamePasswordAuthenticationToken(principal, token, Collections.emptyList());
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-            }
+            var authentication = new UsernamePasswordAuthenticationToken(user, token, Collections.emptyList());
+            SecurityContextHolder.getContext().setAuthentication(authentication);
         }
     }
 

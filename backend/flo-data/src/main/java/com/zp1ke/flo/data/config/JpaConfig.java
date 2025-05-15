@@ -1,6 +1,6 @@
 package com.zp1ke.flo.data.config;
 
-import com.zp1ke.flo.data.model.UserProfile;
+import com.zp1ke.flo.data.domain.User;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,7 +15,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 public class JpaConfig {
 
     @Bean
-    public AuditorAware<UserProfile> auditorAware() {
+    public AuditorAware<User> auditorAware() {
         return new UserAuditorAware();
     }
 }

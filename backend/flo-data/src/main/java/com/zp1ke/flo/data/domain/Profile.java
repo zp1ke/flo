@@ -10,7 +10,7 @@ import org.springframework.lang.NonNull;
 
 @Entity
 @Table(name = "profiles", indexes = {
-    @Index(name = "profiles_unq_code", columnList = "code", unique = true),
+    @Index(name = "profiles_unq_code_user", columnList = "code, user_id", unique = true),
     @Index(name = "profiles_idx_user_id", columnList = "user_id"),
     @Index(name = "profiles_idx_created_at", columnList = "created_at"),
     @Index(name = "profiles_idx_updated_at", columnList = "updated_at"),
