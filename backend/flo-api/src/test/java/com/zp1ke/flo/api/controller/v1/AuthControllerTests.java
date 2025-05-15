@@ -6,6 +6,7 @@ import com.zp1ke.flo.api.dto.UserDto;
 import com.zp1ke.flo.api.model.AuthRequest;
 import com.zp1ke.flo.api.model.AuthResponse;
 import com.zp1ke.flo.data.domain.User;
+import com.zp1ke.flo.data.service.CategoryService;
 import com.zp1ke.flo.data.service.ProfileService;
 import com.zp1ke.flo.data.service.SettingService;
 import com.zp1ke.flo.data.service.UserService;
@@ -43,9 +44,13 @@ class AuthControllerTests {
     @Autowired
     private SettingService settingService;
 
+    @Autowired
+    private CategoryService categoryService;
+
     @BeforeEach
     void setup() {
         settingService.clearAll();
+        categoryService.clearAll();
         profileService.clearAll();
         userService.clearAll();
     }
