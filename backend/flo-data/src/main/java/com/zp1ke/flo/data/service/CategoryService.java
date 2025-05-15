@@ -71,8 +71,4 @@ public class CategoryService {
     public List<Category> categoriesOfProfile(@NonNull Profile profile) {
         return categoryRepository.findAllByProfile(profile);
     }
-
-    public void clearAll() {
-        categoryRepository.deleteAll();
-    }
 }

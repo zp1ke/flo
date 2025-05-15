@@ -26,6 +26,7 @@ dependencies {
     runtimeOnly libs.postgres
 
     testImplementation libs.karate.junit
+    testImplementation libs.spring.jpa
     testImplementation libs.spring.security.test
     testImplementation libs.spring.testcontainers
     testImplementation libs.testcontainers.junit

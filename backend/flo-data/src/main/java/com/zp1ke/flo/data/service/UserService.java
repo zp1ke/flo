@@ -90,8 +90,4 @@ public class UserService {
         }
         return null;
     }
-
-    public void clearAll() {
-        userRepository.deleteAll();
-    }
 }

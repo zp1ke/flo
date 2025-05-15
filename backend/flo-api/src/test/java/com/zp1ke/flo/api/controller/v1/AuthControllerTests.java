@@ -6,9 +6,10 @@ import com.zp1ke.flo.api.dto.UserDto;
 import com.zp1ke.flo.api.model.AuthRequest;
 import com.zp1ke.flo.api.model.AuthResponse;
 import com.zp1ke.flo.data.domain.User;
-import com.zp1ke.flo.data.service.CategoryService;
-import com.zp1ke.flo.data.service.ProfileService;
-import com.zp1ke.flo.data.service.SettingService;
+import com.zp1ke.flo.data.repository.CategoryRepository;
+import com.zp1ke.flo.data.repository.ProfileRepository;
+import com.zp1ke.flo.data.repository.SettingRepository;
+import com.zp1ke.flo.data.repository.UserRepository;
 import com.zp1ke.flo.data.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,20 +40,23 @@ class AuthControllerTests {
     private UserService userService;
 
     @Autowired
-    private ProfileService profileService;
+    private UserRepository userRepository;
 
     @Autowired
-    private SettingService settingService;
+    private ProfileRepository profileRepository;
 
     @Autowired
-    private CategoryService categoryService;
+    private SettingRepository settingRepository;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     @BeforeEach
     void setup() {
-        settingService.clearAll();
-        categoryService.clearAll();
-        profileService.clearAll();
-        userService.clearAll();
+        settingRepository.deleteAll();
+        categoryRepository.deleteAll();
+        profileRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
     @Test

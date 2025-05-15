@@ -36,10 +36,6 @@ public class SettingService {
         });
     }
 
-    public void clearAll() {
-        settingRepository.deleteAll();
-    }
-
     @Nullable
     public Integer getIntegerValue(@NonNull User user, @NonNull SettingCode code) {
         var setting = settingRepository.findByCodeAndUser(code, user);
