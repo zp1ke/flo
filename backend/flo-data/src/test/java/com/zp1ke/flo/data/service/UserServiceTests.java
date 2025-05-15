@@ -1,6 +1,5 @@
 package com.zp1ke.flo.data.service;
 
-import com.zp1ke.flo.data.domain.Setting;
 import com.zp1ke.flo.data.domain.User;
 import com.zp1ke.flo.data.repository.UserRepository;
 import jakarta.validation.ConstraintViolationException;

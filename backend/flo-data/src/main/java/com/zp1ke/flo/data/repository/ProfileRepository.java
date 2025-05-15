@@ -2,9 +2,7 @@ package com.zp1ke.flo.data.repository;
 
 import com.zp1ke.flo.data.domain.Profile;
 import com.zp1ke.flo.data.domain.User;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
