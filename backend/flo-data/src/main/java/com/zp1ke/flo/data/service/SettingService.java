@@ -15,14 +15,18 @@ import org.springframework.stereotype.Service;
 public class SettingService {
 
     private static final String DEFAULT_USER_MAX_PROFILES = "2";
+
     private static final String DEFAULT_USER_MAX_CATEGORIES = "5";
+
+    private static final String DEFAULT_USER_MAX_WALLETS = "3";
 
     private final SettingRepository settingRepository;
 
     public void saveDefaultSettings(@NonNull User user) {
         var defaultSettings = Map.of(
             SettingCode.USER_MAX_PROFILES, DEFAULT_USER_MAX_PROFILES,
-            SettingCode.USER_MAX_CATEGORIES, DEFAULT_USER_MAX_CATEGORIES
+            SettingCode.USER_MAX_CATEGORIES, DEFAULT_USER_MAX_CATEGORIES,
+            SettingCode.USER_MAX_WALLETS, DEFAULT_USER_MAX_WALLETS
         );
         defaultSettings.forEach((code, value) -> {
             if (!settingRepository.existsByCodeAndUser(code, user)) {

@@ -1,10 +1,10 @@
 databaseChangeLog:
   - changeSet:
-      id: flo-0004
+      id: flo-0005
       author: zp1ke
       changes:
         - createTable:
-            tableName: categories
+            tableName: wallets
             columns:
               - column:
                   name: id
@@ -44,32 +44,32 @@ databaseChangeLog:
                   name: code
               - column:
                   name: profile_id
-            indexName: categories_unq_code_profile
-            tableName: categories
+            indexName: wallets_unq_code_profile
+            tableName: wallets
             unique: true
         - createIndex:
             columns:
               - column:
                   name: profile_id
-            indexName: categories_idx_profile_id
-            tableName: categories
+            indexName: wallets_idx_profile_id
+            tableName: wallets
         - createIndex:
             columns:
               - column:
                   descending: true
                   name: created_at
-            indexName: categories_idx_created_at
-            tableName: categories
+            indexName: wallets_idx_created_at
+            tableName: wallets
         - createIndex:
             columns:
               - column:
                   descending: true
                   name: updated_at
-            indexName: categories_idx_updated_at
-            tableName: categories
+            indexName: wallets_idx_updated_at
+            tableName: wallets
         - addForeignKeyConstraint:
             baseColumnNames: profile_id
-            baseTableName: categories
-            constraintName: categories_fx_profile_id
+            baseTableName: wallets
+            constraintName: wallets_fx_profile_id
             referencedColumnNames: id
             referencedTableName: profiles

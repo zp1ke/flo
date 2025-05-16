@@ -12,14 +12,13 @@ Feature: Categories API testing
     And match response.code == '#string'
     And match response.name == 'main category'
 
-  Scenario: Get user categories
+  Scenario: Get profile categories
     Given url baseUrl
     When method get
     Then status 200
     And match response.list == '#[1]'
     And match response.list[0].name == '#string'
     And match response.list[0].name == 'main category'
-    * def categoryCode = response.list[0].code
 
   Scenario: Add duplicated category data
     Given url baseUrl

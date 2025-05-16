@@ -1,9 +1,9 @@
 package com.zp1ke.flo.api.controller.v1;
 
-import com.zp1ke.flo.api.dto.CategoryDto;
+import com.zp1ke.flo.api.dto.WalletDto;
 import com.zp1ke.flo.api.dto.ListDto;
 import com.zp1ke.flo.data.domain.User;
-import com.zp1ke.flo.data.service.CategoryService;
+import com.zp1ke.flo.data.service.WalletService;
 import com.zp1ke.flo.data.service.ProfileService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -14,60 +14,60 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/profiles/{profileCode}/categories")
+@RequestMapping("/api/v1/profiles/{profileCode}/wallets")
 @RequiredArgsConstructor
-@Tag(name = "categories", description = "Profile categories")
-public class CategoryController {
+@Tag(name = "wallets", description = "Profile wallets")
+public class WalletController {
 
     private final ProfileService profileService;
 
-    private final CategoryService categoryService;
+    private final WalletService walletService;
 
     @GetMapping
-    @Operation(summary = "Get categories")
-    public ResponseEntity<ListDto<CategoryDto>> getCategories(@AuthenticationPrincipal User user,
+    @Operation(summary = "Get wallets")
+    public ResponseEntity<ListDto<WalletDto>> getWallets(@AuthenticationPrincipal User user,
                                                               @PathVariable String profileCode) {
         var profile = profileService.profileOfUserByCode(user, profileCode);
         if (profile.isPresent()) {
-            var categories = categoryService.categoriesOfProfile(profile.get()).stream()
-                .map(CategoryDto::fromCategory)
+            var wallets = walletService.walletsOfProfile(profile.get()).stream()
+                .map(WalletDto::fromWallet)
                 .toList();
-            return ResponseEntity.ok(new ListDto<>(categories));
+            return ResponseEntity.ok(new ListDto<>(wallets));
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
     @PostMapping
-    @Operation(summary = "Add category data")
-    public ResponseEntity<CategoryDto> addCategory(@AuthenticationPrincipal User user,
+    @Operation(summary = "Add wallet data")
+    public ResponseEntity<WalletDto> addWallet(@AuthenticationPrincipal User user,
                                                    @PathVariable String profileCode,
-                                                   @RequestBody CategoryDto request) {
+                                                   @RequestBody WalletDto request) {
         var profile = profileService.profileOfUserByCode(user, profileCode);
         if (profile.isPresent()) {
-            var category = request.toCategory();
-            category.setProfile(profile.get());
-            var saved = categoryService.save(category);
-            var dto = CategoryDto.fromCategory(saved);
+            var wallet = request.toWallet();
+            wallet.setProfile(profile.get());
+            var saved = walletService.save(wallet);
+            var dto = WalletDto.fromWallet(saved);
             return ResponseEntity.status(HttpStatus.CREATED).body(dto);
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
-    @PutMapping("/{categoryCode}")
-    @Operation(summary = "Update category data")
-    public ResponseEntity<CategoryDto> updateCategory(@AuthenticationPrincipal User user,
+    @PutMapping("/{walletCode}")
+    @Operation(summary = "Update wallet data")
+    public ResponseEntity<WalletDto> updateWallet(@AuthenticationPrincipal User user,
                                                       @PathVariable String profileCode,
-                                                      @PathVariable String categoryCode,
-                                                      @RequestBody CategoryDto request) {
+                                                      @PathVariable String walletCode,
+                                                      @RequestBody WalletDto request) {
         var profile = profileService.profileOfUserByCode(user, profileCode);
         if (profile.isPresent()) {
-            var category = categoryService.categoryOfProfileByCode(profile.get(), categoryCode);
-            if (category.isPresent()) {
-                var categoryToUpdate = category.get().toBuilder()
+            var wallet = walletService.walletOfProfileByCode(profile.get(), walletCode);
+            if (wallet.isPresent()) {
+                var walletToUpdate = wallet.get().toBuilder()
                     .name(request.getName())
                     .build();
-                var saved = categoryService.save(categoryToUpdate);
-                var dto = CategoryDto.fromCategory(saved);
+                var saved = walletService.save(walletToUpdate);
+                var dto = WalletDto.fromWallet(saved);
                 return ResponseEntity.ok(dto);
             }
             return ResponseEntity.notFound().build();
