@@ -5,6 +5,7 @@ import com.zp1ke.flo.data.model.SettingCode;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 @Entity
@@ -30,6 +31,7 @@ public class Setting extends Auditable {
     @Column(nullable = false, length = 50)
     private SettingCode code;
 
+    @Size(min = 1, max = 255, message = "setting.value-size")
     @NotBlank(message = "setting.value-required")
     @Column(nullable = false)
     private String value;

@@ -27,10 +27,11 @@ public class Profile extends Auditable {
     @Setter(AccessLevel.MODULE)
     private Long id;
 
+    @Size(min = 3, max = 50, message = "profile.code-size")
     @Column(nullable = false, length = 50)
     private String code;
 
-    @Size(min = 3, message = "profile.name-size")
+    @Size(min = 3, max = 255, message = "profile.name-size")
     @NotBlank(message = "profile.name-required")
     @Column(nullable = false)
     private String name;

@@ -26,10 +26,11 @@ public class Wallet extends Auditable {
     @Setter(AccessLevel.MODULE)
     private Long id;
 
+    @Size(min = 3, max = 50, message = "wallet.code-size")
     @Column(nullable = false, length = 50)
     private String code;
 
-    @Size(min = 3, message = "wallet.name-size")
+    @Size(min = 3, max = 255, message = "wallet.name-size")
     @NotBlank(message = "wallet.name-required")
     @Column(nullable = false)
     private String name;

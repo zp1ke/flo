@@ -26,10 +26,11 @@ public class Category extends Auditable {
     @Setter(AccessLevel.MODULE)
     private Long id;
 
+    @Size(min = 3, max = 50, message = "category.code-size")
     @Column(nullable = false, length = 50)
     private String code;
 
-    @Size(min = 3, message = "category.name-size")
+    @Size(min = 3, max = 255, message = "category.name-size")
     @NotBlank(message = "category.name-required")
     @Column(nullable = false)
     private String name;

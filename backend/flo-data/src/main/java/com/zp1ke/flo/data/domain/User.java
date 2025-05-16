@@ -27,16 +27,18 @@ public class User extends Auditable {
     @Setter(AccessLevel.MODULE)
     private Long id;
 
+    @Size(max = 255, message = "user.email-size")
     @Email(message = "user.email-invalid")
     @NotBlank(message = "user.email-required")
     @Column(nullable = false)
     private String email;
 
-    @Size(min = 3, message = "user.username-size")
+    @Size(min = 3, max = 255, message = "user.username-size")
     @NotBlank(message = "user.username-required")
     @Column(nullable = false)
     private String username;
 
+    @Size(max = 255, message = "user.password-size")
     @NotBlank(message = "user.password-empty")
     @Column(nullable = false)
     private String password;

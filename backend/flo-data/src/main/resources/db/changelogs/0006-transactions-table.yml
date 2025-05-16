@@ -1,0 +1,112 @@
+databaseChangeLog:
+  - changeSet:
+      id: flo-0006
+      author: zp1ke
+      changes:
+        - createTable:
+            tableName: transactions
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp with time zone
+                  constraints:
+                    nullable: false
+              - column:
+                  name: code
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: varchar(255)
+              - column:
+                  name: amount
+                  type: decimal(10, 2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: profile_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: category_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: wallet_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+        - createIndex:
+            columns:
+              - column:
+                  name: code
+              - column:
+                  name: profile_id
+            indexName: transactions_unq_code_profile
+            tableName: transactions
+            unique: true
+        - createIndex:
+            columns:
+              - column:
+                  name: profile_id
+            indexName: transactions_idx_profile_id
+            tableName: transactions
+        - createIndex:
+            columns:
+              - column:
+                  name: category_id
+            indexName: transactions_idx_category_id
+            tableName: transactions
+        - createIndex:
+            columns:
+              - column:
+                  name: wallet_id
+            indexName: transactions_idx_wallet_id
+            tableName: transactions
+        - createIndex:
+            columns:
+              - column:
+                  descending: true
+                  name: created_at
+            indexName: transactions_idx_created_at
+            tableName: transactions
+        - createIndex:
+            columns:
+              - column:
+                  descending: true
+                  name: updated_at
+            indexName: transactions_idx_updated_at
+            tableName: transactions
+        - addForeignKeyConstraint:
+            baseColumnNames: profile_id
+            baseTableName: transactions
+            constraintName: transactions_fx_profile_id
+            referencedColumnNames: id
+            referencedTableName: profiles
+        - addForeignKeyConstraint:
+            baseColumnNames: category_id
+            baseTableName: transactions
+            constraintName: transactions_fx_category_id
+            referencedColumnNames: id
+            referencedTableName: categories
+        - addForeignKeyConstraint:
+            baseColumnNames: wallet_id
+            baseTableName: transactions
+            constraintName: transactions_fx_wallet_id
+            referencedColumnNames: id
+            referencedTableName: wallets
