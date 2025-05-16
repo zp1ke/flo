@@ -4,6 +4,7 @@ import com.zp1ke.flo.data.domain.Wallet;
 import com.zp1ke.flo.data.domain.Profile;
 import com.zp1ke.flo.data.model.SettingCode;
 import com.zp1ke.flo.data.repository.WalletRepository;
+import com.zp1ke.flo.data.util.DomainUtils;
 import com.zp1ke.flo.utils.StringUtils;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -27,6 +29,11 @@ public class WalletService {
 
     @NonNull
     public Wallet save(@NonNull Wallet wallet) {
+        if (StringUtils.isBlank(wallet.getCode())) {
+            wallet.setCode(DomainUtils
+                .generateRandomCode((code) -> walletRepository.existsByProfileAndCode(wallet.getProfile(), code)));
+        }
+
         var violations = validator.validate(wallet);
         if (!violations.isEmpty()) {
             throw new ConstraintViolationException("wallet.invalid", violations);
@@ -50,16 +57,6 @@ public class WalletService {
             }
         }
 
-        if (StringUtils.isBlank(wallet.getCode())) {
-            // Generate a random unique code
-            String code;
-            do {
-                code = StringUtils.generateRandomCode(8);
-            } while (walletRepository.existsByProfileAndCode(wallet.getProfile(), code));
-
-            wallet.setCode(code);
-        }
-
         return walletRepository.save(wallet);
     }
 
@@ -70,5 +67,16 @@ public class WalletService {
     @NonNull
     public List<Wallet> walletsOfProfile(@NonNull Profile profile) {
         return walletRepository.findAllByProfile(profile);
+    }
+
+    @Nullable
+    public List<Long> idsOfCodes(@NonNull Profile profile, @Nullable List<String> codes) {
+        if (codes != null && !codes.isEmpty()) {
+            return walletRepository.findAllByProfileAndCodeIn(profile, codes)
+                .stream()
+                .map(Wallet::getId)
+                .toList();
+        }
+        return null;
     }
 }

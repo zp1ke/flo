@@ -4,6 +4,7 @@ import com.zp1ke.flo.data.domain.Category;
 import com.zp1ke.flo.data.domain.Profile;
 import com.zp1ke.flo.data.model.SettingCode;
 import com.zp1ke.flo.data.repository.CategoryRepository;
+import com.zp1ke.flo.data.util.DomainUtils;
 import com.zp1ke.flo.utils.StringUtils;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -27,6 +29,11 @@ public class CategoryService {
 
     @NonNull
     public Category save(@NonNull Category category) {
+        if (StringUtils.isBlank(category.getCode())) {
+            category.setCode(DomainUtils
+                .generateRandomCode((code) -> categoryRepository.existsByProfileAndCode(category.getProfile(), code)));
+        }
+
         var violations = validator.validate(category);
         if (!violations.isEmpty()) {
             throw new ConstraintViolationException("category.invalid", violations);
@@ -50,16 +57,6 @@ public class CategoryService {
             }
         }
 
-        if (StringUtils.isBlank(category.getCode())) {
-            // Generate a random unique code
-            String code;
-            do {
-                code = StringUtils.generateRandomCode(8);
-            } while (categoryRepository.existsByProfileAndCode(category.getProfile(), code));
-
-            category.setCode(code);
-        }
-
         return categoryRepository.save(category);
     }
 
@@ -70,5 +67,16 @@ public class CategoryService {
     @NonNull
     public List<Category> categoriesOfProfile(@NonNull Profile profile) {
         return categoryRepository.findAllByProfile(profile);
+    }
+
+    @Nullable
+    public List<Long> idsOfCodes(@NonNull Profile profile, @Nullable List<String> codes) {
+        if (codes != null && !codes.isEmpty()) {
+            return categoryRepository.findAllByProfileAndCodeIn(profile, codes)
+                .stream()
+                .map(Category::getId)
+                .toList();
+        }
+        return null;
     }
 }

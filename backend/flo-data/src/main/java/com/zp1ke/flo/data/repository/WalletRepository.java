@@ -20,4 +20,6 @@ public interface WalletRepository extends JpaRepository<Wallet, Long> {
     Optional<Wallet> findByProfileAndCode(@NonNull Profile profile, @NonNull String code);
 
     List<Wallet> findAllByProfile(@NonNull Profile profile);
+
+    List<Wallet> findAllByProfileAndCodeIn(@NonNull Profile profile, @NonNull List<String> codes);
 }

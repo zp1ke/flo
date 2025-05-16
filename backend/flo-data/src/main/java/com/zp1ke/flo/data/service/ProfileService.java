@@ -4,6 +4,7 @@ import com.zp1ke.flo.data.domain.Profile;
 import com.zp1ke.flo.data.domain.User;
 import com.zp1ke.flo.data.model.SettingCode;
 import com.zp1ke.flo.data.repository.ProfileRepository;
+import com.zp1ke.flo.data.util.DomainUtils;
 import com.zp1ke.flo.utils.StringUtils;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
@@ -25,6 +26,11 @@ public class ProfileService {
 
     @NonNull
     public Profile save(@NonNull Profile profile) {
+        if (StringUtils.isBlank(profile.getCode())) {
+            profile.setCode(DomainUtils
+                .generateRandomCode((code) -> profileRepository.existsByUserAndCode(profile.getUser(), code)));
+        }
+
         var violations = validator.validate(profile);
         if (!violations.isEmpty()) {
             throw new ConstraintViolationException("profile.invalid", violations);
@@ -45,16 +51,6 @@ public class ProfileService {
             if (profileRepository.existsByUserAndNameAndIdNot(profile.getUser(), profile.getName(), profile.getId())) {
                 throw new IllegalArgumentException("profile.name-duplicate");
             }
-        }
-
-        if (StringUtils.isBlank(profile.getCode())) {
-            // Generate a random unique code
-            String code;
-            do {
-                code = StringUtils.generateRandomCode(8);
-            } while (profileRepository.existsByUserAndCode(profile.getUser(), code));
-
-            profile.setCode(code);
         }
 
         return profileRepository.save(profile);

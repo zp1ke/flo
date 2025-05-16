@@ -20,4 +20,6 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     Optional<Category> findByProfileAndCode(@NonNull Profile profile, @NonNull String code);
 
     List<Category> findAllByProfile(@NonNull Profile profile);
+
+    List<Category> findAllByProfileAndCodeIn(@NonNull Profile profile, @NonNull List<String> codes);
 }
