@@ -2,16 +2,17 @@ package com.zp1ke.flo.data.domain;
 
 import com.zp1ke.flo.data.domain.core.Auditable;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.math.BigDecimal;
+import java.time.OffsetDateTime;
 import lombok.*;
 
 @Entity
 @Table(name = "transactions", indexes = {
     @Index(name = "transactions_unq_code_profile", columnList = "code, profile_id", unique = true),
     @Index(name = "transactions_idx_profile_id", columnList = "profile_id"),
+    @Index(name = "transactions_idx_datetime", columnList = "datetime"),
     @Index(name = "transactions_idx_created_at", columnList = "created_at"),
     @Index(name = "transactions_idx_updated_at", columnList = "updated_at"),
 })
@@ -34,6 +35,10 @@ public class Transaction extends Auditable {
     @Size(max = 255, message = "transaction.description-size")
     @Column
     private String description;
+
+    @NotNull(message = "transaction.datetime-required")
+    @Column(nullable = false)
+    private OffsetDateTime datetime;
 
     @NotNull(message = "transaction.amount-required")
     @Column(nullable = false, precision = 10, scale = 2)

@@ -1,5 +1,6 @@
 package com.zp1ke.flo.api.dto;
 
+import com.zp1ke.flo.data.domain.Profile;
 import com.zp1ke.flo.data.domain.Wallet;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
@@ -24,10 +25,11 @@ public class WalletDto {
     }
 
     @NonNull
-    public Wallet toWallet() {
+    public Wallet toWallet(@NonNull Profile profile) {
         return Wallet.builder()
             .code(code)
             .name(name)
+            .profile(profile)
             .build();
     }
 }

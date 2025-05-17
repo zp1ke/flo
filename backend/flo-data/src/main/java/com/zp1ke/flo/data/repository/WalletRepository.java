@@ -1,7 +1,7 @@
 package com.zp1ke.flo.data.repository;
 
-import com.zp1ke.flo.data.domain.Wallet;
 import com.zp1ke.flo.data.domain.Profile;
+import com.zp1ke.flo.data.domain.Wallet;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;

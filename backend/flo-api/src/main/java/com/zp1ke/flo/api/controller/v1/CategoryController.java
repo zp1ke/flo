@@ -29,10 +29,8 @@ public class CategoryController {
                                                               @PathVariable String profileCode) {
         var profile = profileService.profileOfUserByCode(user, profileCode);
         if (profile.isPresent()) {
-            var categories = categoryService.categoriesOfProfile(profile.get()).stream()
-                .map(CategoryDto::fromCategory)
-                .toList();
-            return ResponseEntity.ok(new ListDto<>(categories));
+            var categories = categoryService.categoriesOfProfile(profile.get());
+            return ResponseEntity.ok(ListDto.of(categories, CategoryDto::fromCategory));
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
@@ -44,8 +42,7 @@ public class CategoryController {
                                                    @RequestBody CategoryDto request) {
         var profile = profileService.profileOfUserByCode(user, profileCode);
         if (profile.isPresent()) {
-            var category = request.toCategory();
-            category.setProfile(profile.get());
+            var category = request.toCategory(profile.get());
             var saved = categoryService.save(category);
             var dto = CategoryDto.fromCategory(saved);
             return ResponseEntity.status(HttpStatus.CREATED).body(dto);

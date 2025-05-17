@@ -1,6 +1,7 @@
 package com.zp1ke.flo.api.dto;
 
 import com.zp1ke.flo.data.domain.Category;
+import com.zp1ke.flo.data.domain.Profile;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,10 +25,11 @@ public class CategoryDto {
     }
 
     @NonNull
-    public Category toCategory() {
+    public Category toCategory(@NonNull Profile profile) {
         return Category.builder()
             .code(code)
             .name(name)
+            .profile(profile)
             .build();
     }
 }

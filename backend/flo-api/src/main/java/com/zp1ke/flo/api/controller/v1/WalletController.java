@@ -1,10 +1,10 @@
 package com.zp1ke.flo.api.controller.v1;
 
-import com.zp1ke.flo.api.dto.WalletDto;
 import com.zp1ke.flo.api.dto.ListDto;
+import com.zp1ke.flo.api.dto.WalletDto;
 import com.zp1ke.flo.data.domain.User;
-import com.zp1ke.flo.data.service.WalletService;
 import com.zp1ke.flo.data.service.ProfileService;
+import com.zp1ke.flo.data.service.WalletService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -26,13 +26,11 @@ public class WalletController {
     @GetMapping
     @Operation(summary = "Get wallets")
     public ResponseEntity<ListDto<WalletDto>> getWallets(@AuthenticationPrincipal User user,
-                                                              @PathVariable String profileCode) {
+                                                         @PathVariable String profileCode) {
         var profile = profileService.profileOfUserByCode(user, profileCode);
         if (profile.isPresent()) {
-            var wallets = walletService.walletsOfProfile(profile.get()).stream()
-                .map(WalletDto::fromWallet)
-                .toList();
-            return ResponseEntity.ok(new ListDto<>(wallets));
+            var wallets = walletService.walletsOfProfile(profile.get());
+            return ResponseEntity.ok(ListDto.of(wallets, WalletDto::fromWallet));
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
@@ -40,12 +38,11 @@ public class WalletController {
     @PostMapping
     @Operation(summary = "Add wallet data")
     public ResponseEntity<WalletDto> addWallet(@AuthenticationPrincipal User user,
-                                                   @PathVariable String profileCode,
-                                                   @RequestBody WalletDto request) {
+                                               @PathVariable String profileCode,
+                                               @RequestBody WalletDto request) {
         var profile = profileService.profileOfUserByCode(user, profileCode);
         if (profile.isPresent()) {
-            var wallet = request.toWallet();
-            wallet.setProfile(profile.get());
+            var wallet = request.toWallet(profile.get());
             var saved = walletService.save(wallet);
             var dto = WalletDto.fromWallet(saved);
             return ResponseEntity.status(HttpStatus.CREATED).body(dto);
@@ -56,9 +53,9 @@ public class WalletController {
     @PutMapping("/{walletCode}")
     @Operation(summary = "Update wallet data")
     public ResponseEntity<WalletDto> updateWallet(@AuthenticationPrincipal User user,
-                                                      @PathVariable String profileCode,
-                                                      @PathVariable String walletCode,
-                                                      @RequestBody WalletDto request) {
+                                                  @PathVariable String profileCode,
+                                                  @PathVariable String walletCode,
+                                                  @RequestBody WalletDto request) {
         var profile = profileService.profileOfUserByCode(user, profileCode);
         if (profile.isPresent()) {
             var wallet = walletService.walletOfProfileByCode(profile.get(), walletCode);

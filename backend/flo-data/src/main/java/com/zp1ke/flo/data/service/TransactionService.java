@@ -12,6 +12,8 @@ import jakarta.validation.Validator;
 import java.time.OffsetDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
@@ -44,6 +46,30 @@ public class TransactionService {
     }
 
     @NonNull
+    public Page<Transaction> transactionsOfProfile(@NonNull Profile profile,
+                                                   @NonNull Pageable pageable,
+                                                   @Nullable OffsetDateTime from,
+                                                   @Nullable OffsetDateTime to) {
+        return transactionsOfProfile(profile, pageable, from, to, null, null);
+    }
+
+    @NonNull
+    public Page<Transaction> transactionsOfProfile(@NonNull Profile profile,
+                                                   @NonNull Pageable pageable,
+                                                   @Nullable OffsetDateTime from,
+                                                   @Nullable OffsetDateTime to,
+                                                   @Nullable List<String> categoriesCodes,
+                                                   @Nullable List<String> walletsCodes) {
+        var categoriesIds = categoryService.idsOfCodes(profile, categoriesCodes);
+        var walletsIds = walletService.idsOfCodes(profile, walletsCodes);
+        var specification = TransactionSpec.withProfile(profile)
+            .and(TransactionSpec.datetimeBetween(from, to))
+            .and(TransactionSpec.withCategories(categoriesIds))
+            .and(TransactionSpec.withWallets(walletsIds));
+        return transactionRepository.findAll(specification, pageable);
+    }
+
+    @NonNull
     public TransactionsStats getStats(@NonNull Profile profile,
                                       @NonNull OffsetDateTime from,
                                       @NonNull OffsetDateTime to,
@@ -51,7 +77,8 @@ public class TransactionService {
                                       @Nullable List<String> walletsCodes) {
         var categoriesIds = categoryService.idsOfCodes(profile, categoriesCodes);
         var walletsIds = walletService.idsOfCodes(profile, walletsCodes);
-        var specification = TransactionSpec.createdBetween(from, to)
+        var specification = TransactionSpec.withProfile(profile)
+            .and(TransactionSpec.datetimeBetween(from, to))
             .and(TransactionSpec.withCategories(categoriesIds))
             .and(TransactionSpec.withWallets(walletsIds));
         var transactions = transactionRepository.findAll(specification);

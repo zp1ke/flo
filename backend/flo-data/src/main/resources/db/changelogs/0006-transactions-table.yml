@@ -32,6 +32,11 @@ databaseChangeLog:
                   name: description
                   type: varchar(255)
               - column:
+                  name: datetime
+                  type: timestamp with time zone
+                  constraints:
+                    nullable: false
+              - column:
                   name: amount
                   type: decimal(10, 2)
                   constraints:
@@ -65,6 +70,12 @@ databaseChangeLog:
               - column:
                   name: profile_id
             indexName: transactions_idx_profile_id
+            tableName: transactions
+        - createIndex:
+            columns:
+              - column:
+                  name: datetime
+            indexName: transactions_idx_datetime
             tableName: transactions
         - createIndex:
             columns:

@@ -1,7 +1,7 @@
 package com.zp1ke.flo.data.service;
 
-import com.zp1ke.flo.data.domain.Wallet;
 import com.zp1ke.flo.data.domain.Profile;
+import com.zp1ke.flo.data.domain.Wallet;
 import com.zp1ke.flo.data.model.SettingCode;
 import com.zp1ke.flo.data.repository.WalletRepository;
 import com.zp1ke.flo.data.util.DomainUtils;

@@ -26,10 +26,8 @@ public class ProfileController {
     @GetMapping
     @Operation(summary = "Get profiles")
     public ResponseEntity<ListDto<ProfileDto>> getProfiles(@AuthenticationPrincipal User user) {
-        var profiles = profileService.profilesOfUser(user).stream()
-            .map(ProfileDto::fromProfile)
-            .toList();
-        return ResponseEntity.ok(new ListDto<>(profiles));
+        var profiles = profileService.profilesOfUser(user);
+        return ResponseEntity.ok(ListDto.of(profiles, ProfileDto::fromProfile));
     }
 
     @PostMapping
