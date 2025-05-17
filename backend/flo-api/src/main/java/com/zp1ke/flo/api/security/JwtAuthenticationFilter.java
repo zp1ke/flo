@@ -32,6 +32,20 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final ProfileService profileService;
 
+    public static boolean pathRequiresProfile(@NonNull String path) {
+        var matcher = PROFILE_CODE_PATTERN.matcher(path);
+        return matcher.matches();
+    }
+
+    @Nullable
+    public static String profileCodeOf(@NonNull String path) {
+        var matcher = PROFILE_CODE_PATTERN.matcher(path);
+        if (matcher.matches()) {
+            return matcher.group(1);
+        }
+        return null;
+    }
+
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,
                                     @NonNull HttpServletResponse response,
@@ -71,25 +85,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         return null;
     }
 
-    public static boolean pathRequiresProfile(@NonNull String path) {
-        var matcher = PROFILE_CODE_PATTERN.matcher(path);
-        return matcher.matches();
-    }
-
     @Nullable
     private Profile profileOf(@NonNull User user, @NonNull String path) {
         var profileCode = profileCodeOf(path);
         if (StringUtils.isNotBlank(profileCode)) {
             return profileService.profileOfUserByCode(user, profileCode).orElse(null);
-        }
-        return null;
-    }
-
-    @Nullable
-    public static String profileCodeOf(@NonNull String path) {
-        var matcher = PROFILE_CODE_PATTERN.matcher(path);
-        if (matcher.matches()) {
-            return matcher.group(1);
         }
         return null;
     }
