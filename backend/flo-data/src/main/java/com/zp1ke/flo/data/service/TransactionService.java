@@ -11,6 +11,7 @@ import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -72,6 +73,13 @@ public class TransactionService {
     @NonNull
     public TransactionsStats getStats(@NonNull Profile profile,
                                       @NonNull OffsetDateTime from,
+                                      @NonNull OffsetDateTime to) {
+        return getStats(profile, from, to, null, null);
+    }
+
+    @NonNull
+    public TransactionsStats getStats(@NonNull Profile profile,
+                                      @NonNull OffsetDateTime from,
                                       @NonNull OffsetDateTime to,
                                       @Nullable List<String> categoriesCodes,
                                       @Nullable List<String> walletsCodes) {
@@ -83,5 +91,10 @@ public class TransactionService {
             .and(TransactionSpec.withWallets(walletsIds));
         var transactions = transactionRepository.findAll(specification);
         return TransactionsStats.build(from, to, transactions);
+    }
+
+    public Optional<Transaction> transactionOfProfileByCode(@NonNull Profile profile,
+                                                            @NonNull String code) {
+        return transactionRepository.findByProfileAndCode(profile, code);
     }
 }
