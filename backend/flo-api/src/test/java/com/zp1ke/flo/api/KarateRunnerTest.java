@@ -3,8 +3,13 @@ package com.zp1ke.flo.api;
 import com.intuit.karate.junit5.Karate;
 import com.zp1ke.flo.api.dto.UserDto;
 import com.zp1ke.flo.api.security.JwtTokenProvider;
+import com.zp1ke.flo.data.domain.Category;
+import com.zp1ke.flo.data.domain.Wallet;
+import com.zp1ke.flo.data.service.CategoryService;
 import com.zp1ke.flo.data.service.ProfileService;
 import com.zp1ke.flo.data.service.UserService;
+import com.zp1ke.flo.data.service.WalletService;
+import java.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
@@ -26,6 +31,12 @@ public class KarateRunnerTest {
     ProfileService profileService;
 
     @Autowired
+    CategoryService categoryService;
+
+    @Autowired
+    WalletService walletService;
+
+    @Autowired
     JwtTokenProvider jwtTokenProvider;
 
     @Karate.Test
@@ -39,8 +50,22 @@ public class KarateRunnerTest {
         var user = userService.create(userDto.toUser());
 
         var profiles = profileService.profilesOfUser(user);
-        var profileCode = profiles.getFirst().getCode();
+        var profile = profiles.getFirst();
+        var profileCode = profile.getCode();
         var token = jwtTokenProvider.generateToken(user.getUsername());
+
+        var mainCategory = categoryService.save(Category.builder()
+            .profile(profile)
+            .name("test main category")
+            .build());
+
+        var mainWallet = walletService.save(Wallet.builder()
+            .profile(profile)
+            .name("test main wallet")
+            .build());
+
+        var today = LocalDate.now();
+        var todayDate = String.format("%04d-%02d-%02d", today.getYear(), today.getMonthValue(), today.getDayOfMonth());
 
         return Karate
             .run("classpath:features/")
@@ -48,6 +73,9 @@ public class KarateRunnerTest {
             .systemProperty("baseUrl", "http://localhost:" + serverPort)
             .systemProperty("profileCode", profileCode)
             .systemProperty("username", username)
-            .systemProperty("authToken", token);
+            .systemProperty("authToken", token)
+            .systemProperty("todayDate", todayDate)
+            .systemProperty("mainCategoryCode", mainCategory.getCode())
+            .systemProperty("mainWalletCode", mainWallet.getCode());
     }
 }

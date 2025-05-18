@@ -6,9 +6,7 @@ import com.zp1ke.flo.api.dto.UserDto;
 import com.zp1ke.flo.api.model.AuthRequest;
 import com.zp1ke.flo.api.model.AuthResponse;
 import com.zp1ke.flo.data.domain.User;
-import com.zp1ke.flo.data.repository.*;
 import com.zp1ke.flo.data.service.UserService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -35,30 +33,6 @@ class AuthControllerTests {
 
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private ProfileRepository profileRepository;
-
-    @Autowired
-    private SettingRepository settingRepository;
-
-    @Autowired
-    private CategoryRepository categoryRepository;
-
-    @Autowired
-    private WalletRepository walletRepository;
-
-    @BeforeEach
-    void setup() {
-        settingRepository.deleteAll();
-        walletRepository.deleteAll();
-        categoryRepository.deleteAll();
-        profileRepository.deleteAll();
-        userRepository.deleteAll();
-    }
 
     @Test
     void signup_returnsAuthResponse_whenRegistrationIsSuccessful() throws Exception {

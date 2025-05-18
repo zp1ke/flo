@@ -16,9 +16,9 @@ Feature: Categories API testing
     Given url baseUrl
     When method get
     Then status 200
-    And match response.list == '#[1]'
-    And match response.list[0].name == '#string'
-    And match response.list[0].name == 'main category'
+    And match response.list == '#[2]'
+    And match response.list[1].name == '#string'
+    And match response.list[1].name == 'main category'
 
   Scenario: Add duplicated category data
     Given url baseUrl

@@ -110,7 +110,8 @@ public class TransactionController {
             var from = DateTimeUtils.toOffsetDateTime(fromDate);
             var to = DateTimeUtils.toOffsetDateTime(toDate.plusDays(1));
             var stats = transactionService.getStats(profile.get(), from, to);
-            return ResponseEntity.ok(TransactionsStatsDto.fromStats(stats));
+            var dto = TransactionsStatsDto.fromStats(stats);
+            return ResponseEntity.ok(dto);
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }

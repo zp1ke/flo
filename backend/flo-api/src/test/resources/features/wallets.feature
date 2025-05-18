@@ -16,9 +16,9 @@ Feature: Wallets API testing
     Given url baseUrl
     When method get
     Then status 200
-    And match response.list == '#[1]'
-    And match response.list[0].name == '#string'
-    And match response.list[0].name == 'main wallet'
+    And match response.list == '#[2]'
+    And match response.list[1].name == '#string'
+    And match response.list[1].name == 'main wallet'
 
   Scenario: Add duplicated wallet data
     Given url baseUrl
