@@ -2,7 +2,7 @@ import { redirect } from 'react-router';
 import { GalleryVerticalEnd } from "lucide-react"
 
 import { fetchUser } from '~/lib/auth';
-import SignInForm from '~/components/sign-in-form';
+import SignInForm from '~/components/form/sign-in-form';
 
 export async function clientLoader() {
   const user = await fetchUser();
