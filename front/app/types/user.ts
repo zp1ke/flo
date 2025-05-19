@@ -4,8 +4,6 @@ export interface Profile {
 }
 
 export interface User {
-  token: string;
   email: string;
-
   profile: Profile;
 }

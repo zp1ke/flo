@@ -3,7 +3,7 @@ import type { User } from "~/types/user";
 
 interface AuthContextType {
   user: User | null;
-  setUser: (user: User | null) => void;
+  setToken: (token: string | null) => void;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
