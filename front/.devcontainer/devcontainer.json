@@ -9,6 +9,7 @@
       "extensions": [
         "bradlc.vscode-tailwindcss",
         "EditorConfig.EditorConfig",
+        "esbenp.prettier-vscode",
         "ms-vscode.vscode-typescript-next"
       ]
     }

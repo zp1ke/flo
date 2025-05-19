@@ -1,5 +1,5 @@
 import { redirect } from 'react-router';
-import { GalleryVerticalEnd } from "lucide-react"
+import { GalleryVerticalEnd } from 'lucide-react';
 
 import { fetchUser } from '~/lib/auth';
 import SignInForm from '~/components/form/sign-in-form';
@@ -25,14 +25,14 @@ export default function Home() {
         <div className="flex justify-center gap-2 md:justify-start">
           <a href="#" className="flex items-center gap-2 font-medium">
             <div className="flex h-6 w-6 items-center justify-center rounded-md bg-primary text-primary-foreground">
-              <GalleryVerticalEnd className="size-4"/>
+              <GalleryVerticalEnd className="size-4" />
             </div>
             Flo
           </a>
         </div>
         <div className="flex flex-1 items-center justify-center">
           <div className="w-full max-w-xs">
-            <SignInForm/>
+            <SignInForm />
           </div>
         </div>
       </div>

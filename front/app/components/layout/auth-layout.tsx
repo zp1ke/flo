@@ -1,7 +1,7 @@
 import { Outlet, redirect } from 'react-router';
 import AuthProvider from '~/contexts/auth/auth-provider';
 import { fetchUser } from '~/lib/auth';
-import { AppSidebar } from "~/components/layout/app-sidebar"
+import { AppSidebar } from '~/components/layout/app-sidebar';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -9,13 +9,9 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "~/components/ui/breadcrumb"
-import { Separator } from "~/components/ui/separator"
-import {
-  SidebarInset,
-  SidebarProvider,
-  SidebarTrigger,
-} from "~/components/ui/sidebar"
+} from '~/components/ui/breadcrumb';
+import { Separator } from '~/components/ui/separator';
+import { SidebarInset, SidebarProvider, SidebarTrigger } from '~/components/ui/sidebar';
 
 export async function clientLoader() {
   const user = await fetchUser();
@@ -37,9 +33,7 @@ export default function AuthLayout() {
               <Breadcrumb>
                 <BreadcrumbList>
                   <BreadcrumbItem className="hidden md:block">
-                    <BreadcrumbLink href="#">
-                      Building Your Application
-                    </BreadcrumbLink>
+                    <BreadcrumbLink href="#">Building Your Application</BreadcrumbLink>
                   </BreadcrumbItem>
                   <BreadcrumbSeparator className="hidden md:block" />
                   <BreadcrumbItem>

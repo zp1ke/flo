@@ -1,5 +1,5 @@
-import { Outlet } from "react-router"
-import useAuth from "~/contexts/auth/use-auth";
+import { Outlet } from 'react-router';
+import useAuth from '~/contexts/auth/use-auth';
 
 export default function Dashboard() {
   const { user } = useAuth();
@@ -9,7 +9,7 @@ export default function Dashboard() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-60">
-      <Outlet/>
+      <Outlet />
       <div>
         <div>Display Name: {user.profile.name}</div>
       </div>

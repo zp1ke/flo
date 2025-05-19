@@ -1,6 +1,6 @@
-import { type ReactNode, useEffect, useState } from "react";
-import AuthContext from "./auth-context";
-import type { User } from "~/types/user";
+import { type ReactNode, useEffect, useState } from 'react';
+import AuthContext from './auth-context';
+import type { User } from '~/types/user';
 import { fetchUser, setToken } from '~/lib/auth';
 import config from '~/config';
 
@@ -31,9 +31,5 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
     return () => unsubscribe();
   }, []);
 
-  return (
-    <AuthContext.Provider value={{ user, setToken }}>
-      {children}
-    </AuthContext.Provider>
-  );
-};
+  return <AuthContext.Provider value={{ user, setToken }}>{children}</AuthContext.Provider>;
+}
