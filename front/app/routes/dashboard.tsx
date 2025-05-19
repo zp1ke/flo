@@ -1,5 +1,5 @@
 import { Outlet } from "react-router"
-import useAuth from "~/contexts/auth/useAuth";
+import useAuth from "~/contexts/auth/use-auth";
 
 export default function Dashboard() {
   const { user } = useAuth();

@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { Outlet, redirect, useNavigate } from 'react-router';
-import AuthProvider from '~/contexts/auth/authProvider';
-import { fetchUser, setToken } from '~/services/auth';
+import AuthProvider from '~/contexts/auth/auth-provider';
+import { fetchUser, setToken } from '~/lib/auth';
 
 export async function clientLoader() {
   const user = await fetchUser();
