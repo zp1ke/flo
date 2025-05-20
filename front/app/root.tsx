@@ -4,6 +4,7 @@ import { isRouteErrorResponse, Links, Meta, Outlet, Scripts, ScrollRestoration }
 import type { Route } from './+types/root';
 import Loading from './components/ui/loading';
 import './app.css';
+import { ThemeProvider } from '~/contexts/theme-provider';
 
 export function meta({}: Route.MetaArgs) {
   return [{ title: 'Flo App' }, { name: 'description', content: 'Welcome to Flo App!' }];
@@ -41,7 +42,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  return <Outlet />;
+  return (
+    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+      <Outlet />
+    </ThemeProvider>
+  );
 }
 
 export function HydrateFallback() {
