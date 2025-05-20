@@ -4,6 +4,10 @@
     "title": "Flo APP",
     "welcome": "Welcome to Flo App!"
   },
+  "language": {
+    "change": "Change Language",
+    "en": "English"
+  },
   "theme": {
     "dark": "Dark",
     "light": "Light",

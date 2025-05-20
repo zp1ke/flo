@@ -1,25 +1,26 @@
 import { useEffect, useState } from 'react';
 import i18next from 'i18next';
 import { useTranslation } from 'react-i18next';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '~/components/ui/dropdown-menu';
+import { Button } from '~/components/ui/button';
+import { GlobeIcon } from 'lucide-react';
 
-type languageOption = { language: string; code: string };
-
-const languageOptions: languageOption[] = [
-  {
-    language: 'English',
-    code: 'en',
-  },
-];
+const languages: string[] = ['en'];
 
 export function LanguageSelector() {
-  const [language, setLanguage] = useState(i18next.language);
-
+  const { t } = useTranslation();
   const { i18n } = useTranslation();
 
-  const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedLanguage = e.target.value;
-    setLanguage(selectedLanguage);
-    i18next.changeLanguage(selectedLanguage);
+  const [language, setLanguage] = useState(i18next.language);
+
+  const handleLanguage = (lang: string) => {
+    setLanguage(lang);
+    i18next.changeLanguage(lang).then(() => {});
   };
 
   useEffect(() => {
@@ -27,17 +28,20 @@ export function LanguageSelector() {
   }, [i18n, i18n.language]);
 
   return (
-    <select
-      id="language"
-      value={language}
-      onChange={handleLanguageChange}
-      className="p-2 border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50
-        dark:bg-gray-800 dark:border-gray-600 dark:text-gray-200 dark:focus:border-indigo-400 dark:focus:ring-indigo-700 dark:focus:ring-opacity-50">
-      {languageOptions.map(({ language, code }, key) => (
-        <option value={code} key={key}>
-          {language}
-        </option>
-      ))}
-    </select>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="outline" size="icon">
+          <GlobeIcon className="absolute h-[1.2rem] w-[1.2rem]" />
+          <span className="sr-only">{t('language.change')}</span>
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        {languages.map((lang) => (
+          <DropdownMenuItem onClick={() => handleLanguage(lang)} disabled={language === lang} key={lang}>
+            {t('language.' + lang)}
+          </DropdownMenuItem>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }
