@@ -21,6 +21,7 @@ export const fetchUser = async (): Promise<User | null> => {
   const token = getToken();
   if (!token) {
     localStorage.removeItem(USER_KEY);
+    localStorage.removeItem(USER_KEY_TS);
     return Promise.resolve(null);
   }
 
