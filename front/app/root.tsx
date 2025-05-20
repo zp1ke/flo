@@ -1,13 +1,17 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { isRouteErrorResponse, Links, Meta, Outlet, Scripts, ScrollRestoration } from 'react-router';
 
 import type { Route } from './+types/root';
 import Loading from './components/ui/loading';
 import './app.css';
+import './lib/i18n';
 import { ThemeProvider } from '~/contexts/theme-provider';
+import { useTranslation } from 'react-i18next';
 
 export function meta({}: Route.MetaArgs) {
-  return [{ title: 'Flo App' }, { name: 'description', content: 'Welcome to Flo App!' }];
+  const { t } = useTranslation();
+
+  return [{ title: t('app.title') }, { name: 'description', content: t('app.welcome') }];
 }
 
 export const links: Route.LinksFunction = () => [
@@ -43,9 +47,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
 export default function App() {
   return (
-    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-      <Outlet />
-    </ThemeProvider>
+    <Suspense fallback="...">
+      <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+        <Outlet />
+      </ThemeProvider>
+    </Suspense>
   );
 }
 

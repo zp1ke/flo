@@ -13,6 +13,7 @@ import {
 import { Separator } from '~/components/ui/separator';
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '~/components/ui/sidebar';
 import { ModeToggle } from '~/components/layout/mode-toggle';
+import { LanguageSelector } from '~/components/layout/language-selector';
 
 export async function clientLoader() {
   const user = await fetchUser();
@@ -44,6 +45,7 @@ export default function AuthLayout() {
               </Breadcrumb>
             </div>
             <div className="flex items-center gap-2 px-4">
+              <LanguageSelector />
               <ModeToggle />
             </div>
           </header>

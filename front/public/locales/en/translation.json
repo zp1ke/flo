@@ -1,0 +1,13 @@
+{
+  "app": {
+    "name": "Flo",
+    "title": "Flo APP",
+    "welcome": "Welcome to Flo App!"
+  },
+  "theme": {
+    "dark": "Dark",
+    "light": "Light",
+    "system": "System",
+    "toggle": "Toggle Theme"
+  }
+}

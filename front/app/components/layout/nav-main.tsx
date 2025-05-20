@@ -12,6 +12,7 @@ import {
   SidebarMenuSubItem,
 } from '~/components/ui/sidebar';
 import { Link } from 'react-router';
+import { useTranslation } from 'react-i18next';
 
 export function NavMain({
   items,
@@ -27,9 +28,11 @@ export function NavMain({
     }[];
   }[];
 }) {
+  const { t } = useTranslation();
+
   return (
     <SidebarGroup>
-      <SidebarGroupLabel>Flo</SidebarGroupLabel>
+      <SidebarGroupLabel>{t('app.name')}</SidebarGroupLabel>
       <SidebarMenu>
         {items.map((item) => (
           <Collapsible key={item.title} asChild defaultOpen={item.isActive} className="group/collapsible">
