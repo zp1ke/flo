@@ -4,9 +4,27 @@
     "title": "Flo APP",
     "welcome": "Welcome to Flo App!"
   },
+  "error": {
+    "details": "An unexpected error occurred.",
+    "message": "Oops!",
+    "notFound": "The requested page could not be found.",
+    "title": "Error"
+  },
   "language": {
     "change": "Change Language",
     "en": "English"
+  },
+  "signIn": {
+    "description": "Sign in to your account",
+    "email": "Email",
+    "forgotPassword": "Forgot Password?",
+    "noAccount": "Don't have an account?",
+    "password": "Password",
+    "processing": "Processing...",
+    "title": "Sign In"
+  },
+  "signUp": {
+    "title": "Sign Up"
   },
   "theme": {
     "dark": "Dark",
