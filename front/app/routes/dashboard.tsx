@@ -9,9 +9,9 @@ export default function Dashboard() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-60">
-      <Outlet />
+      <Outlet/>
       <div>
-        <div>Display Name: {user.profile.name}</div>
+        <div>Display Name: {user.activeProfile.name}</div>
       </div>
       <div className="text-xl font-semibold mt-4">Dashboard</div>
     </div>

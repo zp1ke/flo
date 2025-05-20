@@ -17,7 +17,7 @@ export default function SignInForm() {
     setTimeout(() => {
       setToken('test-token');
       navigate('/');
-    }, 1000);
+    }, 100);
   };
 
   return (

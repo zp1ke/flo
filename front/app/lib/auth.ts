@@ -36,12 +36,14 @@ export const fetchUser = async (): Promise<User | null> => {
 
     console.debug('Fetching user from API...', Date.now());
     setTimeout(() => {
+      const profile = {
+        code: token,
+        name: 'Mock User',
+      } satisfies Profile;
       const user = {
         email: 'mock@mail.com',
-        profile: {
-          code: token,
-          name: 'Mock User',
-        } satisfies Profile,
+        activeProfile: profile,
+        profiles: [profile] satisfies Profile[],
       } satisfies User;
       localStorage.setItem(USER_KEY_TS, Date.now().toString());
       localStorage.setItem(USER_KEY, JSON.stringify(user));

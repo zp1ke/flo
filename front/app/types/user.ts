@@ -5,5 +5,6 @@ export interface Profile {
 
 export interface User {
   email: string;
-  profile: Profile;
+  activeProfile: Profile;
+  profiles: Profile[];
 }
