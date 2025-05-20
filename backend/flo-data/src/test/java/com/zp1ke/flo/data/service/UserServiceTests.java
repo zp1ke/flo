@@ -2,6 +2,7 @@ package com.zp1ke.flo.data.service;
 
 import com.zp1ke.flo.data.domain.User;
 import com.zp1ke.flo.data.repository.UserRepository;
+import com.zp1ke.flo.data.repository.UserTokenRepository;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
@@ -23,8 +24,8 @@ class UserServiceTests {
 
     private UserService createUserService(UserRepository userRepository) {
         return new UserService(validator, userRepository,
-            mock(PasswordEncoder.class), mock(ProfileService.class),
-            mock(SettingService.class));
+            mock(UserTokenRepository.class), mock(PasswordEncoder.class),
+            mock(ProfileService.class), mock(SettingService.class));
     }
 
     @Test

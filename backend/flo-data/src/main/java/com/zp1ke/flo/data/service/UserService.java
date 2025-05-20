@@ -2,10 +2,13 @@ package com.zp1ke.flo.data.service;
 
 import com.zp1ke.flo.data.domain.Profile;
 import com.zp1ke.flo.data.domain.User;
+import com.zp1ke.flo.data.domain.UserToken;
 import com.zp1ke.flo.data.repository.UserRepository;
+import com.zp1ke.flo.data.repository.UserTokenRepository;
 import com.zp1ke.flo.utils.StringUtils;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
+import java.time.OffsetDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
@@ -20,6 +23,8 @@ public class UserService {
 
     private final UserRepository userRepository;
 
+    private final UserTokenRepository userTokenRepository;
+
     private final PasswordEncoder passwordEncoder;
 
     private final ProfileService profileService;
@@ -27,8 +32,17 @@ public class UserService {
     private final SettingService settingService;
 
     @Nullable
-    public User findByUsername(@NonNull String username) {
-        return userRepository.findByUsername(username).orElse(null);
+    public User findByUsernameAndValidToken(@NonNull String username,
+                                            @NonNull String token,
+                                            @NonNull String remoteAddress) {
+        var user = userRepository.findByUsername(username);
+        if (user.isPresent()) {
+            var userToken = userTokenRepository.findByTokenAndUserAndRemoteAddress(token, user.get(), remoteAddress);
+            if (userToken.isPresent() && userToken.get().isValid()) {
+                return user.get();
+            }
+        }
+        return null;
     }
 
     @NonNull
@@ -89,5 +103,19 @@ public class UserService {
             return user;
         }
         return null;
+    }
+
+    public void saveUserToken(@NonNull User user,
+                              @NonNull String token,
+                              @NonNull String remoteAddress,
+                              @NonNull OffsetDateTime expiresAt) {
+        var userToken = userTokenRepository
+            .findByTokenAndUser(token, user).orElse(new UserToken()).toBuilder()
+            .user(user)
+            .token(token)
+            .remoteAddress(remoteAddress)
+            .expiresAt(expiresAt)
+            .build();
+        userTokenRepository.save(userToken);
     }
 }

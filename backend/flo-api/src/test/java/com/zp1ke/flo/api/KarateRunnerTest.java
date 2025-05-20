@@ -1,8 +1,8 @@
 package com.zp1ke.flo.api;
 
 import com.intuit.karate.junit5.Karate;
+import com.zp1ke.flo.api.controller.v1.AuthController;
 import com.zp1ke.flo.api.dto.UserDto;
-import com.zp1ke.flo.api.security.JwtTokenProvider;
 import com.zp1ke.flo.data.domain.Category;
 import com.zp1ke.flo.data.domain.Wallet;
 import com.zp1ke.flo.data.service.CategoryService;
@@ -37,7 +37,7 @@ public class KarateRunnerTest {
     WalletService walletService;
 
     @Autowired
-    JwtTokenProvider jwtTokenProvider;
+    AuthController authController;
 
     @Karate.Test
     Karate testFeatures() {
@@ -52,7 +52,7 @@ public class KarateRunnerTest {
         var profiles = profileService.profilesOfUser(user);
         var profile = profiles.getFirst();
         var profileCode = profile.getCode();
-        var token = jwtTokenProvider.generateToken(user.getUsername());
+        var token = authController.generateToken(user, "127.0.0.1");
 
         var mainCategory = categoryService.save(Category.builder()
             .profile(profile)

@@ -1,5 +1,6 @@
 package com.zp1ke.flo.api.security;
 
+import com.zp1ke.flo.api.model.JwtToken;
 import com.zp1ke.flo.utils.StringUtils;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -50,20 +51,25 @@ public class JwtTokenProvider {
      * </p>
      *
      * @param username the unique code of the user for whom to generate the token, must not be null
-     * @return a signed JWT token string that can be used for authentication
+     * @return object with a signed JWT token string that can be used for authentication and expiration date
      * @throws NullPointerException if the provided username is null
      */
     @NonNull
-    public String generateToken(@NonNull String username) {
+    public JwtToken generateToken(@NonNull String username) {
         var timeMillis = System.currentTimeMillis();
         var expirationTimeMillis = expirationTimeInHours * 60 * 60 * 1000L;
-        return Jwts.builder()
+        var expirationDate = new Date(timeMillis + expirationTimeMillis);
+        var token = Jwts.builder()
             .subject(username)
             .issuer(ISSUER)
             .issuedAt(new Date(timeMillis))
-            .expiration(new Date(timeMillis + expirationTimeMillis))
+            .expiration(expirationDate)
             .signWith(jwtKey())
             .compact();
+        return JwtToken.builder()
+            .token(token)
+            .expirationDate(expirationDate)
+            .build();
     }
 
     /**

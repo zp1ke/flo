@@ -1,0 +1,90 @@
+databaseChangeLog:
+  - changeSet:
+      id: flo-0007
+      author: zp1ke
+      changes:
+        - createTable:
+            tableName: users_tokens
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp with time zone
+                  constraints:
+                    nullable: false
+              - column:
+                  name: token
+                  type: varchar(500)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: remote_address
+                  type: varchar(255)
+              - column:
+                  name: expires_at
+                  type: timestamp with time zone
+                  constraints:
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+        - createIndex:
+            columns:
+              - column:
+                  name: token
+              - column:
+                  name: user_id
+            indexName: users_tokens_unq_token_user
+            tableName: users_tokens
+            unique: true
+        - createIndex:
+            columns:
+              - column:
+                  name: user_id
+            indexName: users_tokens_idx_user_id
+            tableName: users_tokens
+        - createIndex:
+            columns:
+              - column:
+                  name: remote_address
+            indexName: users_tokens_idx_remote_address
+            tableName: users_tokens
+        - createIndex:
+            columns:
+              - column:
+                  name: expires_at
+            indexName: users_tokens_idx_expires_at
+            tableName: users_tokens
+        - createIndex:
+            columns:
+              - column:
+                  descending: true
+                  name: created_at
+            indexName: users_tokens_idx_created_at
+            tableName: users_tokens
+        - createIndex:
+            columns:
+              - column:
+                  descending: true
+                  name: updated_at
+            indexName: users_tokens_idx_updated_at
+            tableName: users_tokens
+        - addForeignKeyConstraint:
+            baseColumnNames: user_id
+            baseTableName: users_tokens
+            constraintName: users_tokens_fx_user_id
+            referencedColumnNames: id
+            referencedTableName: users

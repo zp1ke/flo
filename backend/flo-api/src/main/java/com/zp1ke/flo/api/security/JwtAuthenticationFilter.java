@@ -1,5 +1,6 @@
 package com.zp1ke.flo.api.security;
 
+import com.zp1ke.flo.api.utils.RequestUtils;
 import com.zp1ke.flo.data.domain.Profile;
 import com.zp1ke.flo.data.domain.User;
 import com.zp1ke.flo.data.service.ProfileService;
@@ -54,14 +55,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (token != null && jwtTokenProvider.validateToken(token)) {
             var username = jwtTokenProvider.parseUsername(token);
             if (username != null) {
-                generateAuthentication(username, token, request.getRequestURI());
+                generateAuthentication(username, token, request);
             }
         }
         filterChain.doFilter(request, response);
     }
 
-    private void generateAuthentication(@NonNull String username, @NonNull String token, @NonNull String path) {
-        var user = userService.findByUsername(username);
+    private void generateAuthentication(@NonNull String username,
+                                        @NonNull String token,
+                                        @NonNull HttpServletRequest request) {
+        var remoteAddress = RequestUtils.remoteAddress(request);
+        var user = userService.findByUsernameAndValidToken(username, token, remoteAddress);
+        var path = request.getRequestURI();
         if (user != null && pathRequiresProfile(path) && profileOf(user, path) == null) {
             user = null;
         }
