@@ -1,10 +1,5 @@
 import * as React from 'react';
-import {
-  BookOpen,
-  Bot,
-  Settings2,
-  SquareTerminal,
-} from 'lucide-react';
+import { BookOpen, Bot, Settings2, SquareTerminal } from 'lucide-react';
 
 import { NavMain } from '~/components/layout/nav-main';
 import { NavUser } from '~/components/layout/nav-user';
@@ -107,21 +102,21 @@ const data = {
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { user } = useAuth();
   if (!user) {
-    return <Loading/>;
+    return <Loading />;
   }
 
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <ProfileSwitcher profiles={user.profiles}/>
+        <ProfileSwitcher profiles={user.profiles} />
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain}/>
+        <NavMain items={data.navMain} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={user}/>
+        <NavUser user={user} />
       </SidebarFooter>
-      <SidebarRail/>
+      <SidebarRail />
     </Sidebar>
   );
 }

@@ -14,11 +14,7 @@ import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from '~/c
 import { setToken } from '~/lib/auth';
 import type { User } from '~/types/user';
 
-export function NavUser({
-                          user,
-                        }: {
-  user: User;
-}) {
+export function NavUser({ user }: { user: User }) {
   const { isMobile } = useSidebar();
   const navigate = useNavigate();
   const userAvatar = '/user.svg';
@@ -33,14 +29,14 @@ export function NavUser({
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground">
               <Avatar className="h-8 w-8 rounded-lg">
-                <AvatarImage src={userAvatar} alt=";)"/>
+                <AvatarImage src={userAvatar} alt=";)" />
                 <AvatarFallback className="rounded-lg">;)</AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-semibold">{profile.name}</span>
                 <span className="truncate text-xs">{user.email}</span>
               </div>
-              <ChevronsUpDown className="ml-auto size-4"/>
+              <ChevronsUpDown className="ml-auto size-4" />
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent
@@ -51,7 +47,7 @@ export function NavUser({
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage src={userAvatar} alt=";)"/>
+                  <AvatarImage src={userAvatar} alt=";)" />
                   <AvatarFallback className="rounded-lg">CN</AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
@@ -60,13 +56,13 @@ export function NavUser({
                 </div>
               </div>
             </DropdownMenuLabel>
-            <DropdownMenuSeparator/>
+            <DropdownMenuSeparator />
             <DropdownMenuItem
               onClick={() => {
                 setToken(null);
                 navigate('/');
               }}>
-              <LogOut/>
+              <LogOut />
               Sign out
             </DropdownMenuItem>
           </DropdownMenuContent>
