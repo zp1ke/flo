@@ -10,7 +10,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "~/components/ui/dialog"
+} from '~/components/ui/dialog';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -79,15 +79,17 @@ export function NavUser({ user }: { user: User }) {
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Are you sure?</DialogTitle>
-              <DialogDescription>
-                This action will sign you out.
-              </DialogDescription>
+              <DialogDescription>This action will sign you out.</DialogDescription>
             </DialogHeader>
             <DialogFooter>
-              <Button variant="destructive" onClick={() => {
-                setToken(null);
-                navigate('/');
-              }}>Confirm</Button>
+              <Button
+                variant="destructive"
+                onClick={() => {
+                  setToken(null);
+                  navigate('/');
+                }}>
+                Confirm
+              </Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>

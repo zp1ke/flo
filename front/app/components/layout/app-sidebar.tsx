@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { BookOpen, Bot, Settings2, SquareTerminal } from 'lucide-react';
+import { BookOpen, Bot, LayoutDashboardIcon, Settings2, SquareTerminal } from 'lucide-react';
 
 import { NavMain } from '~/components/layout/nav-main';
 import { NavUser } from '~/components/layout/nav-user';
@@ -12,10 +12,15 @@ import Loading from '~/components/ui/loading';
 const data = {
   navMain: [
     {
+      title: 'Dashboard',
+      url: '#',
+      icon: LayoutDashboardIcon,
+      isActive: true,
+    },
+    {
       title: 'Playground',
       url: '#',
       icon: SquareTerminal,
-      isActive: true,
       items: [
         {
           title: 'History',
