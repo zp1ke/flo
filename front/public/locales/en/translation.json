@@ -26,11 +26,19 @@
   "signIn": {
     "description": "Sign in to your account",
     "email": "Email",
+    "emailDescription": "Enter your email address",
+    "emailMax255": "Email must be at most 255 characters long.",
+    "emailPlaceholder": "example@mail.com",
     "forgotPassword": "Forgot Password?",
     "noAccount": "Don't have an account?",
     "password": "Password",
+    "passwordDescription": "Enter your password",
+    "passwordPlaceholder": "Your super secret password",
+    "passwordSize": "Password must be at least 8 characters long and max 100 characters long.",
     "processing": "Processing...",
-    "title": "Sign In"
+    "title": "Sign In",
+    "validEmail": "Please enter a valid email address.",
+    "validPassword": "Password must contain at least one letter and one number."
   },
   "signOut": {
     "cancel": "Cancel",
