@@ -1,0 +1,50 @@
+services:
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: flo
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "sh -c 'pg_isready -U postgres -d flo'" ]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 5s
+
+  flo-api:
+    image: zp1ke/flo-api:latest
+    environment:
+      DATASOURCE_URL: jdbc:postgresql://postgres:5432/flo
+      DATASOURCE_USER: postgres
+      DATASOURCE_PASSWORD: postgres
+      JWT_SECRET: 2768a6e5c25fd6cb8d1b25f8c9e4bfe76d8726c7229774a06720c598d6ca3fcb6e57e0e25314819f4dfc4ee6c8848c3eca271b6ef7981865db6bad3cbf35be82f42b970d9fe96a249836708f86f26d4fcd669bfa06b66fdadc07db41cbf7541f9b676c1498db99d9cd7d13c235f4667b148e0fb68172c9c29aa6277599e299f62d355a94b90035c1ec1142cb147d36cbea6f4c5f1c0717e7fb41183b1a4237d4185929fce6bc15c4087a11a0778c3fff09fe1d90243223e1e31d1c75d862ab6ed36fe1660bb2722f002ae41853e0be4fa0ec9a1800eea04a98fd28b224a86b54a5fc01daec2d9d00fb0303818afb02dd2c781f9d57b44f27ff9d7cbc461076fe
+      JWT_EXPIRATION_MINUTES: 10080
+      SPRING_PROFILES_ACTIVE: docker
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:8080/actuator/health || exit 1" ]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 5s
+
+  flo-web:
+    image: zp1ke/flo-web:latest
+    environment:
+      VITE_REFRESH_USER_EVERY_MS: 3600000
+      VITE_API_BASE_URL: http://flo-api:8080/api/v1
+      NODE_ENV: production
+    ports:
+      - "80:80"
+    depends_on:
+      flo-api:
+        condition: service_healthy

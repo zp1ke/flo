@@ -7,7 +7,6 @@
     "check-updates": "npx npm-check-updates",
     "dev": "react-router dev",
     "format": "prettier --write ./app",
-    "start": "react-router-serve ./build/server/index.js",
     "typecheck": "react-router typegen && tsc"
   },
   "dependencies": {
