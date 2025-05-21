@@ -1,5 +1,12 @@
 import React, { Suspense } from 'react';
-import { isRouteErrorResponse, Links, Meta, Outlet, Scripts, ScrollRestoration } from 'react-router';
+import {
+  isRouteErrorResponse,
+  Links,
+  Meta,
+  Outlet,
+  Scripts,
+  ScrollRestoration,
+} from 'react-router';
 
 import type { Route } from './+types/root';
 import Loading from './components/ui/loading';
@@ -49,8 +56,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
 export default function App() {
   return (
-    <Suspense fallback="...">
-      <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+    <Suspense fallback={<HydrateFallback />}>
+      <ThemeProvider defaultTheme="dark" storage={localStorage}>
         <Outlet />
       </ThemeProvider>
     </Suspense>
@@ -58,7 +65,11 @@ export default function App() {
 }
 
 export function HydrateFallback() {
-  return <Loading wrapperClassName="min-h-screen" />;
+  return (
+    <ThemeProvider defaultTheme="dark">
+      <Loading wrapperClassName="min-h-screen" />
+    </ThemeProvider>
+  );
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
@@ -77,8 +88,8 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
   }
 
   return (
-    <Suspense fallback="...">
-      <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+    <Suspense fallback={<HydrateFallback />}>
+      <ThemeProvider defaultTheme="dark" storage={localStorage}>
         <main className="pt-16 p-4 container mx-auto h-screen">
           <h1 className="text-3xl font-bold mb-4">{message}</h1>
           <p>{details}</p>

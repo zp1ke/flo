@@ -10,7 +10,7 @@ import {
 } from '~/components/ui/dropdown-menu';
 import { useTheme } from '~/contexts/theme-provider';
 
-export function ModeToggle() {
+export function ThemeModeSelector() {
   const { t } = useTranslation();
   const { theme, setTheme } = useTheme();
 

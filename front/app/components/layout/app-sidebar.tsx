@@ -4,7 +4,13 @@ import { CircleDollarSignIcon, LayoutDashboardIcon, Settings2Icon } from 'lucide
 import { NavMain } from '~/components/layout/nav-main';
 import { NavUser } from '~/components/layout/nav-user';
 import { ProfileSwitcher } from '~/components/layout/profile-switcher';
-import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarRail } from '~/components/ui/sidebar';
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarHeader,
+  SidebarRail,
+} from '~/components/ui/sidebar';
 import useAuth from '~/contexts/auth/use-auth';
 import Loading from '~/components/ui/loading';
 
@@ -14,7 +20,6 @@ const data = {
       title: 'dashboard',
       url: '/dashboard',
       icon: LayoutDashboardIcon,
-      isActive: true,
     },
     {
       title: 'transactions',
@@ -35,7 +40,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     return <Loading />;
   }
 
-  const activeProfileIndex = user.profiles.findIndex((profile) => profile.code === user.activeProfile.code);
+  const activeProfileIndex = user.profiles.findIndex(
+    (profile) => profile.code === user.activeProfile.code
+  );
 
   return (
     <Sidebar collapsible="icon" {...props}>

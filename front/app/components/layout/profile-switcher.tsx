@@ -10,12 +10,23 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from '~/components/ui/dropdown-menu';
-import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from '~/components/ui/sidebar';
+import {
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  useSidebar,
+} from '~/components/ui/sidebar';
 import type { Profile } from '~/types/user';
 import { useTranslation } from 'react-i18next';
 import useAuth from '~/contexts/auth/use-auth';
 
-export function ProfileSwitcher({ activeIndex, profiles }: { activeIndex: number; profiles: Profile[] }) {
+export function ProfileSwitcher({
+  activeIndex,
+  profiles,
+}: {
+  activeIndex: number;
+  profiles: Profile[];
+}) {
   const { t } = useTranslation();
   const { isMobile } = useSidebar();
   const [activeProfile, setActiveProfile] = React.useState(profiles[activeIndex]);
@@ -43,7 +54,9 @@ export function ProfileSwitcher({ activeIndex, profiles }: { activeIndex: number
             align="start"
             side={isMobile ? 'bottom' : 'right'}
             sideOffset={4}>
-            <DropdownMenuLabel className="text-xs text-muted-foreground">{t('profiles.title')}</DropdownMenuLabel>
+            <DropdownMenuLabel className="text-xs text-muted-foreground">
+              {t('profiles.title')}
+            </DropdownMenuLabel>
             {profiles.map((profile, index) => (
               <DropdownMenuItem
                 key={profile.code}

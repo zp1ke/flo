@@ -2,20 +2,13 @@ import { Outlet, redirect } from 'react-router';
 import AuthProvider from '~/contexts/auth/auth-provider';
 import { fetchUser } from '~/lib/auth';
 import { AppSidebar } from '~/components/layout/app-sidebar';
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from '~/components/ui/breadcrumb';
 import { Separator } from '~/components/ui/separator';
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '~/components/ui/sidebar';
-import { ModeToggle } from '~/components/layout/mode-toggle';
+import { ThemeModeSelector } from '~/components/layout/theme-mode-selector';
 import { LanguageSelector } from '~/components/layout/language-selector';
 
 export async function clientLoader() {
+  await new Promise((resolve) => setTimeout(resolve, 1000));
   const user = await fetchUser();
   if (!user) {
     throw redirect('/');
@@ -32,21 +25,10 @@ export default function AuthLayout() {
             <div className="flex items-center gap-2 px-4">
               <SidebarTrigger className="-ml-1" />
               <Separator orientation="vertical" className="mr-2 h-4" />
-              <Breadcrumb>
-                <BreadcrumbList>
-                  <BreadcrumbItem className="hidden md:block">
-                    <BreadcrumbLink href="#">Building Your Application</BreadcrumbLink>
-                  </BreadcrumbItem>
-                  <BreadcrumbSeparator className="hidden md:block" />
-                  <BreadcrumbItem>
-                    <BreadcrumbPage>Data Fetching</BreadcrumbPage>
-                  </BreadcrumbItem>
-                </BreadcrumbList>
-              </Breadcrumb>
             </div>
             <div className="flex items-center gap-2 px-4">
               <LanguageSelector />
-              <ModeToggle />
+              <ThemeModeSelector />
             </div>
           </header>
           <Outlet />

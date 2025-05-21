@@ -5,7 +5,7 @@ type Theme = 'dark' | 'light' | 'system';
 type ThemeProviderProps = {
   children: ReactNode;
   defaultTheme?: Theme;
-  storageKey?: string;
+  storage?: Storage;
 };
 
 type ThemeProviderState = {
@@ -20,13 +20,17 @@ const initialState: ThemeProviderState = {
 
 const ThemeProviderContext = createContext<ThemeProviderState>(initialState);
 
+const storageKey = 'app-ui-theme';
+
 export function ThemeProvider({
   children,
   defaultTheme = 'system',
-  storageKey = 'app-ui-theme',
+  storage,
   ...props
 }: ThemeProviderProps) {
-  const [theme, setTheme] = useState<Theme>(() => (localStorage.getItem(storageKey) as Theme) || defaultTheme);
+  const [theme, setTheme] = useState<Theme>(
+    () => (storage?.getItem(storageKey) as Theme) || defaultTheme
+  );
 
   useEffect(() => {
     const root = window.document.documentElement;
@@ -34,7 +38,9 @@ export function ThemeProvider({
     root.classList.remove('light', 'dark');
 
     if (theme === 'system') {
-      const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches
+        ? 'dark'
+        : 'light';
 
       root.classList.add(systemTheme);
       return;
@@ -46,7 +52,7 @@ export function ThemeProvider({
   const value = {
     theme,
     setTheme: (theme: Theme) => {
-      localStorage.setItem(storageKey, theme);
+      storage?.setItem(storageKey, theme);
       setTheme(theme);
     },
   };

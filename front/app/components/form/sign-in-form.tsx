@@ -34,16 +34,30 @@ export default function SignInForm() {
             <div className="flex flex-col gap-6">
               <div className="grid gap-2">
                 <Label htmlFor="email">{t('signIn.email')}</Label>
-                <Input id="email" type="email" placeholder="mail@example.com" required disabled={processing} />
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="mail@example.com"
+                  required
+                  disabled={processing}
+                />
               </div>
               <div className="grid gap-2">
                 <div className="flex items-center">
                   <Label htmlFor="password">{t('signIn.password')}</Label>
-                  <a href="#" className="ml-auto inline-block text-sm underline-offset-4 hover:underline">
+                  <a
+                    href="#"
+                    className="ml-auto inline-block text-sm underline-offset-4 hover:underline">
                     {t('signIn.forgotPassword')}
                   </a>
                 </div>
-                <Input id="password" type="password" required disabled={processing} autoComplete="signin-password" />
+                <Input
+                  id="password"
+                  type="password"
+                  required
+                  disabled={processing}
+                  autoComplete="signin-password"
+                />
               </div>
               <Button type="submit" className="w-full" disabled={processing}>
                 {processing && <Loader2 className="animate-spin" />}

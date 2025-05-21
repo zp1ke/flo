@@ -4,7 +4,7 @@ import { GalleryVerticalEnd } from 'lucide-react';
 import { fetchUser } from '~/lib/auth';
 import SignInForm from '~/components/form/sign-in-form';
 import { useTranslation } from 'react-i18next';
-import { ModeToggle } from '~/components/layout/mode-toggle';
+import { ThemeModeSelector } from '~/components/layout/theme-mode-selector';
 import { LanguageSelector } from '~/components/layout/language-selector';
 
 export async function clientLoader() {
@@ -38,7 +38,7 @@ export default function Home() {
           </div>
           <div className="flex items-center gap-2 px-4">
             <LanguageSelector />
-            <ModeToggle />
+            <ThemeModeSelector />
           </div>
         </div>
         <div className="flex flex-1 items-center justify-center">

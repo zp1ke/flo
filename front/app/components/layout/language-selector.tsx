@@ -37,7 +37,10 @@ export function LanguageSelector() {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         {languages.map((lang) => (
-          <DropdownMenuItem onClick={() => handleLanguage(lang)} disabled={language === lang} key={lang}>
+          <DropdownMenuItem
+            onClick={() => handleLanguage(lang)}
+            disabled={language === lang}
+            key={lang}>
             {t('language.' + lang)}
           </DropdownMenuItem>
         ))}
