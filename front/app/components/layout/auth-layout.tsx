@@ -8,7 +8,6 @@ import { ThemeModeSelector } from '~/components/layout/theme-mode-selector';
 import { LanguageSelector } from '~/components/layout/language-selector';
 
 export async function clientLoader() {
-  await new Promise((resolve) => setTimeout(resolve, 1000));
   const user = await fetchUser();
   if (!user) {
     throw redirect('/');

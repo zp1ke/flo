@@ -18,7 +18,10 @@ import { useTranslation } from 'react-i18next';
 export function meta({}: Route.MetaArgs) {
   const { t } = useTranslation();
 
-  return [{ title: t('app.title') }, { name: 'description', content: t('app.welcome') }];
+  return [
+    { title: t('app.title', { defaultValue: 'Flo APP' }) },
+    { name: 'description', content: t('app.welcome', { defaultValue: 'Welcome to Flo APP' }) },
+  ];
 }
 
 export const links: Route.LinksFunction = () => [
@@ -57,7 +60,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 export default function App() {
   return (
     <Suspense fallback={<HydrateFallback />}>
-      <ThemeProvider defaultTheme="dark" storage={localStorage}>
+      <ThemeProvider>
         <Outlet />
       </ThemeProvider>
     </Suspense>
@@ -66,7 +69,7 @@ export default function App() {
 
 export function HydrateFallback() {
   return (
-    <ThemeProvider defaultTheme="dark">
+    <ThemeProvider>
       <Loading wrapperClassName="min-h-screen" />
     </ThemeProvider>
   );
@@ -75,13 +78,16 @@ export function HydrateFallback() {
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
   const { t } = useTranslation();
 
-  let message = t('error.message');
-  let details = t('error.details');
+  let message = t('error.message', { defaultValue: 'Oops!' });
+  let details = t('error.details', { defaultValue: 'An unexpected error occurred.' });
   let stack: string | undefined;
 
   if (isRouteErrorResponse(error)) {
-    message = error.status === 404 ? '404' : t('error.title');
-    details = error.status === 404 ? t('error.notFound') : error.statusText || details;
+    message = error.status === 404 ? '404' : t('error.title', { defaultValue: 'Error' });
+    details =
+      error.status === 404
+        ? t('error.notFound', { defaultValue: 'Page not found.' })
+        : error.statusText || details;
   } else if (import.meta.env.DEV && error && error instanceof Error) {
     details = error.message;
     stack = error.stack;
@@ -89,7 +95,7 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
 
   return (
     <Suspense fallback={<HydrateFallback />}>
-      <ThemeProvider defaultTheme="dark" storage={localStorage}>
+      <ThemeProvider>
         <main className="pt-16 p-4 container mx-auto h-screen">
           <h1 className="text-3xl font-bold mb-4">{message}</h1>
           <p>{details}</p>
