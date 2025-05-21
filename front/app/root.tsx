@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import React from 'react';
 import {
   isRouteErrorResponse,
   Links,
@@ -13,15 +13,9 @@ import Loading from './components/ui/loading';
 import './app.css';
 import './lib/i18n';
 import { ThemeProvider } from '~/contexts/theme-provider';
-import { useTranslation } from 'react-i18next';
 
-export function meta({}: Route.MetaArgs) {
-  const { t } = useTranslation();
-
-  return [
-    { title: t('app.title', { defaultValue: 'Flo APP' }) },
-    { name: 'description', content: t('app.welcome', { defaultValue: 'Welcome to Flo APP' }) },
-  ];
+export function meta({ }: Route.MetaArgs) {
+  return [{ title: 'Flo APP' }, { name: 'description', content: 'Welcome to Flo APP' }];
 }
 
 export const links: Route.LinksFunction = () => [
@@ -38,10 +32,8 @@ export const links: Route.LinksFunction = () => [
 ];
 
 export function Layout({ children }: { children: React.ReactNode }) {
-  const { i18n } = useTranslation();
-
   return (
-    <html lang={i18n.language}>
+    <html lang="en">
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -59,34 +51,33 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
 export default function App() {
   return (
-    <Suspense fallback={<HydrateFallback />}>
-      <ThemeProvider>
-        <Outlet />
-      </ThemeProvider>
-    </Suspense>
+    <ThemeProvider>
+      <Outlet />
+    </ThemeProvider>
   );
 }
 
 export function HydrateFallback() {
   return (
-    <ThemeProvider>
-      <Loading wrapperClassName="min-h-screen" />
-    </ThemeProvider>
+    <>
+      <ThemeProvider>
+        <Loading wrapperClassName="min-h-screen" />
+      </ThemeProvider>
+      <Scripts />
+    </>
   );
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
-  const { t } = useTranslation();
-
-  let message = t('error.message', { defaultValue: 'Oops!' });
-  let details = t('error.details', { defaultValue: 'An unexpected error occurred.' });
+  let message = 'Oops!';
+  let details = 'An unexpected error occurred.';
   let stack: string | undefined;
 
   if (isRouteErrorResponse(error)) {
-    message = error.status === 404 ? '404' : t('error.title', { defaultValue: 'Error' });
+    message = error.status === 404 ? '404' : 'Error';
     details =
       error.status === 404
-        ? t('error.notFound', { defaultValue: 'Page not found.' })
+        ? 'Page not found.'
         : error.statusText || details;
   } else if (import.meta.env.DEV && error && error instanceof Error) {
     details = error.message;
@@ -94,18 +85,16 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
   }
 
   return (
-    <Suspense fallback={<HydrateFallback />}>
-      <ThemeProvider>
-        <main className="pt-16 p-4 container mx-auto h-screen">
-          <h1 className="text-3xl font-bold mb-4">{message}</h1>
-          <p>{details}</p>
-          {stack && (
-            <pre className="w-full p-4 overflow-x-auto">
-              <code>{stack}</code>
-            </pre>
-          )}
-        </main>
-      </ThemeProvider>
-    </Suspense>
+    <ThemeProvider>
+      <main className="pt-16 p-4 container mx-auto h-screen">
+        <h1 className="text-3xl font-bold mb-4">{message}</h1>
+        <p>{details}</p>
+        {stack && (
+          <pre className="w-full p-4 overflow-x-auto">
+            <code>{stack}</code>
+          </pre>
+        )}
+      </main>
+    </ThemeProvider>
   );
 }
