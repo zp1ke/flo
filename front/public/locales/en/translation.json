@@ -33,9 +33,11 @@
     "title": "Sign In"
   },
   "signOut": {
+    "cancel": "Cancel",
     "confirm": "Confirm",
     "confirmMessage": "This action will sign you out.",
     "confirmTitle": "Are you sure?",
+    "processing": "Processing...",
     "title": "Sign Out"
   },
   "signUp": {

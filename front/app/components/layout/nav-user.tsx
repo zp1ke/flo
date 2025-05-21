@@ -1,9 +1,10 @@
-import { ChevronsUpDown, LogOut } from 'lucide-react';
+import { ChevronsUpDown, Loader2, LogOut } from 'lucide-react';
 import { useNavigate } from 'react-router';
 
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar';
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -25,10 +26,11 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from '~/components/ui/sidebar';
-import { setToken } from '~/lib/auth';
 import type { User } from '~/types/user';
 import { Button } from '../ui/button';
 import { useTranslation } from 'react-i18next';
+import { useState } from 'react';
+import { signOut } from '~/lib/auth';
 
 export function NavUser({ user }: { user: User }) {
   const { t } = useTranslation();
@@ -36,6 +38,8 @@ export function NavUser({ user }: { user: User }) {
   const navigate = useNavigate();
   const userAvatar = '/user.svg';
   const profile = user.activeProfile;
+
+  const [signingOut, setSigningOut] = useState(false);
 
   return (
     <SidebarMenu>
@@ -83,19 +87,36 @@ export function NavUser({ user }: { user: User }) {
               </DialogTrigger>
             </DropdownMenuContent>
           </DropdownMenu>
-          <DialogContent>
+          <DialogContent
+            className="[&>button]:hidden"
+            onInteractOutside={(e) => {
+              if (signingOut) {
+                e.preventDefault();
+              }
+            }}>
             <DialogHeader>
               <DialogTitle>{t('signOut.confirmTitle')}</DialogTitle>
               <DialogDescription>{t('signOut.confirmMessage')}</DialogDescription>
             </DialogHeader>
             <DialogFooter>
+              <DialogClose asChild>
+                <Button type="button" variant="secondary" disabled={signingOut}>
+                  {t('signOut.cancel')}
+                </Button>
+              </DialogClose>
               <Button
+                className="ml-auto flex"
                 variant="destructive"
+                disabled={signingOut}
                 onClick={() => {
-                  setToken(null);
-                  navigate('/');
+                  setSigningOut(true);
+                  signOut().then(() => {
+                    navigate('/');
+                  });
                 }}>
-                {t('signOut.confirm')}
+                {signingOut && <Loader2 className="animate-spin" />}
+                {signingOut && t('signOut.processing')}
+                {!signingOut && t('signOut.confirm')}
               </Button>
             </DialogFooter>
           </DialogContent>

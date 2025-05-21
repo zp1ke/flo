@@ -5,8 +5,8 @@ import { Input } from '~/components/ui/input';
 import { Label } from '~/components/ui/label';
 import { Link, useNavigate } from 'react-router';
 import { Loader2 } from 'lucide-react';
-import { setToken } from '~/lib/auth';
 import { useTranslation } from 'react-i18next';
+import { signIn } from '~/lib/auth';
 
 export default function SignInForm() {
   const { t } = useTranslation();
@@ -16,10 +16,12 @@ export default function SignInForm() {
   const onSignIn = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setProcessing(true);
-    setTimeout(() => {
-      setToken('test-token');
-      navigate('/');
-    }, 100);
+    const formData = new FormData(event.currentTarget);
+    const email = formData.get('email')?.toString() ?? '';
+    const password = formData.get('password')?.toString() ?? '';
+
+    await signIn({ email, password });
+    navigate('/');
   };
 
   return (

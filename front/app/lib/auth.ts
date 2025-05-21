@@ -5,16 +5,14 @@ const TOKEN_KEY = 'auth_token';
 const USER_KEY = 'auth_user';
 const USER_KEY_TS = 'auth_user_ts';
 
-const getToken = (): string | null => {
-  return localStorage.getItem(TOKEN_KEY);
-};
-
-export const setToken = (token: string | null): void => {
-  if (token) {
-    localStorage.setItem(TOKEN_KEY, token);
-  } else {
-    localStorage.removeItem(TOKEN_KEY);
-  }
+export const signIn = async (data: { email: string; password: string }): Promise<void> => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      const token = 'test-token';
+      setToken(token);
+      resolve();
+    }, 1000);
+  });
 };
 
 export const fetchUser = async (): Promise<User | null> => {
@@ -51,4 +49,25 @@ export const fetchUser = async (): Promise<User | null> => {
       resolve(user);
     }, 1000);
   });
+};
+
+export const signOut = async (): Promise<void> => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      setToken(null);
+      resolve();
+    }, 1000);
+  });
+};
+
+const getToken = (): string | null => {
+  return localStorage.getItem(TOKEN_KEY);
+};
+
+const setToken = (token: string | null): void => {
+  if (token) {
+    localStorage.setItem(TOKEN_KEY, token);
+  } else {
+    localStorage.removeItem(TOKEN_KEY);
+  }
 };
