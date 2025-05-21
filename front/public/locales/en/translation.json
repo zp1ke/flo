@@ -14,6 +14,15 @@
     "change": "Change Language",
     "en": "English"
   },
+  "nav": {
+    "dashboard": "Dashboard",
+    "settings": "Settings",
+    "transactions": "Transactions"
+  },
+  "profiles": {
+    "add": "Add Profile",
+    "title": "Profiles"
+  },
   "signIn": {
     "description": "Sign in to your account",
     "email": "Email",
@@ -22,6 +31,12 @@
     "password": "Password",
     "processing": "Processing...",
     "title": "Sign In"
+  },
+  "signOut": {
+    "confirm": "Confirm",
+    "confirmMessage": "This action will sign you out.",
+    "confirmTitle": "Are you sure?",
+    "title": "Sign Out"
   },
   "signUp": {
     "title": "Sign Up"

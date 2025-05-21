@@ -12,14 +12,13 @@ import {
 } from '~/components/ui/dropdown-menu';
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from '~/components/ui/sidebar';
 import type { Profile } from '~/types/user';
+import { useTranslation } from 'react-i18next';
+import useAuth from '~/contexts/auth/use-auth';
 
-export function ProfileSwitcher({ profiles }: { profiles: Profile[] }) {
+export function ProfileSwitcher({ activeIndex, profiles }: { activeIndex: number; profiles: Profile[] }) {
+  const { t } = useTranslation();
   const { isMobile } = useSidebar();
-  const [activeProfile, setActiveProfile] = React.useState(profiles[0]);
-
-  if (!activeProfile) {
-    return null;
-  }
+  const [activeProfile, setActiveProfile] = React.useState(profiles[activeIndex]);
 
   return (
     <SidebarMenu>
@@ -44,9 +43,13 @@ export function ProfileSwitcher({ profiles }: { profiles: Profile[] }) {
             align="start"
             side={isMobile ? 'bottom' : 'right'}
             sideOffset={4}>
-            <DropdownMenuLabel className="text-xs text-muted-foreground">Profiles</DropdownMenuLabel>
+            <DropdownMenuLabel className="text-xs text-muted-foreground">{t('profiles.title')}</DropdownMenuLabel>
             {profiles.map((profile, index) => (
-              <DropdownMenuItem key={profile.code} onClick={() => setActiveProfile(profile)} className="gap-2 p-2">
+              <DropdownMenuItem
+                key={profile.code}
+                onClick={() => setActiveProfile(profile)}
+                className="gap-2 p-2"
+                disabled={profile.code === activeProfile.code}>
                 <div className="flex size-6 items-center justify-center rounded-sm border">
                   <GalleryVerticalIcon className="size-4 shrink-0" />
                 </div>
@@ -59,7 +62,7 @@ export function ProfileSwitcher({ profiles }: { profiles: Profile[] }) {
               <div className="flex size-6 items-center justify-center rounded-md border bg-background">
                 <Plus className="size-4" />
               </div>
-              <div className="font-medium text-muted-foreground">Add profile</div>
+              <div className="font-medium text-muted-foreground">{t('profiles.add')}</div>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

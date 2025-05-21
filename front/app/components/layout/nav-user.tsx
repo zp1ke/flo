@@ -23,8 +23,10 @@ import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from '~/c
 import { setToken } from '~/lib/auth';
 import type { User } from '~/types/user';
 import { Button } from '../ui/button';
+import { useTranslation } from 'react-i18next';
 
 export function NavUser({ user }: { user: User }) {
+  const { t } = useTranslation();
   const { isMobile } = useSidebar();
   const navigate = useNavigate();
   const userAvatar = '/user.svg';
@@ -59,7 +61,7 @@ export function NavUser({ user }: { user: User }) {
                 <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                   <Avatar className="h-8 w-8 rounded-lg">
                     <AvatarImage src={userAvatar} alt=";)" />
-                    <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                    <AvatarFallback className="rounded-lg">;)</AvatarFallback>
                   </Avatar>
                   <div className="grid flex-1 text-left text-sm leading-tight">
                     <span className="truncate font-semibold">{profile.name}</span>
@@ -71,15 +73,15 @@ export function NavUser({ user }: { user: User }) {
               <DialogTrigger asChild>
                 <DropdownMenuItem>
                   <LogOut />
-                  Sign out
+                  {t('signOut.title')}
                 </DropdownMenuItem>
               </DialogTrigger>
             </DropdownMenuContent>
           </DropdownMenu>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Are you sure?</DialogTitle>
-              <DialogDescription>This action will sign you out.</DialogDescription>
+              <DialogTitle>{t('signOut.confirmTitle')}</DialogTitle>
+              <DialogDescription>{t('signOut.confirmMessage')}</DialogDescription>
             </DialogHeader>
             <DialogFooter>
               <Button
@@ -88,7 +90,7 @@ export function NavUser({ user }: { user: User }) {
                   setToken(null);
                   navigate('/');
                 }}>
-                Confirm
+                {t('signOut.confirm')}
               </Button>
             </DialogFooter>
           </DialogContent>

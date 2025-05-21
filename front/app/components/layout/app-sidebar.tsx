@@ -11,18 +11,18 @@ import Loading from '~/components/ui/loading';
 const data = {
   navMain: [
     {
-      title: 'Dashboard',
+      title: 'dashboard',
       url: '/dashboard',
       icon: LayoutDashboardIcon,
       isActive: true,
     },
     {
-      title: 'Transactions',
+      title: 'transactions',
       url: '#',
       icon: CircleDollarSignIcon,
     },
     {
-      title: 'Settings',
+      title: 'settings',
       url: '#',
       icon: Settings2Icon,
     },
@@ -35,10 +35,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     return <Loading />;
   }
 
+  const activeProfileIndex = user.profiles.findIndex((profile) => profile.code === user.activeProfile.code);
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <ProfileSwitcher profiles={user.profiles} />
+        <ProfileSwitcher profiles={user.profiles} activeIndex={activeProfileIndex} />
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
