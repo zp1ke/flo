@@ -1,3 +1,11 @@
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Loader2 } from 'lucide-react';
+import { type ReactNode, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
+import { z } from 'zod';
+import { Button } from '~/components/ui/button';
+import { Checkbox } from '~/components/ui/checkbox';
 import {
   Dialog,
   DialogContent,
@@ -6,14 +14,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from '~/components/ui/dialog';
-import { Button } from '~/components/ui/button';
-import type { Profile } from '~/types/user';
-import { useState, type ReactNode } from 'react';
-import { useTranslation } from 'react-i18next';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-import { saveProfile } from '~/lib/auth';
 import {
   Form,
   FormControl,
@@ -23,9 +23,9 @@ import {
   FormMessage,
 } from '~/components/ui/form';
 import { Input } from '~/components/ui/input';
-import { Loader2 } from 'lucide-react';
-import { Checkbox } from '~/components/ui/checkbox';
+import { saveProfile } from '~/lib/auth';
 import { cn } from '~/lib/utils';
+import type { Profile } from '~/types/user';
 
 export function SaveProfileDialog({
   profile,

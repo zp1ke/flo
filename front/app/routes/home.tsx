@@ -1,11 +1,10 @@
-import { redirect } from 'react-router';
 import { GalleryVerticalEnd } from 'lucide-react';
-
-import { fetchUser } from '~/lib/auth';
-import SignInForm from '~/components/form/sign-in-form';
 import { useTranslation } from 'react-i18next';
-import { ThemeModeSelector } from '~/components/layout/theme-mode-selector';
+import { redirect } from 'react-router';
+import SignInForm from '~/components/form/sign-in-form';
 import { LanguageSelector } from '~/components/layout/language-selector';
+import { ThemeModeSelector } from '~/components/layout/theme-mode-selector';
+import { fetchUser } from '~/lib/auth';
 
 export async function clientLoader() {
   const user = await fetchUser();

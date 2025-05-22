@@ -1,8 +1,9 @@
 import { type ReactNode, useEffect, useState } from 'react';
-import AuthContext from './auth-context';
-import type { User } from '~/types/user';
-import { fetchUser } from '~/lib/auth';
 import config from '~/config';
+import { fetchUser } from '~/lib/auth';
+import type { User } from '~/types/user';
+
+import AuthContext from './auth-context';
 
 const onAuthStateChanged = (callback: (user: User | null) => void): (() => void) => {
   let refreshing = true;

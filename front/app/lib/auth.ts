@@ -1,5 +1,5 @@
-import type { Profile, User } from '~/types/user';
 import config from '~/config';
+import type { Profile, User } from '~/types/user';
 
 const TOKEN_KEY = 'auth_token';
 const USER_KEY = 'auth_user';

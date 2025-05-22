@@ -4,10 +4,11 @@ import {
   Settings2Icon,
   UsersRoundIcon,
 } from 'lucide-react';
-
+import type { ComponentProps } from 'react';
 import { NavMain } from '~/components/layout/nav-main';
 import { NavUser } from '~/components/layout/nav-user';
 import { ProfileSwitcher } from '~/components/layout/profile-switcher';
+import Loading from '~/components/ui/loading';
 import {
   Sidebar,
   SidebarContent,
@@ -16,8 +17,6 @@ import {
   SidebarRail,
 } from '~/components/ui/sidebar';
 import useAuth from '~/contexts/auth/use-auth';
-import Loading from '~/components/ui/loading';
-import type { ComponentProps } from 'react';
 
 const data = {
   navMain: [

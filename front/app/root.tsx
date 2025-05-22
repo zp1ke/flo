@@ -1,18 +1,18 @@
+import type { ReactNode } from 'react';
 import {
-  isRouteErrorResponse,
   Links,
   Meta,
   Outlet,
   Scripts,
   ScrollRestoration,
+  isRouteErrorResponse,
 } from 'react-router';
+import { ThemeProvider } from '~/contexts/theme-provider';
 
 import type { Route } from './+types/root';
-import Loading from './components/ui/loading';
 import './app.css';
+import Loading from './components/ui/loading';
 import './lib/i18n';
-import { ThemeProvider } from '~/contexts/theme-provider';
-import type { ReactNode } from 'react';
 
 export function meta({}: Route.MetaArgs) {
   return [{ title: 'Flo APP' }, { name: 'description', content: 'Welcome to Flo APP' }];

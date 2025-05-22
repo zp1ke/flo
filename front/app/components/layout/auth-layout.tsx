@@ -1,11 +1,11 @@
 import { Outlet, redirect } from 'react-router';
-import AuthProvider from '~/contexts/auth/auth-provider';
-import { fetchUser } from '~/lib/auth';
 import { AppSidebar } from '~/components/layout/app-sidebar';
+import { LanguageSelector } from '~/components/layout/language-selector';
+import { ThemeModeSelector } from '~/components/layout/theme-mode-selector';
 import { Separator } from '~/components/ui/separator';
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '~/components/ui/sidebar';
-import { ThemeModeSelector } from '~/components/layout/theme-mode-selector';
-import { LanguageSelector } from '~/components/layout/language-selector';
+import AuthProvider from '~/contexts/auth/auth-provider';
+import { fetchUser } from '~/lib/auth';
 
 export async function clientLoader() {
   const user = await fetchUser();

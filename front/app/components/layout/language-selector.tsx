@@ -1,14 +1,14 @@
-import { useEffect, useState } from 'react';
 import i18next from 'i18next';
+import { GlobeIcon } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Button } from '~/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '~/components/ui/dropdown-menu';
-import { Button } from '~/components/ui/button';
-import { GlobeIcon } from 'lucide-react';
 
 const languages: string[] = ['en'];
 

@@ -1,5 +1,6 @@
 import { ChevronsUpDown, GalleryVerticalEnd, GalleryVerticalIcon, Plus } from 'lucide-react';
-
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { DialogTrigger } from '~/components/ui/dialog';
 import {
   DropdownMenu,
@@ -17,8 +18,7 @@ import {
   useSidebar,
 } from '~/components/ui/sidebar';
 import type { Profile } from '~/types/user';
-import { useTranslation } from 'react-i18next';
-import { useState } from 'react';
+
 import { SaveProfileDialog } from '../form/save-profile-dialog';
 
 export function ProfileSwitcher({

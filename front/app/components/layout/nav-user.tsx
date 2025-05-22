@@ -1,6 +1,7 @@
 import { ChevronsUpDown, Loader2, LogOut } from 'lucide-react';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router';
-
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar';
 import {
   Dialog,
@@ -26,11 +27,10 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from '~/components/ui/sidebar';
-import type { User } from '~/types/user';
-import { Button } from '../ui/button';
-import { useTranslation } from 'react-i18next';
-import { useState } from 'react';
 import { signOut } from '~/lib/auth';
+import type { User } from '~/types/user';
+
+import { Button } from '../ui/button';
 
 export function NavUser({ user }: { user: User }) {
   const { t } = useTranslation();
