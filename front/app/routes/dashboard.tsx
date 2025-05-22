@@ -1,6 +1,7 @@
 import { Overview } from '~/components/dashboard/overview';
 import { RecentSales } from '~/components/dashboard/recent-sales';
 import { SectionCards } from '~/components/dashboard/section-cards';
+import PageContent from '~/components/layout/page-content';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '~/components/ui/card';
 import Loading from '~/components/ui/loading';
 import useAuth from '~/contexts/auth/use-auth';
@@ -12,13 +13,13 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="@container/main flex flex-1 flex-col space-y-4 p-8 pt-6 gap-2">
-      <div className="flex items-center justify-between space-y-2">
-        <h2 className="text-2xl font-bold tracking-tight">DASHBOARD</h2>
+    <PageContent
+      title="DASHBOARD TODO"
+      header={
         <div className="flex items-center">
           <span>DAY PICKER</span>
         </div>
-      </div>
+      }>
       <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
         <SectionCards />
       </div>
@@ -41,6 +42,6 @@ export default function Dashboard() {
           </CardContent>
         </Card>
       </div>
-    </div>
+    </PageContent>
   );
 }
