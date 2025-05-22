@@ -51,7 +51,10 @@ export const fetchUser = async (): Promise<User | null> => {
   });
 };
 
-export const saveProfile = async (profile: Profile, setDefault: boolean): Promise<Profile> => {
+export const saveUserProfile = async (
+  profile: Profile,
+  setDefault: boolean
+): Promise<{ user: User; profile: Profile }> => {
   const user = await fetchUser();
   if (!user) {
     throw new Error('user.notFound');
@@ -72,14 +75,26 @@ export const saveProfile = async (profile: Profile, setDefault: boolean): Promis
     user.activeProfile = profile;
   }
 
-  localStorage.setItem(USER_KEY_TS, Date.now().toString());
   localStorage.setItem(USER_KEY, JSON.stringify(user));
 
   return new Promise((resolve) => {
     setTimeout(() => {
-      resolve(profile);
+      resolve({ user, profile });
     }, 1000);
   });
+};
+
+export const setActiveProfile = async (profile: Profile): Promise<User> => {
+  const user = await fetchUser();
+  if (!user) {
+    throw new Error('user.notFound');
+  }
+
+  user.activeProfile = profile;
+
+  localStorage.setItem(USER_KEY, JSON.stringify(user));
+
+  return user;
 };
 
 export const signOut = async (): Promise<void> => {

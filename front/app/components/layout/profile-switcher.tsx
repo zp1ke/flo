@@ -17,6 +17,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from '~/components/ui/sidebar';
+import useAuth from '~/contexts/auth/use-auth';
 import type { Profile } from '~/types/user';
 
 import { SaveProfileDialog } from '../form/save-profile-dialog';
@@ -30,9 +31,18 @@ export function ProfileSwitcher({
 }) {
   const { t } = useTranslation();
   const { isMobile } = useSidebar();
+  const { activateProfile } = useAuth();
 
   const [activeProfile, setActiveProfile] = useState(profiles[activeIndex]);
   const [profilesList, setProfilesList] = useState(profiles);
+  const [processing, setProcessing] = useState(false);
+
+  const setProfile = async (profile: Profile) => {
+    setProcessing(true);
+    await activateProfile(profile);
+    setActiveProfile(profile);
+    setProcessing(false);
+  };
 
   return (
     <SidebarMenu>
@@ -41,7 +51,7 @@ export function ProfileSwitcher({
           onSaved={(profile, setAsDefault) => {
             setProfilesList([...profilesList, profile]);
             if (setAsDefault) {
-              setActiveProfile(profile);
+              setProfile(profile);
             }
           }}>
           <DropdownMenu>
@@ -70,9 +80,9 @@ export function ProfileSwitcher({
               {profilesList.map((profile, index) => (
                 <DropdownMenuItem
                   key={profile.code}
-                  onClick={() => setActiveProfile(profile)}
+                  onClick={() => setProfile(profile)}
                   className="gap-2 p-2"
-                  disabled={profile.code === activeProfile.code}>
+                  disabled={processing || profile.code === activeProfile.code}>
                   <div className="flex size-6 items-center justify-center rounded-sm border">
                     <GalleryVerticalIcon className="size-4 shrink-0" />
                   </div>
@@ -82,7 +92,7 @@ export function ProfileSwitcher({
               ))}
               <DropdownMenuSeparator />
               <DialogTrigger asChild>
-                <DropdownMenuItem className="gap-2 p-2">
+                <DropdownMenuItem className="gap-2 p-2" disabled={processing}>
                   <div className="flex size-6 items-center justify-center rounded-md border bg-background">
                     <Plus className="size-4" />
                   </div>

@@ -23,7 +23,7 @@ import {
   FormMessage,
 } from '~/components/ui/form';
 import { Input } from '~/components/ui/input';
-import { saveProfile } from '~/lib/auth';
+import useAuth from '~/contexts/auth/use-auth';
 import { cn } from '~/lib/utils';
 import type { Profile } from '~/types/user';
 
@@ -37,6 +37,7 @@ export function SaveProfileDialog({
   children: ReactNode;
 }) {
   const { t } = useTranslation();
+  const { saveProfile } = useAuth();
 
   const [open, setOpen] = useState(false);
   const [processing, setProcessing] = useState(false);
@@ -60,7 +61,6 @@ export function SaveProfileDialog({
     const { name, setDefault } = data;
     const setAsDefault = setDefault ?? false;
 
-    // TODO: save profile should be called on useAuth
     const saved = await saveProfile({ code: profile?.code, name } satisfies Profile, setAsDefault);
     onSaved(saved, setAsDefault);
 
