@@ -3,19 +3,12 @@ import { RecentSales } from '~/components/dashboard/recent-sales';
 import { SectionCards } from '~/components/dashboard/section-cards';
 import PageContent from '~/components/layout/page-content';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '~/components/ui/card';
-import Loading from '~/components/ui/loading';
-import useAuth from '~/contexts/auth/use-auth';
 
 export default function Dashboard() {
-  const { user } = useAuth();
-  if (!user) {
-    return <Loading />;
-  }
-
   return (
     <PageContent
       title="DASHBOARD TODO"
-      header={
+      headerEnd={
         <div className="flex items-center">
           <span>DAY PICKER</span>
         </div>
