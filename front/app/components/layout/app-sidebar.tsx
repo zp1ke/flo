@@ -27,17 +27,17 @@ const data = {
     },
     {
       title: 'profiles',
-      url: '#',
+      url: '/profiles',
       icon: UsersRoundIcon,
     },
     {
       title: 'transactions',
-      url: '#',
+      url: '/transactions',
       icon: CircleDollarSignIcon,
     },
     {
       title: 'settings',
-      url: '#',
+      url: '/settings',
       icon: Settings2Icon,
     },
   ],
