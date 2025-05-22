@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   isRouteErrorResponse,
   Links,
@@ -13,6 +12,7 @@ import Loading from './components/ui/loading';
 import './app.css';
 import './lib/i18n';
 import { ThemeProvider } from '~/contexts/theme-provider';
+import type { ReactNode } from 'react';
 
 export function meta({}: Route.MetaArgs) {
   return [{ title: 'Flo APP' }, { name: 'description', content: 'Welcome to Flo APP' }];
@@ -31,7 +31,7 @@ export const links: Route.LinksFunction = () => [
   },
 ];
 
-export function Layout({ children }: { children: React.ReactNode }) {
+export function Layout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <head>

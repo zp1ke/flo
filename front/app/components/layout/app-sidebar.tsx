@@ -1,5 +1,9 @@
-import * as React from 'react';
-import { CircleDollarSignIcon, LayoutDashboardIcon, Settings2Icon } from 'lucide-react';
+import {
+  CircleDollarSignIcon,
+  LayoutDashboardIcon,
+  Settings2Icon,
+  UsersRoundIcon,
+} from 'lucide-react';
 
 import { NavMain } from '~/components/layout/nav-main';
 import { NavUser } from '~/components/layout/nav-user';
@@ -13,6 +17,7 @@ import {
 } from '~/components/ui/sidebar';
 import useAuth from '~/contexts/auth/use-auth';
 import Loading from '~/components/ui/loading';
+import type { ComponentProps } from 'react';
 
 const data = {
   navMain: [
@@ -20,6 +25,11 @@ const data = {
       title: 'dashboard',
       url: '/dashboard',
       icon: LayoutDashboardIcon,
+    },
+    {
+      title: 'profiles',
+      url: '#',
+      icon: UsersRoundIcon,
     },
     {
       title: 'transactions',
@@ -34,7 +44,7 @@ const data = {
   ],
 };
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
   const { user } = useAuth();
   if (!user) {
     return <Loading />;

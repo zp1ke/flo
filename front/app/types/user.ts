@@ -1,5 +1,5 @@
 export interface Profile {
-  code: string;
+  code?: string;
   name: string;
 }
 

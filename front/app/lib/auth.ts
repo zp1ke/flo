@@ -51,6 +51,37 @@ export const fetchUser = async (): Promise<User | null> => {
   });
 };
 
+export const saveProfile = async (profile: Profile, setDefault: boolean): Promise<Profile> => {
+  const user = await fetchUser();
+  if (!user) {
+    throw new Error('user.notFound');
+  }
+
+  if (!profile.code) {
+    profile.code = Date.now().toString();
+    user.profiles.push(profile);
+  } else {
+    const index = user.profiles.findIndex((p) => p.code === profile.code);
+    if (index === -1) {
+      throw new Error('profile.notFound');
+    }
+    user.profiles[index] = profile;
+  }
+
+  if (setDefault) {
+    user.activeProfile = profile;
+  }
+
+  localStorage.setItem(USER_KEY_TS, Date.now().toString());
+  localStorage.setItem(USER_KEY, JSON.stringify(user));
+
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(profile);
+    }, 1000);
+  });
+};
+
 export const signOut = async (): Promise<void> => {
   return new Promise((resolve) => {
     setTimeout(() => {

@@ -16,11 +16,20 @@
   },
   "nav": {
     "dashboard": "Dashboard",
+    "profiles": "Profiles",
     "settings": "Settings",
     "transactions": "Transactions"
   },
   "profiles": {
     "add": "Add Profile",
+    "defaultProfile": "Set as default Profile",
+    "edit": "Edit Profile",
+    "editDescription": "Make changes to your profile here. Click save when you're done.",
+    "name": "Name",
+    "namePlaceholder": "Profile name",
+    "nameSize": "Name must be at least 3 characters long and max 255 characters long.",
+    "processing": "Processing...",
+    "save": "Save",
     "title": "Profiles"
   },
   "signIn": {

@@ -19,7 +19,7 @@ import {
 import type { Profile } from '~/types/user';
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
-import { AddProfileDialog } from '../form/add-profile-dialog';
+import { SaveProfileDialog } from '../form/save-profile-dialog';
 
 export function ProfileSwitcher({
   activeIndex,
@@ -37,10 +37,12 @@ export function ProfileSwitcher({
   return (
     <SidebarMenu>
       <SidebarMenuItem>
-        <AddProfileDialog
-          onAdded={(profile) => {
+        <SaveProfileDialog
+          onSaved={(profile, setAsDefault) => {
             setProfilesList([...profilesList, profile]);
-            setActiveProfile(profile);
+            if (setAsDefault) {
+              setActiveProfile(profile);
+            }
           }}>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -89,7 +91,7 @@ export function ProfileSwitcher({
               </DialogTrigger>
             </DropdownMenuContent>
           </DropdownMenu>
-        </AddProfileDialog>
+        </SaveProfileDialog>
       </SidebarMenuItem>
     </SidebarMenu>
   );
