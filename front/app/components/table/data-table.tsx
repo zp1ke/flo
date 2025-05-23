@@ -32,12 +32,12 @@ interface DataTableProps<TData, TValue> {
 
 export function DataTable<TData, TValue>({
   tableProps,
-  statuses,
-  priorities,
+  textFilters,
+  facetedFilters,
 }: {
   tableProps: DataTableProps<TData, TValue>;
-  statuses: { label: string; value: string }[];
-  priorities: { label: string; value: string }[];
+  textFilters?: { title: string; column: string }[];
+  facetedFilters?: { title: string; column: string; options: { label: string; value: string }[] }[];
 }) {
   const [rowSelection, setRowSelection] = useState({});
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -70,7 +70,11 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="space-y-4">
-      <DataTableToolbar tableToolbar={{ table }} statuses={statuses} priorities={priorities} />
+      <DataTableToolbar
+        tableToolbar={{ table }}
+        textFilters={textFilters}
+        facetedFilters={facetedFilters}
+      />
       <div className="rounded-md border">
         <Table>
           <TableHeader>

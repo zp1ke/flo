@@ -18,7 +18,7 @@ import {
   useSidebar,
 } from '~/components/ui/sidebar';
 import useAuth from '~/contexts/auth/use-auth';
-import type { Profile } from '~/types/user';
+import type { Profile } from '~/types/profile';
 
 import { SaveProfileDialog } from '../form/save-profile-dialog';
 

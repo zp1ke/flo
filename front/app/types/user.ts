@@ -1,7 +1,4 @@
-export interface Profile {
-  code?: string;
-  name: string;
-}
+import type { Profile } from './profile';
 
 export interface User {
   email: string;

@@ -12,12 +12,12 @@ interface DataTableToolbarProps<TData> {
 
 export function DataTableToolbar<TData>({
   tableToolbar,
-  statuses,
-  priorities,
+  textFilters,
+  facetedFilters,
 }: {
   tableToolbar: DataTableToolbarProps<TData>;
-  statuses: { label: string; value: string }[];
-  priorities: { label: string; value: string }[];
+  textFilters?: { title: string; column: string }[];
+  facetedFilters?: { title: string; column: string; options: { label: string; value: string }[] }[];
 }) {
   const { table } = tableToolbar;
   const isFiltered = table.getState().columnFilters.length > 0;
@@ -25,26 +25,23 @@ export function DataTableToolbar<TData>({
   return (
     <div className="flex items-center justify-between">
       <div className="flex flex-1 items-center space-x-2">
-        <Input
-          placeholder="Filter tasks..."
-          value={(table.getColumn('title')?.getFilterValue() as string) ?? ''}
-          onChange={(event) => table.getColumn('title')?.setFilterValue(event.target.value)}
-          className="h-8 w-[150px] lg:w-[250px]"
-        />
-        {table.getColumn('status') && (
-          <DataTableFacetedFilter
-            column={table.getColumn('status')}
-            title="Status"
-            options={statuses}
+        {textFilters?.map((filter) => (
+          <Input
+            key={filter.column}
+            placeholder={`Filter ${filter.title}...`}
+            value={(table.getColumn(filter.column)?.getFilterValue() as string) ?? ''}
+            onChange={(event) => table.getColumn(filter.column)?.setFilterValue(event.target.value)}
+            className="h-8 w-[150px] lg:w-[250px]"
           />
-        )}
-        {table.getColumn('priority') && (
+        ))}
+        {facetedFilters?.map((filter) => (
           <DataTableFacetedFilter
-            column={table.getColumn('priority')}
-            title="Priority"
-            options={priorities}
+            key={filter.column}
+            column={table.getColumn(filter.column)}
+            title={filter.title}
+            options={filter.options}
           />
-        )}
+        ))}
         {isFiltered && (
           <Button
             variant="ghost"

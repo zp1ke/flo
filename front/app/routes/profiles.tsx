@@ -1,131 +1,79 @@
 import { z } from 'zod';
 import PageContent from '~/components/layout/page-content';
-import { taskSchema } from '~/components/profiles/schema';
 import { columns } from '~/components/profiles/table-columns';
-import { priorities, statuses } from '~/components/profiles/table-data';
 import { DataTable } from '~/components/table/data-table';
+import { profileSchema } from '~/types/profile';
 
 export default function Profiles() {
   const data = [
     {
-      id: 'TASK-8782',
-      title: "You can't compress the program without quantifying the open-source SSD pixel!",
-      status: 'in progress',
-      label: 'documentation',
-      priority: 'medium',
+      code: 'TASK-8782',
+      name: 'Alice Johnson',
     },
     {
-      id: 'TASK-7878',
-      title: 'Try to calculate the EXE feed, maybe it will index the multi-byte pixel!',
-      status: 'backlog',
-      label: 'documentation',
-      priority: 'medium',
+      code: 'TASK-7878',
+      name: 'Bob Smith',
     },
     {
-      id: 'TASK-7839',
-      title: 'We need to bypass the neural TCP card!',
-      status: 'todo',
-      label: 'bug',
-      priority: 'high',
+      code: 'TASK-7839',
+      name: 'Carol Davis',
     },
     {
-      id: 'TASK-5562',
-      title:
-        'The SAS interface is down, bypass the open-source pixel so we can back up the PNG bandwidth!',
-      status: 'backlog',
-      label: 'feature',
-      priority: 'medium',
+      code: 'TASK-5562',
+      name: 'David Wilson',
     },
     {
-      id: 'TASK-8686',
-      title: "I'll parse the wireless SSL protocol, that should driver the API panel!",
-      status: 'canceled',
-      label: 'feature',
-      priority: 'medium',
+      code: 'TASK-8686',
+      name: 'Emma Brown',
     },
     {
-      id: 'TASK-1280',
-      title: 'Use the digital TLS panel, then you can transmit the haptic system!',
-      status: 'done',
-      label: 'bug',
-      priority: 'high',
+      code: 'TASK-1280',
+      name: 'Frank Miller',
     },
     {
-      id: 'TASK-7262',
-      title:
-        'The UTF8 application is down, parse the neural bandwidth so we can back up the PNG firewall!',
-      status: 'done',
-      label: 'feature',
-      priority: 'high',
+      code: 'TASK-7262',
+      name: 'Grace Lee',
     },
     {
-      id: 'TASK-1138',
-      title:
-        "Generating the driver won't do anything, we need to quantify the 1080p SMTP bandwidth!",
-      status: 'in progress',
-      label: 'feature',
-      priority: 'medium',
+      code: 'TASK-1138',
+      name: 'Henry Garcia',
     },
     {
-      id: 'TASK-7184',
-      title: 'We need to program the back-end THX pixel!',
-      status: 'todo',
-      label: 'feature',
-      priority: 'low',
+      code: 'TASK-7184',
+      name: 'Ivy Chen',
     },
     {
-      id: 'TASK-5160',
-      title:
-        "Calculating the bus won't do anything, we need to navigate the back-end JSON protocol!",
-      status: 'in progress',
-      label: 'documentation',
-      priority: 'high',
+      code: 'TASK-5160',
+      name: 'Jack Anderson',
     },
     {
-      id: 'TASK-5618',
-      title:
-        "Generating the driver won't do anything, we need to index the online SSL application!",
-      status: 'done',
-      label: 'documentation',
-      priority: 'medium',
+      code: 'TASK-5618',
+      name: 'Kate Thompson',
     },
     {
-      id: 'TASK-6699',
-      title: "I'll transmit the wireless JBOD capacitor, that should hard drive the SSD feed!",
-      status: 'backlog',
-      label: 'documentation',
-      priority: 'medium',
+      code: 'TASK-6699',
+      name: 'Liam Rodriguez',
     },
     {
-      id: 'TASK-2858',
-      title: 'We need to override the online UDP bus!',
-      status: 'backlog',
-      label: 'bug',
-      priority: 'medium',
+      code: 'TASK-2858',
+      name: 'Maya Patel',
     },
     {
-      id: 'TASK-9864',
-      title: "I'll reboot the 1080p FTP panel, that should matrix the HEX hard drive!",
-      status: 'done',
-      label: 'bug',
-      priority: 'high',
+      code: 'TASK-9864',
+      name: 'Noah Martinez',
     },
     {
-      id: 'TASK-8404',
-      title: 'We need to generate the virtual HEX alarm!',
-      status: 'in progress',
-      label: 'bug',
-      priority: 'low',
+      code: 'TASK-8404',
+      name: 'Olivia Taylor',
     },
   ];
-  const profiles = z.array(taskSchema).parse(data);
+  const profiles = z.array(profileSchema).parse(data);
 
   return (
     <PageContent title="PROFILES TODO" subtitle="Here's a list of your profiles!">
       <DataTable
         tableProps={{ data: profiles, columns }}
-        statuses={statuses}
-        priorities={priorities}
+        textFilters={[{ title: 'Name', column: 'name' }]}
       />
     </PageContent>
   );

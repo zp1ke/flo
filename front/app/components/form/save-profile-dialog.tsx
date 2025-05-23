@@ -25,7 +25,7 @@ import {
 import { Input } from '~/components/ui/input';
 import useAuth from '~/contexts/auth/use-auth';
 import { cn } from '~/lib/utils';
-import type { Profile } from '~/types/user';
+import { type Profile, profileNameIsValid, profileSchema } from '~/types/profile';
 
 export function SaveProfileDialog({
   profile,
@@ -43,7 +43,7 @@ export function SaveProfileDialog({
   const [processing, setProcessing] = useState(false);
 
   const formSchema = z.object({
-    name: z.string().min(3, t('profiles.nameSize')).max(255, t('profiles.nameSize')),
+    name: profileSchema.shape.name.refine(profileNameIsValid, t('profiles.nameSize')),
     setDefault: z.boolean().default(true).optional(),
   });
 
