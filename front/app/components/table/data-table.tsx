@@ -1,6 +1,7 @@
 import {
   type ColumnDef,
   type ColumnFiltersState,
+  type PaginationState,
   type SortingState,
   type VisibilityState,
   flexRender,
@@ -12,7 +13,8 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import { useState } from 'react';
+import { Loader2 } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import {
   Table,
   TableBody,
@@ -25,53 +27,78 @@ import {
 import { DataTablePagination } from './data-table-pagination';
 import { DataTableToolbar } from './data-table-toolbar';
 
-interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
+export type DataPage<TData> = {
   data: TData[];
-}
+  total: number;
+};
 
 export function DataTable<TData, TValue>({
-  tableProps,
-  textFilters,
+  columns,
+  dataFetcher,
   facetedFilters,
+  textFilters,
+  pageIndex = 0,
+  pageSize = 10,
 }: {
-  tableProps: DataTableProps<TData, TValue>;
-  textFilters?: { title: string; column: string }[];
+  columns: ColumnDef<TData, TValue>[];
+  dataFetcher: (pagination: PaginationState) => Promise<DataPage<TData>>;
   facetedFilters?: { title: string; column: string; options: { label: string; value: string }[] }[];
+  pageIndex?: number;
+  pageSize?: number;
+  textFilters?: { title: string; column: string }[];
 }) {
-  const [rowSelection, setRowSelection] = useState({});
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [data, setData] = useState<DataPage<TData>>({ data: [], total: 0 });
+  const [loading, setLoading] = useState(true);
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex,
+    pageSize,
+  });
   const [sorting, setSorting] = useState<SortingState>([]);
+  const [rowSelection, setRowSelection] = useState({});
 
-  const { data, columns } = tableProps;
+  useEffect(() => {
+    dataFetcher(pagination).then((data) => {
+      setData(data);
+      setLoading(false);
+    });
+  }, [loading]);
 
   const table = useReactTable({
-    data,
-    columns,
-    state: {
-      sorting,
-      columnVisibility,
-      rowSelection,
-      columnFilters,
-    },
+    data: data.data,
+    columns: columns,
     enableRowSelection: true,
-    onRowSelectionChange: setRowSelection,
-    onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
-    onColumnVisibilityChange: setColumnVisibility,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
+    manualPagination: true,
+    onColumnFiltersChange: setColumnFilters,
+    onColumnVisibilityChange: setColumnVisibility,
+    onPaginationChange: (state) => {
+      setPagination(state);
+      setLoading(true);
+    },
+    onRowSelectionChange: setRowSelection,
+    onSortingChange: setSorting,
+    rowCount: data.total,
+    state: {
+      columnFilters,
+      columnVisibility,
+      pagination,
+      rowSelection,
+      sorting,
+    },
   });
 
   return (
     <div className="space-y-4">
       <DataTableToolbar
-        tableToolbar={{ table }}
+        loading={loading}
+        table={table}
         textFilters={textFilters}
         facetedFilters={facetedFilters}
       />
@@ -106,14 +133,21 @@ export function DataTable<TData, TValue>({
             ) : (
               <TableRow>
                 <TableCell colSpan={columns.length} className="h-24 text-center">
-                  No results.
+                  {loading ? (
+                    <div className="flex items-center justify-center space-x-2">
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      <span>Loading...</span>
+                    </div>
+                  ) : (
+                    <span>No results.</span>
+                  )}
                 </TableCell>
               </TableRow>
             )}
           </TableBody>
         </Table>
       </div>
-      <DataTablePagination table={table} />
+      <DataTablePagination disabled={loading} table={table} />
     </div>
   );
 }

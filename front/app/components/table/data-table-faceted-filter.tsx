@@ -17,6 +17,7 @@ import { cn } from '~/lib/utils';
 
 interface DataTableFacetedFilterProps<TData, TValue> {
   column?: Column<TData, TValue>;
+  disabled?: boolean;
   title?: string;
   options: {
     label: string;
@@ -27,6 +28,7 @@ interface DataTableFacetedFilterProps<TData, TValue> {
 
 export function DataTableFacetedFilter<TData, TValue>({
   column,
+  disabled = false,
   title,
   options,
 }: DataTableFacetedFilterProps<TData, TValue>) {
@@ -35,8 +37,8 @@ export function DataTableFacetedFilter<TData, TValue>({
 
   return (
     <Popover>
-      <PopoverTrigger asChild>
-        <Button variant="outline" size="sm" className="h-8 border-dashed">
+      <PopoverTrigger asChild disabled={disabled}>
+        <Button variant="outline" size="sm" className="h-8 border-dashed" disabled={disabled}>
           <PlusCircle />
           {title}
           {selectedValues?.size > 0 && (
@@ -69,7 +71,7 @@ export function DataTableFacetedFilter<TData, TValue>({
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0" align="start">
         <Command>
-          <CommandInput placeholder={title} />
+          <CommandInput placeholder={title} disabled={disabled} />
           <CommandList>
             <CommandEmpty>No results found.</CommandEmpty>
             <CommandGroup>
@@ -112,6 +114,7 @@ export function DataTableFacetedFilter<TData, TValue>({
                 <CommandSeparator />
                 <CommandGroup>
                   <CommandItem
+                    disabled={disabled}
                     onSelect={() => column?.setFilterValue(undefined)}
                     className="justify-center text-center">
                     Clear filters
