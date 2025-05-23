@@ -3,6 +3,7 @@ import {
   type ColumnFiltersState,
   type PaginationState,
   type SortingState,
+  type Updater,
   type VisibilityState,
   flexRender,
   getCoreRowModel,
@@ -14,7 +15,8 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 import { Loader2 } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { type HTMLAttributes, useEffect, useState } from 'react';
+import { useLocation, useSearchParams } from 'react-router';
 import {
   Table,
   TableBody,
@@ -32,21 +34,25 @@ export type DataPage<TData> = {
   total: number;
 };
 
+interface DataTableProps<TData, TValue> extends HTMLAttributes<HTMLDivElement> {
+  columns: ColumnDef<TData, TValue>[];
+  dataFetcher: (pagination: PaginationState) => Promise<DataPage<TData>>;
+  facetedFilters?: DataTableSelectFilter[];
+  textFilters?: DataTableFilter[];
+}
+
 export function DataTable<TData, TValue>({
   columns,
   dataFetcher,
   facetedFilters,
   textFilters,
-  pageIndex = 0,
-  pageSize = 10,
-}: {
-  columns: ColumnDef<TData, TValue>[];
-  dataFetcher: (pagination: PaginationState) => Promise<DataPage<TData>>;
-  facetedFilters?: { title: string; column: string; options: { label: string; value: string }[] }[];
-  pageIndex?: number;
-  pageSize?: number;
-  textFilters?: { title: string; column: string }[];
-}) {
+}: DataTableProps<TData, TValue>) {
+  const location = useLocation();
+  const [searchParams] = useSearchParams();
+
+  const pageIndex = searchParams.get('page') ? Number(searchParams.get('page')) - 1 : 0;
+  const pageSize = searchParams.get('pageSize') ? Number(searchParams.get('pageSize')) : 10;
+
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [data, setData] = useState<DataPage<TData>>({ data: [], total: 0 });
@@ -65,6 +71,24 @@ export function DataTable<TData, TValue>({
     });
   }, [loading]);
 
+  const onPaginationChange = (state: Updater<PaginationState>) => {
+    const stateIsFunction = typeof state === 'function';
+    const pageIndex = stateIsFunction ? state(pagination).pageIndex : state.pageIndex;
+    const pageSize = stateIsFunction ? state(pagination).pageSize : state.pageSize;
+    addToUrl({ page: String(pageIndex + 1), pageSize: String(pageSize) });
+
+    setPagination(state);
+    setLoading(true);
+  };
+
+  const addToUrl = (params: Record<string, string>) => {
+    const url = new URL(location.pathname, window.location.origin);
+    Object.entries(params).forEach(([key, value]) => {
+      url.searchParams.set(key, value);
+    });
+    history.pushState({}, '', url);
+  };
+
   const table = useReactTable({
     data: data.data,
     columns: columns,
@@ -78,10 +102,7 @@ export function DataTable<TData, TValue>({
     manualPagination: true,
     onColumnFiltersChange: setColumnFilters,
     onColumnVisibilityChange: setColumnVisibility,
-    onPaginationChange: (state) => {
-      setPagination(state);
-      setLoading(true);
-    },
+    onPaginationChange,
     onRowSelectionChange: setRowSelection,
     onSortingChange: setSorting,
     rowCount: data.total,

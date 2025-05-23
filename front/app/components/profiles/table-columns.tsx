@@ -33,8 +33,8 @@ export const columns: ColumnDef<Profile>[] = [
     accessorKey: 'code',
     header: ({ column }) => <DataTableColumnHeader column={column} title="Code" />,
     cell: ({ row }) => <div className="w-[80px]">{row.getValue('code')}</div>,
-    enableSorting: true,
-    enableHiding: false,
+    enableSorting: false,
+    enableHiding: true,
   },
   {
     accessorKey: 'name',

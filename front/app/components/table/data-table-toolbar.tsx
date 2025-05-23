@@ -1,28 +1,32 @@
 import type { Table } from '@tanstack/react-table';
-import { Loader2, X } from 'lucide-react';
+import { CheckIcon, Loader2, X } from 'lucide-react';
 import { Button } from '~/components/ui/button';
 import { Input } from '~/components/ui/input';
+import { cn } from '~/lib/utils';
 
 import { DataTableFacetedFilter } from './data-table-faceted-filter';
 import { DataTableViewOptions } from './data-table-view-options';
+
+interface DataTableViewOptions<TData> {
+  facetedFilters?: DataTableSelectFilter[];
+  loading?: boolean;
+  table: Table<TData>;
+  textFilters?: DataTableFilter[];
+}
 
 export function DataTableToolbar<TData>({
   facetedFilters,
   loading = false,
   table,
   textFilters,
-}: {
-  facetedFilters?: { title: string; column: string; options: { label: string; value: string }[] }[];
-  loading?: boolean;
-  table: Table<TData>;
-  textFilters?: { title: string; column: string }[];
-}) {
+}: DataTableViewOptions<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0;
 
   return (
     <div className="flex items-center justify-between">
       <div className="flex flex-1 items-center space-x-2">
         {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+        {!loading && <CheckIcon className="mr-2 h-4 w-4" />}
         {textFilters?.map((filter) => (
           <Input
             key={filter.column}
