@@ -30,6 +30,7 @@ export const columns: ColumnDef<Profile>[] = [
     enableHiding: false,
   },
   {
+    id: 'code',
     accessorKey: 'code',
     header: ({ column }) => <DataTableColumnHeader column={column} title="Code" />,
     cell: ({ row }) => <div className="w-[80px]">{row.getValue('code')}</div>,
@@ -37,6 +38,7 @@ export const columns: ColumnDef<Profile>[] = [
     enableHiding: true,
   },
   {
+    id: 'name',
     accessorKey: 'name',
     header: ({ column }) => <DataTableColumnHeader column={column} title="Name" />,
     cell: ({ row }) => (

@@ -1,6 +1,7 @@
 import {
   type ColumnDef,
   type ColumnFiltersState,
+  type ColumnSort,
   type PaginationState,
   type SortingState,
   type Updater,
@@ -36,10 +37,12 @@ export type DataPage<TData> = {
 
 interface DataTableProps<TData, TValue> extends HTMLAttributes<HTMLDivElement> {
   columns: ColumnDef<TData, TValue>[];
-  dataFetcher: (pagination: PaginationState) => Promise<DataPage<TData>>;
+  dataFetcher: (pagination: PaginationState, sorting: SortingState) => Promise<DataPage<TData>>;
   facetedFilters?: DataTableSelectFilter[];
   textFilters?: DataTableFilter[];
 }
+
+const sortColumnPrefix = 'sort_';
 
 export function DataTable<TData, TValue>({
   columns,
@@ -50,38 +53,33 @@ export function DataTable<TData, TValue>({
   const location = useLocation();
   const [searchParams] = useSearchParams();
 
-  const pageIndex = searchParams.get('page') ? Number(searchParams.get('page')) - 1 : 0;
-  const pageSize = searchParams.get('pageSize') ? Number(searchParams.get('pageSize')) : 10;
-
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]); // TODO: searchParams
   const [data, setData] = useState<DataPage<TData>>({ data: [], total: 0 });
   const [loading, setLoading] = useState(true);
-  const [pagination, setPagination] = useState<PaginationState>({
-    pageIndex,
-    pageSize,
-  });
-  const [sorting, setSorting] = useState<SortingState>([]);
+  const [pagination, setPagination] = useState<PaginationState>(paginationFrom(searchParams));
+  const [sorting, setSorting] = useState<SortingState>(sortingFrom(searchParams, columns));
   const [rowSelection, setRowSelection] = useState({});
 
   useEffect(() => {
-    dataFetcher(pagination).then((data) => {
-      setData(data);
-      setLoading(false);
-    });
+    if (loading) {
+      dataFetcher(pagination, sorting).then((data) => {
+        setData(data);
+        updateUrlParams();
+        setLoading(false);
+      });
+    }
   }, [loading]);
 
-  const onPaginationChange = (state: Updater<PaginationState>) => {
-    const stateIsFunction = typeof state === 'function';
-    const pageIndex = stateIsFunction ? state(pagination).pageIndex : state.pageIndex;
-    const pageSize = stateIsFunction ? state(pagination).pageSize : state.pageSize;
-    addToUrl({ page: String(pageIndex + 1), pageSize: String(pageSize) });
+  const updateUrlParams = () => {
+    const params: Record<string, string> = {
+      page: String(pagination.pageIndex + 1),
+      pageSize: String(pagination.pageSize),
+    };
+    sorting.forEach((columnSort) => {
+      params[sortColumnPrefix + columnSort.id] = columnSort.desc ? 'desc' : 'asc';
+    });
 
-    setPagination(state);
-    setLoading(true);
-  };
-
-  const addToUrl = (params: Record<string, string>) => {
     const url = new URL(location.pathname, window.location.origin);
     Object.entries(params).forEach(([key, value]) => {
       url.searchParams.set(key, value);
@@ -102,9 +100,15 @@ export function DataTable<TData, TValue>({
     manualPagination: true,
     onColumnFiltersChange: setColumnFilters,
     onColumnVisibilityChange: setColumnVisibility,
-    onPaginationChange,
+    onPaginationChange: (state) => {
+      setPagination(state);
+      setLoading(true);
+    },
     onRowSelectionChange: setRowSelection,
-    onSortingChange: setSorting,
+    onSortingChange: (state) => {
+      setSorting(state);
+      setLoading(true);
+    },
     rowCount: data.total,
     state: {
       columnFilters,
@@ -172,3 +176,29 @@ export function DataTable<TData, TValue>({
     </div>
   );
 }
+
+const paginationFrom = (searchParams: URLSearchParams): PaginationState => {
+  const pageIndex = searchParams.get('page') ? Number(searchParams.get('page')) - 1 : 0;
+  const pageSize = searchParams.get('pageSize') ? Number(searchParams.get('pageSize')) : 10;
+  return { pageIndex, pageSize };
+};
+
+const sortingFrom = (
+  searchParams: URLSearchParams,
+  columns: ColumnDef<any, any>[]
+): SortingState => {
+  const sorting: SortingState = [];
+  searchParams.forEach((value, key) => {
+    if (!key.startsWith(sortColumnPrefix)) {
+      return;
+    }
+    const theKey = key.substring(sortColumnPrefix.length);
+    if ((value === 'asc' || value === 'desc') && columns.some((column) => column.id === theKey)) {
+      sorting.push({
+        id: theKey,
+        desc: value === 'desc',
+      } satisfies ColumnSort);
+    }
+  });
+  return sorting;
+};
