@@ -1,4 +1,4 @@
-import type { Column } from '@tanstack/react-table';
+import type { Column, Table } from '@tanstack/react-table';
 import { ArrowDown, ArrowUp, ChevronsUpDown, EyeOff } from 'lucide-react';
 import type { HTMLAttributes } from 'react';
 import { Button } from '~/components/ui/button';
@@ -13,23 +13,30 @@ import { cn } from '~/lib/utils';
 
 interface DataTableColumnHeaderProps<TData, TValue> extends HTMLAttributes<HTMLDivElement> {
   column: Column<TData, TValue>;
+  table: Table<TData>;
   title: string;
 }
 
 export function DataTableColumnHeader<TData, TValue>({
-  column,
-  title,
   className,
+  column,
+  table,
+  title,
 }: DataTableColumnHeaderProps<TData, TValue>) {
   if (!column.getCanSort()) {
     return <div className={cn(className)}>{title}</div>;
   }
+  const disabled = table.options?.meta?.loading;
 
   return (
     <div className={cn('flex items-center space-x-2', className)}>
       <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="ghost" size="sm" className="-ml-3 h-8 data-[state=open]:bg-accent">
+        <DropdownMenuTrigger asChild disabled={disabled}>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="-ml-3 h-8 data-[state=open]:bg-accent"
+            disabled={disabled}>
             <span>{title}</span>
             {column.getIsSorted() === 'desc' ? (
               <ArrowDown />

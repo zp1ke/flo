@@ -22,7 +22,7 @@ export default function Profiles() {
                 data,
                 total: 100,
               });
-            }, 1000);
+            }, 10000);
           });
         }}
         textFilters={[{ title: 'Name', column: 'name' }]}

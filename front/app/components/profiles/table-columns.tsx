@@ -10,6 +10,7 @@ export const columns: ColumnDef<Profile>[] = [
     id: 'select',
     header: ({ table }) => (
       <Checkbox
+        disabled={table.options?.meta?.loading}
         checked={
           table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate')
         }
@@ -18,8 +19,9 @@ export const columns: ColumnDef<Profile>[] = [
         className="translate-y-[2px]"
       />
     ),
-    cell: ({ row }) => (
+    cell: ({ row, table }) => (
       <Checkbox
+        disabled={table.options?.meta?.loading}
         checked={row.getIsSelected()}
         onCheckedChange={(value) => row.toggleSelected(!!value)}
         aria-label="Select row"
@@ -32,7 +34,9 @@ export const columns: ColumnDef<Profile>[] = [
   {
     id: 'code',
     accessorKey: 'code',
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Code" />,
+    header: ({ column, table }) => (
+      <DataTableColumnHeader column={column} table={table} title="Code" />
+    ),
     cell: ({ row }) => <div className="w-[80px]">{row.getValue('code')}</div>,
     enableSorting: false,
     enableHiding: true,
@@ -40,7 +44,9 @@ export const columns: ColumnDef<Profile>[] = [
   {
     id: 'name',
     accessorKey: 'name',
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Name" />,
+    header: ({ column, table }) => (
+      <DataTableColumnHeader column={column} table={table} title="Name" />
+    ),
     cell: ({ row }) => (
       <div className="max-w-[500px] truncate font-medium">{row.getValue('name')}</div>
     ),
@@ -49,6 +55,6 @@ export const columns: ColumnDef<Profile>[] = [
   },
   {
     id: 'actions',
-    cell: ({ row }) => <DataTableRowActions row={row} />,
+    cell: ({ row, table }) => <DataTableRowActions row={row} table={table} />,
   },
 ];

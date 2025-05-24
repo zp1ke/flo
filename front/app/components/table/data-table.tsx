@@ -5,7 +5,6 @@ import {
   type ColumnSort,
   type PaginationState,
   type SortingState,
-  type Updater,
   type VisibilityState,
   flexRender,
   getCoreRowModel,
@@ -46,6 +45,8 @@ interface DataTableProps<TData, TValue> extends HTMLAttributes<HTMLDivElement> {
 const sortColumnPrefix = 'sort_';
 const pageKey = 'page';
 const pageSizeKey = 'pageSize';
+const sortAsc = 'asc';
+const sortDesc = 'desc';
 
 export function DataTable<TData, TValue>({
   columns,
@@ -82,7 +83,7 @@ export function DataTable<TData, TValue>({
       pageSize: String(pagination.pageSize),
     };
     sorting.forEach((columnSort) => {
-      params[sortColumnPrefix + columnSort.id] = columnSort.desc ? 'desc' : 'asc';
+      params[sortColumnPrefix + columnSort.id] = columnSort.desc ? sortDesc : sortAsc;
     });
     columnFilters.forEach((columnFilter) => {
       if (columnFilter.value) {
@@ -108,6 +109,11 @@ export function DataTable<TData, TValue>({
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
     manualPagination: true,
+    manualSorting: true,
+    manualFiltering: true,
+    meta: {
+      loading,
+    },
     onColumnFiltersChange: (state) => {
       setColumnFilters(state);
       setLoading(true);
@@ -206,10 +212,13 @@ const sortingFrom = (
       return;
     }
     const theKey = key.substring(sortColumnPrefix.length);
-    if ((value === 'asc' || value === 'desc') && columns.some((column) => column.id === theKey)) {
+    if (
+      (value === sortAsc || value === sortDesc) &&
+      columns.some((column) => column.id === theKey)
+    ) {
       sorting.push({
         id: theKey,
-        desc: value === 'desc',
+        desc: value === sortDesc,
       } satisfies ColumnSort);
     }
   });
