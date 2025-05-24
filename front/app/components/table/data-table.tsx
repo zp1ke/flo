@@ -1,5 +1,6 @@
 import {
   type ColumnDef,
+  type ColumnFilter,
   type ColumnFiltersState,
   type ColumnSort,
   type PaginationState,
@@ -43,6 +44,8 @@ interface DataTableProps<TData, TValue> extends HTMLAttributes<HTMLDivElement> {
 }
 
 const sortColumnPrefix = 'sort_';
+const pageKey = 'page';
+const pageSizeKey = 'pageSize';
 
 export function DataTable<TData, TValue>({
   columns,
@@ -54,7 +57,9 @@ export function DataTable<TData, TValue>({
   const [searchParams] = useSearchParams();
 
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]); // TODO: searchParams
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>(
+    filtersFrom(searchParams, columns)
+  );
   const [data, setData] = useState<DataPage<TData>>({ data: [], total: 0 });
   const [loading, setLoading] = useState(true);
   const [pagination, setPagination] = useState<PaginationState>(paginationFrom(searchParams));
@@ -79,6 +84,11 @@ export function DataTable<TData, TValue>({
     sorting.forEach((columnSort) => {
       params[sortColumnPrefix + columnSort.id] = columnSort.desc ? 'desc' : 'asc';
     });
+    columnFilters.forEach((columnFilter) => {
+      if (columnFilter.value) {
+        params[columnFilter.id] = columnFilter.value.toString();
+      }
+    });
 
     const url = new URL(location.pathname, window.location.origin);
     Object.entries(params).forEach(([key, value]) => {
@@ -98,7 +108,10 @@ export function DataTable<TData, TValue>({
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
     manualPagination: true,
-    onColumnFiltersChange: setColumnFilters,
+    onColumnFiltersChange: (state) => {
+      setColumnFilters(state);
+      setLoading(true);
+    },
     onColumnVisibilityChange: setColumnVisibility,
     onPaginationChange: (state) => {
       setPagination(state);
@@ -178,8 +191,8 @@ export function DataTable<TData, TValue>({
 }
 
 const paginationFrom = (searchParams: URLSearchParams): PaginationState => {
-  const pageIndex = searchParams.get('page') ? Number(searchParams.get('page')) - 1 : 0;
-  const pageSize = searchParams.get('pageSize') ? Number(searchParams.get('pageSize')) : 10;
+  const pageIndex = searchParams.get(pageKey) ? Number(searchParams.get(pageKey)) - 1 : 0;
+  const pageSize = searchParams.get(pageSizeKey) ? Number(searchParams.get(pageSizeKey)) : 10;
   return { pageIndex, pageSize };
 };
 
@@ -201,4 +214,25 @@ const sortingFrom = (
     }
   });
   return sorting;
+};
+
+const filtersFrom = (
+  searchParams: URLSearchParams,
+  columns: ColumnDef<any, any>[]
+): ColumnFiltersState => {
+  const filters: ColumnFilter[] = [];
+  searchParams.forEach((value, key) => {
+    if (
+      !key.startsWith(sortColumnPrefix) &&
+      key !== pageKey &&
+      key !== pageSizeKey &&
+      columns.some((column) => column.id === key)
+    ) {
+      filters.push({
+        id: key,
+        value,
+      } satisfies ColumnFilter);
+    }
+  });
+  return filters;
 };
