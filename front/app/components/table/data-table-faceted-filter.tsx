@@ -1,5 +1,6 @@
 import type { Column } from '@tanstack/react-table';
 import { Check, PlusCircle } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { Badge } from '~/components/ui/badge';
 import { Button } from '~/components/ui/button';
 import {
@@ -32,6 +33,8 @@ export function DataTableFacetedFilter<TData, TValue>({
   title,
   options,
 }: DataTableFacetedFilterProps<TData, TValue>) {
+  const { t } = useTranslation();
+
   const facets = column?.getFacetedUniqueValues();
   const selectedValues = new Set(column?.getFilterValue() as string[]);
 
@@ -50,7 +53,7 @@ export function DataTableFacetedFilter<TData, TValue>({
               <div className="hidden space-x-1 lg:flex">
                 {selectedValues.size > 2 ? (
                   <Badge variant="secondary" className="rounded-sm px-1 font-normal">
-                    {selectedValues.size} selected
+                    {t('table.filterSelected', { count: selectedValues.size })}
                   </Badge>
                 ) : (
                   options
@@ -73,7 +76,7 @@ export function DataTableFacetedFilter<TData, TValue>({
         <Command>
           <CommandInput placeholder={title} disabled={disabled} />
           <CommandList>
-            <CommandEmpty>No results found.</CommandEmpty>
+            <CommandEmpty>{t('table.noResults')}</CommandEmpty>
             <CommandGroup>
               {options.map((option) => {
                 const isSelected = selectedValues.has(option.value);
@@ -117,7 +120,7 @@ export function DataTableFacetedFilter<TData, TValue>({
                     disabled={disabled}
                     onSelect={() => column?.setFilterValue(undefined)}
                     className="justify-center text-center">
-                    Clear filters
+                    {t('table.clearFilters')}
                   </CommandItem>
                 </CommandGroup>
               </>

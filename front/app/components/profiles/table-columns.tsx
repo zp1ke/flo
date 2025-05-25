@@ -5,7 +5,7 @@ import { Checkbox } from '~/components/ui/checkbox';
 import type { Profile } from '../../types/profile';
 import { DataTableRowActions } from './table-row-actions';
 
-export const columns: ColumnDef<Profile>[] = [
+export const tableColumns = ({ t }: { t: (key: string) => string }): ColumnDef<Profile>[] => [
   {
     id: 'select',
     header: ({ table }) => (
@@ -15,7 +15,7 @@ export const columns: ColumnDef<Profile>[] = [
           table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate')
         }
         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
+        aria-label={t('table.selectAll')}
         className="translate-y-[2px]"
       />
     ),
@@ -24,7 +24,7 @@ export const columns: ColumnDef<Profile>[] = [
         disabled={table.options?.meta?.loading}
         checked={row.getIsSelected()}
         onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
+        aria-label={t('table.selectRow')}
         className="translate-y-[2px]"
       />
     ),
@@ -35,7 +35,7 @@ export const columns: ColumnDef<Profile>[] = [
     id: 'code',
     accessorKey: 'code',
     header: ({ column, table }) => (
-      <DataTableColumnHeader column={column} table={table} title="Code" />
+      <DataTableColumnHeader column={column} table={table} title={t('profiles.code')} />
     ),
     cell: ({ row }) => <div className="w-[80px]">{row.getValue('code')}</div>,
     enableSorting: false,
@@ -45,7 +45,7 @@ export const columns: ColumnDef<Profile>[] = [
     id: 'name',
     accessorKey: 'name',
     header: ({ column, table }) => (
-      <DataTableColumnHeader column={column} table={table} title="Name" />
+      <DataTableColumnHeader column={column} table={table} title={t('profiles.name')} />
     ),
     cell: ({ row }) => (
       <div className="max-w-[500px] truncate font-medium">{row.getValue('name')}</div>

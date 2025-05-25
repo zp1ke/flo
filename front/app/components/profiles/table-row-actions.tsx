@@ -1,12 +1,12 @@
 import type { Row, Table } from '@tanstack/react-table';
 import { MoreHorizontal } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { Button } from '~/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from '~/components/ui/dropdown-menu';
 
@@ -18,6 +18,8 @@ interface DataTableRowActionsProps<TData> {
 }
 
 export function DataTableRowActions<TData>({ row, table }: DataTableRowActionsProps<TData>) {
+  const { t } = useTranslation();
+
   const profile = profileSchema.parse(row.original);
   const disabled = table.options?.meta?.loading;
 
@@ -26,18 +28,14 @@ export function DataTableRowActions<TData>({ row, table }: DataTableRowActionsPr
       <DropdownMenuTrigger asChild disabled={disabled}>
         <Button variant="ghost" className="flex h-8 w-8 p-0 data-[state=open]:bg-muted">
           <MoreHorizontal />
-          <span className="sr-only">Open menu</span>
+          <span className="sr-only">{t('table.openMenu')}</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[160px]">
-        <DropdownMenuItem disabled={disabled}>Edit</DropdownMenuItem>
-        <DropdownMenuItem disabled={disabled}>Make a copy</DropdownMenuItem>
-        <DropdownMenuItem disabled={disabled}>Favorite</DropdownMenuItem>
+        <DropdownMenuItem disabled={disabled}>{t('profiles.edit')}</DropdownMenuItem>
+        <DropdownMenuItem disabled={disabled}>{t('profiles.defaultProfile')}</DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem disabled={disabled}>
-          Delete
-          <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
-        </DropdownMenuItem>
+        <DropdownMenuItem disabled={disabled}>{t('profiles.delete')}</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

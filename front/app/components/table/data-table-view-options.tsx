@@ -1,5 +1,6 @@
 import type { Table } from '@tanstack/react-table';
 import { Settings2 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { Button } from '~/components/ui/button';
 import {
   DropdownMenu,
@@ -23,16 +24,18 @@ export function DataTableViewOptions<TData>({ table }: DataTableViewOptionsProps
     return <></>;
   }
 
+  const { t } = useTranslation();
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="outline" size="sm" className="ml-auto hidden h-8 lg:flex">
           <Settings2 />
-          View
+          {t('table.view')}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[150px]">
-        <DropdownMenuLabel>Toggle columns</DropdownMenuLabel>
+        <DropdownMenuLabel>{t('table.toggleColumns')}</DropdownMenuLabel>
         <DropdownMenuSeparator />
         {columns.map((column) => {
           return (

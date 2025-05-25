@@ -1,11 +1,17 @@
+import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import PageContent from '~/components/layout/page-content';
-import { columns } from '~/components/profiles/table-columns';
+import { tableColumns } from '~/components/profiles/table-columns';
 import { type DataPage, DataTable } from '~/components/table/data-table';
 import { type Profile } from '~/types/profile';
 
 export default function Profiles() {
+  const { t } = useTranslation();
+
+  const columns = useMemo(() => tableColumns({ t }), [t]);
+
   return (
-    <PageContent title="PROFILES TODO" subtitle="Here's a list of your profiles!">
+    <PageContent title={t('profiles.title')} subtitle={t('profiles.subtitle')}>
       <DataTable
         columns={columns}
         dataFetcher={async (pagination): Promise<DataPage<Profile>> => {
@@ -22,10 +28,10 @@ export default function Profiles() {
                 data,
                 total: 100,
               });
-            }, 10000);
+            }, 1000);
           });
         }}
-        textFilters={[{ title: 'Name', column: 'name' }]}
+        textFilters={[{ title: t('profiles.name'), column: 'name' }]}
       />
     </PageContent>
   );

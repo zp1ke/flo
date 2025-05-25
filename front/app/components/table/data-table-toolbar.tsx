@@ -1,8 +1,8 @@
 import type { Table } from '@tanstack/react-table';
 import { CheckIcon, Loader2, X } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { Button } from '~/components/ui/button';
 import { Input } from '~/components/ui/input';
-import { cn } from '~/lib/utils';
 
 import { DataTableFacetedFilter } from './data-table-faceted-filter';
 import { DataTableViewOptions } from './data-table-view-options';
@@ -20,6 +20,8 @@ export function DataTableToolbar<TData>({
   table,
   textFilters,
 }: DataTableViewOptions<TData>) {
+  const { t } = useTranslation();
+
   const isFiltered = table.getState().columnFilters.length > 0;
 
   return (
@@ -32,7 +34,7 @@ export function DataTableToolbar<TData>({
             key={filter.column}
             disabled={loading}
             type="search"
-            placeholder={`Filter ${filter.title}...`}
+            placeholder={`${t('table.filter')} ${filter.title}...`}
             value={(table.getColumn(filter.column)?.getFilterValue() as string) ?? ''}
             onChange={(event) => table.getColumn(filter.column)?.setFilterValue(event.target.value)}
             className="h-8 w-[150px] lg:w-[250px]"
@@ -53,7 +55,7 @@ export function DataTableToolbar<TData>({
             disabled={loading}
             onClick={() => table.resetColumnFilters()}
             className="h-8 px-2 lg:px-3">
-            Reset
+            {t('table.reset')}
             <X />
           </Button>
         )}

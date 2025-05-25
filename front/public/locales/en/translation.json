@@ -22,7 +22,9 @@
   },
   "profiles": {
     "add": "Add Profile",
+    "code": "Code",
     "defaultProfile": "Set as default Profile",
+    "delete": "Delete Profile",
     "edit": "Edit Profile",
     "editDescription": "Make changes to your profile here. Click save when you're done.",
     "name": "Name",
@@ -30,6 +32,7 @@
     "nameSize": "Name must be at least 3 characters long and max 255 characters long.",
     "processing": "Processing...",
     "save": "Save",
+    "subtitle": "Manage your profiles",
     "title": "Profiles"
   },
   "signIn": {
@@ -59,6 +62,32 @@
   },
   "signUp": {
     "title": "Sign Up"
+  },
+  "table": {
+    "clearFilters": "Clear filters",
+    "filter": "Filter",
+    "filterSelected_zero": "Nothing selected.",
+    "filterSelected_one": "{{count}} selected.",
+    "filterSelected_other": "{{count}} selected.",
+    "goToFirstPage": "Go to first page",
+    "goToPreviousPage": "Go to previous page",
+    "goToNextPage": "Go to next page",
+    "goToLastPage": "Go to last page",
+    "noResults": "No results found.",
+    "of": "of",
+    "ofSelected_one": "of {{count}} item selected.",
+    "ofSelected_other": "of {{count}} items selected.",
+    "openMenu": "Open Menu",
+    "page": "Page",
+    "reset": "Reset",
+    "rowsPerPage": "Rows per page",
+    "selectAll": "Select All",
+    "selectRow": "Select Row",
+    "sortAsc": "Sort Ascending",
+    "sortDesc": "Sort Descending",
+    "sortRemove": "Remove Sorting",
+    "toggleColumns": "Toggle Columns",
+    "view": "View"
   },
   "theme": {
     "dark": "Dark",

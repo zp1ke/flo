@@ -1,6 +1,7 @@
 import type { Column, Table } from '@tanstack/react-table';
 import { ArrowDown, ArrowUp, ChevronsUpDown, EyeOff } from 'lucide-react';
-import type { HTMLAttributes } from 'react';
+import { type HTMLAttributes } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Button } from '~/components/ui/button';
 import {
   DropdownMenu,
@@ -26,6 +27,9 @@ export function DataTableColumnHeader<TData, TValue>({
   if (!column.getCanSort()) {
     return <div className={cn(className)}>{title}</div>;
   }
+
+  const { t } = useTranslation();
+
   const disabled = table.options?.meta?.loading;
 
   return (
@@ -50,16 +54,16 @@ export function DataTableColumnHeader<TData, TValue>({
         <DropdownMenuContent align="start">
           <DropdownMenuItem onClick={() => column.toggleSorting(false)}>
             <ArrowUp className="h-3.5 w-3.5 text-muted-foreground/70" />
-            Asc
+            {t('table.sortAsc')}
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => column.toggleSorting(true)}>
             <ArrowDown className="h-3.5 w-3.5 text-muted-foreground/70" />
-            Desc
+            {t('table.sortDesc')}
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={() => column.toggleVisibility(false)}>
+          <DropdownMenuItem onClick={() => column.toggleSorting()}>
             <EyeOff className="h-3.5 w-3.5 text-muted-foreground/70" />
-            Hide
+            {t('table.sortRemove')}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

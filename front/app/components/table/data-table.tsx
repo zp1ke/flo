@@ -57,13 +57,16 @@ export function DataTable<TData, TValue>({
   const location = useLocation();
   const [searchParams] = useSearchParams();
 
+  const initialPagination = paginationFrom(searchParams);
+  const pageSizes = Array.from(new Set([initialPagination.pageSize, 10, 20, 40, 50])).sort();
+
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>(
     filtersFrom(searchParams, columns)
   );
   const [data, setData] = useState<DataPage<TData>>({ data: [], total: 0 });
   const [loading, setLoading] = useState(true);
-  const [pagination, setPagination] = useState<PaginationState>(paginationFrom(searchParams));
+  const [pagination, setPagination] = useState<PaginationState>(initialPagination);
   const [sorting, setSorting] = useState<SortingState>(sortingFrom(searchParams, columns));
   const [rowSelection, setRowSelection] = useState({});
 
@@ -191,7 +194,7 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      <DataTablePagination disabled={loading} table={table} />
+      <DataTablePagination disabled={loading} pageSizes={pageSizes} table={table} />
     </div>
   );
 }
