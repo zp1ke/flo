@@ -17,7 +17,9 @@ import {
 } from '@tanstack/react-table';
 import { Loader2 } from 'lucide-react';
 import { type HTMLAttributes, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useLocation, useSearchParams } from 'react-router';
+import { toast } from 'sonner';
 import {
   Table,
   TableBody,
@@ -26,27 +28,23 @@ import {
   TableHeader,
   TableRow,
 } from '~/components/ui/table';
+import type { PageFilters } from '~/lib/rest-client';
+import { FetchState } from '~/types/fetch-state';
+import type { DataPage } from '~/types/page';
+import { SortDirection, sortPrefix } from '~/types/sort';
 
 import { DataTablePagination } from './data-table-pagination';
 import { DataTableToolbar } from './data-table-toolbar';
 
-export type DataPage<TData> = {
-  data: TData[];
-  total: number;
-};
-
 interface DataTableProps<TData, TValue> extends HTMLAttributes<HTMLDivElement> {
   columns: ColumnDef<TData, TValue>[];
-  dataFetcher: (pagination: PaginationState, sorting: SortingState) => Promise<DataPage<TData>>;
+  dataFetcher: (pageFilters: PageFilters) => Promise<DataPage<TData>>;
   facetedFilters?: DataTableSelectFilter[];
   textFilters?: DataTableFilter[];
 }
 
-const sortColumnPrefix = 'sort_';
 const pageKey = 'page';
 const pageSizeKey = 'pageSize';
-const sortAsc = 'asc';
-const sortDesc = 'desc';
 
 export function DataTable<TData, TValue>({
   columns,
@@ -54,6 +52,7 @@ export function DataTable<TData, TValue>({
   facetedFilters,
   textFilters,
 }: DataTableProps<TData, TValue>) {
+  const { t } = useTranslation();
   const location = useLocation();
   const [searchParams] = useSearchParams();
 
@@ -65,20 +64,46 @@ export function DataTable<TData, TValue>({
     filtersFrom(searchParams, columns)
   );
   const [data, setData] = useState<DataPage<TData>>({ data: [], total: 0 });
-  const [loading, setLoading] = useState(true);
+  const [fetchState, setFetchState] = useState(FetchState.Loading);
   const [pagination, setPagination] = useState<PaginationState>(initialPagination);
   const [sorting, setSorting] = useState<SortingState>(sortingFrom(searchParams, columns));
   const [rowSelection, setRowSelection] = useState({});
 
   useEffect(() => {
-    if (loading) {
-      dataFetcher(pagination, sorting).then((data) => {
-        setData(data);
-        updateUrlParams();
-        setLoading(false);
-      });
+    if (fetchState === FetchState.Loading) {
+      dataFetcher(pageFilters())
+        .then((data) => {
+          setData(data);
+          updateUrlParams();
+          setFetchState(FetchState.Success);
+        })
+        .catch((e) => {
+          setData({ data: [], total: 0 });
+          setFetchState(FetchState.Error);
+          toast.error('ERROR FETCHING TODO', { description: e.message });
+        });
     }
-  }, [loading]);
+  }, [fetchState]);
+
+  const pageFilters = (): PageFilters => {
+    const sort: Record<string, SortDirection> = {};
+    sorting.forEach((columnSort) => {
+      sort[columnSort.id] = columnSort.desc ? SortDirection.Desc : SortDirection.Asc;
+    });
+    const filters: Record<string, string> = {};
+    columnFilters.forEach((columnFilter) => {
+      if (columnFilter.value) {
+        filters[columnFilter.id] = columnFilter.value.toString();
+      }
+    });
+
+    return {
+      page: pagination.pageIndex,
+      size: pagination.pageSize,
+      sort,
+      filters,
+    } satisfies PageFilters;
+  };
 
   const updateUrlParams = () => {
     const params: Record<string, string> = {
@@ -86,7 +111,7 @@ export function DataTable<TData, TValue>({
       pageSize: String(pagination.pageSize),
     };
     sorting.forEach((columnSort) => {
-      params[sortColumnPrefix + columnSort.id] = columnSort.desc ? sortDesc : sortAsc;
+      params[sortPrefix + columnSort.id] = columnSort.desc ? SortDirection.Desc : SortDirection.Asc;
     });
     columnFilters.forEach((columnFilter) => {
       if (columnFilter.value) {
@@ -115,21 +140,25 @@ export function DataTable<TData, TValue>({
     manualSorting: true,
     manualFiltering: true,
     meta: {
-      loading,
+      fetchState,
+      isLoading: () => fetchState === FetchState.Loading,
+      onRefresh: () => {
+        setFetchState(FetchState.Loading);
+      },
     },
     onColumnFiltersChange: (state) => {
       setColumnFilters(state);
-      setLoading(true);
+      setFetchState(FetchState.Loading);
     },
     onColumnVisibilityChange: setColumnVisibility,
     onPaginationChange: (state) => {
       setPagination(state);
-      setLoading(true);
+      setFetchState(FetchState.Loading);
     },
     onRowSelectionChange: setRowSelection,
     onSortingChange: (state) => {
       setSorting(state);
-      setLoading(true);
+      setFetchState(FetchState.Loading);
     },
     rowCount: data.total,
     state: {
@@ -144,7 +173,7 @@ export function DataTable<TData, TValue>({
   return (
     <div className="space-y-4">
       <DataTableToolbar
-        loading={loading}
+        fetchState={fetchState}
         table={table}
         textFilters={textFilters}
         facetedFilters={facetedFilters}
@@ -180,13 +209,13 @@ export function DataTable<TData, TValue>({
             ) : (
               <TableRow>
                 <TableCell colSpan={columns.length} className="h-24 text-center">
-                  {loading ? (
+                  {fetchState === FetchState.Loading ? (
                     <div className="flex items-center justify-center space-x-2">
                       <Loader2 className="h-4 w-4 animate-spin" />
-                      <span>Loading...</span>
+                      <span>{t('table.loading')}</span>
                     </div>
                   ) : (
-                    <span>No results.</span>
+                    <span>{t('table.noResults')}</span>
                   )}
                 </TableCell>
               </TableRow>
@@ -194,7 +223,11 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      <DataTablePagination disabled={loading} pageSizes={pageSizes} table={table} />
+      <DataTablePagination
+        disabled={fetchState === FetchState.Loading}
+        pageSizes={pageSizes}
+        table={table}
+      />
     </div>
   );
 }
@@ -211,17 +244,17 @@ const sortingFrom = (
 ): SortingState => {
   const sorting: SortingState = [];
   searchParams.forEach((value, key) => {
-    if (!key.startsWith(sortColumnPrefix)) {
+    if (!key.startsWith(sortPrefix)) {
       return;
     }
-    const theKey = key.substring(sortColumnPrefix.length);
+    const theKey = key.substring(sortPrefix.length);
     if (
-      (value === sortAsc || value === sortDesc) &&
+      (value === SortDirection.Asc || value === SortDirection.Desc) &&
       columns.some((column) => column.id === theKey)
     ) {
       sorting.push({
         id: theKey,
-        desc: value === sortDesc,
+        desc: value === SortDirection.Desc,
       } satisfies ColumnSort);
     }
   });
@@ -235,7 +268,7 @@ const filtersFrom = (
   const filters: ColumnFilter[] = [];
   searchParams.forEach((value, key) => {
     if (
-      !key.startsWith(sortColumnPrefix) &&
+      !key.startsWith(sortPrefix) &&
       key !== pageKey &&
       key !== pageSizeKey &&
       columns.some((column) => column.id === key)

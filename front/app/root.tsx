@@ -12,6 +12,7 @@ import { ThemeProvider } from '~/contexts/theme-provider';
 import type { Route } from './+types/root';
 import './app.css';
 import Loading from './components/ui/loading';
+import { Toaster } from './components/ui/sonner';
 import './lib/i18n';
 
 export function meta({}: Route.MetaArgs) {
@@ -42,6 +43,7 @@ export function Layout({ children }: { children: ReactNode }) {
       </head>
       <body>
         {children}
+        <Toaster />
         <ScrollRestoration />
         <Scripts />
       </body>

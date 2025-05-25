@@ -30,7 +30,7 @@ export function DataTableColumnHeader<TData, TValue>({
 
   const { t } = useTranslation();
 
-  const disabled = table.options?.meta?.loading;
+  const disabled = table.options?.meta?.isLoading();
 
   return (
     <div className={cn('flex items-center space-x-2', className)}>

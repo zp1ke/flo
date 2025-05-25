@@ -21,7 +21,7 @@ export function DataTableRowActions<TData>({ row, table }: DataTableRowActionsPr
   const { t } = useTranslation();
 
   const profile = profileSchema.parse(row.original);
-  const disabled = table.options?.meta?.loading;
+  const disabled = table.options?.meta?.isLoading();
 
   return (
     <DropdownMenu>

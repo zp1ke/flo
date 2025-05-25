@@ -10,7 +10,7 @@ export const tableColumns = ({ t }: { t: (key: string) => string }): ColumnDef<P
     id: 'select',
     header: ({ table }) => (
       <Checkbox
-        disabled={table.options?.meta?.loading}
+        disabled={table.options?.meta?.isLoading()}
         checked={
           table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate')
         }
@@ -21,7 +21,7 @@ export const tableColumns = ({ t }: { t: (key: string) => string }): ColumnDef<P
     ),
     cell: ({ row, table }) => (
       <Checkbox
-        disabled={table.options?.meta?.loading}
+        disabled={table.options?.meta?.isLoading()}
         checked={row.getIsSelected()}
         onCheckedChange={(value) => row.toggleSelected(!!value)}
         aria-label={t('table.selectRow')}

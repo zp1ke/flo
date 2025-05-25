@@ -73,6 +73,7 @@
     "goToPreviousPage": "Go to previous page",
     "goToNextPage": "Go to next page",
     "goToLastPage": "Go to last page",
+    "loading": "Loading...",
     "noResults": "No results found.",
     "of": "of",
     "ofSelected_one": "of {{count}} item selected.",
