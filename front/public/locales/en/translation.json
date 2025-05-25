@@ -27,6 +27,7 @@
     "delete": "Delete Profile",
     "edit": "Edit Profile",
     "editDescription": "Make changes to your profile here. Click save when you're done.",
+    "fetchError": "Could not fetch profiles.",
     "name": "Name",
     "namePlaceholder": "Profile name",
     "nameSize": "Name must be at least 3 characters long and max 255 characters long.",
@@ -35,12 +36,17 @@
     "subtitle": "Manage your profiles",
     "title": "Profiles"
   },
+  "rest": {
+    "unknownError": "An unknown error occurred.",
+    "user.invalid_credentials": "Invalid credentials."
+  },
   "signIn": {
     "description": "Sign in to your account",
     "email": "Email",
     "emailDescription": "Enter your email address",
     "emailMax255": "Email must be at most 255 characters long.",
     "emailPlaceholder": "example@mail.com",
+    "error": "Could not sign in.",
     "forgotPassword": "Forgot Password?",
     "noAccount": "Don't have an account?",
     "password": "Password",

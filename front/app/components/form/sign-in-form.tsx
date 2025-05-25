@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router';
+import { toast } from 'sonner';
 import { z } from 'zod';
 import { Button } from '~/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '~/components/ui/card';
@@ -17,6 +18,7 @@ import {
 } from '~/components/ui/form';
 import { Input } from '~/components/ui/input';
 import { signIn } from '~/lib/auth';
+import type { RestError } from '~/lib/rest-client';
 
 export default function SignInForm() {
   const { t } = useTranslation();
@@ -25,11 +27,7 @@ export default function SignInForm() {
 
   const formSchema = z.object({
     email: z.string().email(t('signIn.validEmail')).max(255, t('signIn.emailMax255')),
-    password: z
-      .string()
-      .min(6, t('signIn.passwordSize'))
-      .max(100, t('signIn.passwordSize'))
-      .regex(/(?=.*[0-9])/, t('signIn.validPassword')),
+    password: z.string().min(3, t('signIn.passwordSize')).max(100, t('signIn.passwordSize')),
   });
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -45,8 +43,13 @@ export default function SignInForm() {
 
     const { email, password } = data;
 
-    await signIn({ email, password });
-    navigate('/');
+    try {
+      await signIn({ email, password });
+      navigate('/');
+    } catch (e) {
+      toast.error(t('signIn.error'), { description: t((e as RestError).message) });
+      setProcessing(false);
+    }
   };
 
   return (

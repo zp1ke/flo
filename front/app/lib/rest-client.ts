@@ -3,6 +3,12 @@ import config from '~/config';
 import type { DataPage } from '~/types/page';
 import { SortDirection, sortPrefix } from '~/types/sort';
 
+import { getAuthToken } from './auth';
+
+export interface RestError {
+  message: string;
+}
+
 export interface PageFilters {
   page: number;
   size: number;
@@ -24,22 +30,43 @@ class RestClient {
   constructor(baseUrl: string) {
     this.axios = axios.create({
       baseURL: baseUrl,
-      timeout: 1000,
+      timeout: 5_000,
     });
   }
 
   async getPage<T>(url: string, pageFilters?: PageFilters): Promise<DataPage<T>> {
     try {
-      const response = await this.axios.get<RestPage<T>>(url, { params: paramsFrom(pageFilters) });
+      const response = await this.axios.get<RestPage<T>>(url, {
+        params: paramsFrom(pageFilters),
+        headers: headers(),
+      });
       return {
         data: response.data.list,
         total: response.data.totalElements,
       };
     } catch (error) {
-      throw new Error(`GET request failed: ${error}`);
+      throw parseError(error);
+    }
+  }
+
+  async postJson<T>(url: string, data: Record<string, any>): Promise<T> {
+    try {
+      const response = await this.axios.post<T>(url, data, { headers: headers() });
+      return response.data;
+    } catch (error) {
+      throw parseError(error);
     }
   }
 }
+
+const headers = (): Record<string, string> => {
+  const authToken = getAuthToken();
+  return {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+    ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
+  };
+};
 
 const paramsFrom = (pageFilters?: PageFilters): Record<string, any> => {
   const params: Record<string, any> = {};
@@ -47,10 +74,12 @@ const paramsFrom = (pageFilters?: PageFilters): Record<string, any> => {
     params.page = pageFilters.page;
     params.size = pageFilters.size;
     if (pageFilters.sort) {
+      const sortArray: string[] = [];
       Object.entries(pageFilters.sort).forEach(([key, value]) => {
         const theKey = key.startsWith(sortPrefix) ? key.substring(sortPrefix.length) : key;
-        params[theKey] = value;
+        sortArray.push(`${theKey},${value}`);
       });
+      params.sort = encodeURIComponent(sortArray.join(','));
     }
     if (pageFilters.filters) {
       Object.entries(pageFilters.filters).forEach(([key, value]) => {
@@ -60,6 +89,22 @@ const paramsFrom = (pageFilters?: PageFilters): Record<string, any> => {
   }
   return params;
 };
+
+const parseError = (error: unknown): RestError => {
+  if (axios.isAxiosError(error) && error.response?.data) {
+    return {
+      ...error.response.data,
+      message: 'rest.' + (error.response.data.message || 'unknownError'),
+    } satisfies RestError;
+  }
+  if (error instanceof Error) {
+    return { message: error.message } satisfies RestError;
+  }
+  if (typeof error === 'string') {
+    return { message: error } satisfies RestError;
+  }
+  return { message: 'rest.unknownError' } satisfies RestError;
+}
 
 const restClient = new RestClient(config.restApiBaseUrl);
 

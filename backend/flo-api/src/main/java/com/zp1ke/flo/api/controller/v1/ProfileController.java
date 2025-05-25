@@ -1,6 +1,6 @@
 package com.zp1ke.flo.api.controller.v1;
 
-import com.zp1ke.flo.api.dto.ListDto;
+import com.zp1ke.flo.api.dto.PageDto;
 import com.zp1ke.flo.api.dto.ProfileDto;
 import com.zp1ke.flo.data.domain.User;
 import com.zp1ke.flo.data.service.ProfileService;
@@ -8,6 +8,9 @@ import com.zp1ke.flo.data.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -25,9 +28,12 @@ public class ProfileController {
 
     @GetMapping
     @Operation(summary = "Get profiles")
-    public ResponseEntity<ListDto<ProfileDto>> getProfiles(@AuthenticationPrincipal User user) {
-        var profiles = profileService.profilesOfUser(user);
-        return ResponseEntity.ok(ListDto.of(profiles, ProfileDto::fromProfile));
+    public ResponseEntity<PageDto<ProfileDto>> getProfiles(@AuthenticationPrincipal User user,
+                                                           @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC)
+                                                           Pageable pageable,
+                                                           @RequestParam(required = false, name = "name") String nameFilter) {
+        var profiles = profileService.profilesOfUser(user, nameFilter, pageable);
+        return ResponseEntity.ok(PageDto.of(profiles, ProfileDto::fromProfile));
     }
 
     @PostMapping

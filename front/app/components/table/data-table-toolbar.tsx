@@ -1,9 +1,10 @@
 import type { Table } from '@tanstack/react-table';
-import { CheckIcon, Loader2, RefreshCwIcon, TriangleAlertIcon, X } from 'lucide-react';
+import { Loader2, RefreshCwIcon, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '~/components/ui/button';
 import { Input } from '~/components/ui/input';
 import { FetchState } from '~/types/fetch-state';
+import { useDebounce } from 'use-debounce';
 
 import { DataTableFacetedFilter } from './data-table-faceted-filter';
 import { DataTableViewOptions } from './data-table-view-options';

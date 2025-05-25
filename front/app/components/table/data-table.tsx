@@ -28,7 +28,7 @@ import {
   TableHeader,
   TableRow,
 } from '~/components/ui/table';
-import type { PageFilters } from '~/lib/rest-client';
+import type { PageFilters, RestError } from '~/lib/rest-client';
 import { FetchState } from '~/types/fetch-state';
 import type { DataPage } from '~/types/page';
 import { SortDirection, sortPrefix } from '~/types/sort';
@@ -80,7 +80,7 @@ export function DataTable<TData, TValue>({
         .catch((e) => {
           setData({ data: [], total: 0 });
           setFetchState(FetchState.Error);
-          toast.error('ERROR FETCHING TODO', { description: e.message });
+          toast.error(t('profiles.fetchError'), { description: t((e as RestError).message) });
         });
     }
   }, [fetchState]);

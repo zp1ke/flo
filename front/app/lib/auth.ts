@@ -1,23 +1,32 @@
+import { use } from 'react';
 import config from '~/config';
 import type { Profile } from '~/types/profile';
 import type { User } from '~/types/user';
+
+import restClient from './rest-client';
 
 const TOKEN_KEY = 'auth_token';
 const USER_KEY = 'auth_user';
 const USER_KEY_TS = 'auth_user_ts';
 
+const basePath = '/auth';
+
+interface AuthResponse {
+  token: string;
+  user: User;
+}
+
 export const signIn = async (data: { email: string; password: string }): Promise<void> => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      const token = 'test-token';
-      setToken(token);
-      resolve();
-    }, 1000);
+  const authResponse = await restClient.postJson<AuthResponse>(`${basePath}/sign-in`, {
+    username: data.email,
+    password: data.password,
   });
+  setAuthToken(authResponse.token);
+  await fetchUser();
 };
 
 export const fetchUser = async (): Promise<User | null> => {
-  const token = getToken();
+  const token = getAuthToken();
   if (!token) {
     localStorage.removeItem(USER_KEY);
     localStorage.removeItem(USER_KEY_TS);
@@ -101,17 +110,17 @@ export const setActiveProfile = async (profile: Profile): Promise<User> => {
 export const signOut = async (): Promise<void> => {
   return new Promise((resolve) => {
     setTimeout(() => {
-      setToken(null);
+      setAuthToken(null);
       resolve();
-    }, 1000);
+    }, 100);
   });
 };
 
-const getToken = (): string | null => {
+export const getAuthToken = (): string | null => {
   return localStorage.getItem(TOKEN_KEY);
 };
 
-const setToken = (token: string | null): void => {
+const setAuthToken = (token: string | null): void => {
   if (token) {
     localStorage.setItem(TOKEN_KEY, token);
   } else {

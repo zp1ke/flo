@@ -4,6 +4,7 @@ import com.zp1ke.flo.data.domain.Profile;
 import com.zp1ke.flo.data.domain.User;
 import com.zp1ke.flo.data.model.SettingCode;
 import com.zp1ke.flo.data.repository.ProfileRepository;
+import com.zp1ke.flo.data.repository.ProfileSpec;
 import com.zp1ke.flo.data.util.DomainUtils;
 import com.zp1ke.flo.utils.StringUtils;
 import jakarta.validation.ConstraintViolationException;
@@ -11,7 +12,10 @@ import jakarta.validation.Validator;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -63,5 +67,14 @@ public class ProfileService {
     @NonNull
     public List<Profile> profilesOfUser(@NonNull User user) {
         return profileRepository.findAllByUser(user);
+    }
+
+    @NonNull
+    public Page<Profile> profilesOfUser(@NonNull User user,
+                                        @Nullable String nameFilter,
+                                        @NonNull Pageable pageable) {
+        var specification = ProfileSpec.withUser(user)
+            .and(ProfileSpec.nameLike(nameFilter));
+        return profileRepository.findAll(specification, pageable);
     }
 }
