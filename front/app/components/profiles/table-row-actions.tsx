@@ -50,7 +50,7 @@ export function DataTableRowActions<TData>({ row, table }: DataTableRowActionsPr
           <DropdownMenuItem disabled={disabled}>{t('profiles.defaultProfile')}</DropdownMenuItem>
           <DropdownMenuSeparator />
           <DialogTrigger asChild>
-            <DropdownMenuItem disabled={disabled} className="text-danger">
+            <DropdownMenuItem disabled={disabled} className="text-destructive">
               {t('profiles.delete')}
             </DropdownMenuItem>
           </DialogTrigger>
