@@ -12,4 +12,6 @@ public interface UserTokenRepository extends JpaRepository<UserToken, Long> {
                                                            @NonNull String remoteAddress);
 
     Optional<UserToken> findByTokenAndUser(@NonNull String token, @NonNull User user);
+
+    void deleteByTokenAndRemoteAddress(@NonNull String token, @NonNull String remoteAddress);
 }

@@ -118,4 +118,9 @@ public class UserService {
             .build();
         userTokenRepository.save(userToken);
     }
+
+    public void disableUserToken(@NonNull String token,
+                                 @NonNull String remoteAddress) {
+        userTokenRepository.deleteByTokenAndRemoteAddress(token, remoteAddress);
+    }
 }
