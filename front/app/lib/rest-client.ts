@@ -63,27 +63,25 @@ const headers = (): Record<string, string> => {
   const authToken = getAuthToken();
   return {
     'Content-Type': 'application/json',
-    'Accept': 'application/json',
+    Accept: 'application/json',
     ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
   };
 };
 
-const paramsFrom = (pageFilters?: PageFilters): Record<string, any> => {
-  const params: Record<string, any> = {};
+const paramsFrom = (pageFilters?: PageFilters): URLSearchParams => {
+  const params = new URLSearchParams();
   if (pageFilters) {
-    params.page = pageFilters.page;
-    params.size = pageFilters.size;
+    params.set('page', pageFilters.page.toString());
+    params.set('size', pageFilters.size.toString());
     if (pageFilters.sort) {
-      const sortArray: string[] = [];
       Object.entries(pageFilters.sort).forEach(([key, value]) => {
         const theKey = key.startsWith(sortPrefix) ? key.substring(sortPrefix.length) : key;
-        sortArray.push(`${theKey},${value}`);
+        params.append('sort', `${theKey},${value}`);
       });
-      params.sort = encodeURIComponent(sortArray.join(','));
     }
     if (pageFilters.filters) {
       Object.entries(pageFilters.filters).forEach(([key, value]) => {
-        params[key] = value;
+        params.set(key, value);
       });
     }
   }
@@ -104,7 +102,7 @@ const parseError = (error: unknown): RestError => {
     return { message: error } satisfies RestError;
   }
   return { message: 'rest.unknownError' } satisfies RestError;
-}
+};
 
 const restClient = new RestClient(config.restApiBaseUrl);
 

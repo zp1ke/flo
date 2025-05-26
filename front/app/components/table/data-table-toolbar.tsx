@@ -1,10 +1,11 @@
-import type { Table } from '@tanstack/react-table';
+import type { ColumnFilter, Table } from '@tanstack/react-table';
 import { Loader2, RefreshCwIcon, X } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '~/components/ui/button';
 import { Input } from '~/components/ui/input';
+import useDebounce from '~/hooks/use-debounce';
 import { FetchState } from '~/types/fetch-state';
-import { useDebounce } from 'use-debounce';
 
 import { DataTableFacetedFilter } from './data-table-faceted-filter';
 import { DataTableViewOptions } from './data-table-view-options';
@@ -24,14 +25,24 @@ export function DataTableToolbar<TData>({
 }: DataTableViewOptions<TData>) {
   const { t } = useTranslation();
 
-  const isFiltered = table.getState().columnFilters.length > 0;
+  const [filters, setFilters] = useState<Record<string, string>>(
+    parseFilters(table.getState().columnFilters)
+  );
+  const debouncedFilters = useDebounce<Record<string, string>>(filters, 1000);
+
+  useEffect(() => {
+    for (const [column, value] of Object.entries(debouncedFilters)) {
+      table.getColumn(column)?.setFilterValue(value ? value.trim() : undefined);
+    }
+    table.options?.meta?.onRefresh?.();
+  }, [debouncedFilters]);
 
   return (
     <div className="flex items-center justify-between">
       <div className="flex flex-1 items-center space-x-2">
         <Button
-          variant="ghost"
-          className="mr-2 p-0"
+          variant="outline"
+          size="icon"
           disabled={fetchState === FetchState.Loading}
           onClick={() => table.options.meta?.onRefresh()}>
           {fetchState === FetchState.Loading && <Loader2 className="h-4 w-4 animate-spin" />}
@@ -43,9 +54,11 @@ export function DataTableToolbar<TData>({
             disabled={fetchState === FetchState.Loading}
             type="search"
             placeholder={`${t('table.filter')} ${filter.title}...`}
-            value={(table.getColumn(filter.column)?.getFilterValue() as string) ?? ''}
-            onChange={(event) => table.getColumn(filter.column)?.setFilterValue(event.target.value)}
-            className="h-8 w-[150px] lg:w-[250px]"
+            value={filters[filter.column] ?? ''}
+            onChange={(event) =>
+              setFilters((prev) => ({ ...prev, [filter.column]: event.target.value }))
+            }
+            className="w-[150px] lg:w-[250px]"
           />
         ))}
         {facetedFilters?.map((filter) => (
@@ -57,12 +70,14 @@ export function DataTableToolbar<TData>({
             options={filter.options}
           />
         ))}
-        {isFiltered && (
+        {Object.entries(debouncedFilters).length > 0 && (
           <Button
-            variant="ghost"
+            variant="outline"
             disabled={fetchState === FetchState.Loading}
-            onClick={() => table.resetColumnFilters()}
-            className="h-8 px-2 lg:px-3">
+            onClick={() => {
+              table.resetColumnFilters();
+              table.options?.meta?.onRefresh?.();
+            }}>
             {t('table.reset')}
             <X />
           </Button>
@@ -72,3 +87,15 @@ export function DataTableToolbar<TData>({
     </div>
   );
 }
+
+const parseFilters = (filters: ColumnFilter[]): Record<string, string> => {
+  return filters.reduce(
+    (acc, filter) => {
+      if (filter.id && filter.value) {
+        acc[filter.id] = String(filter.value).trim();
+      }
+      return acc;
+    },
+    {} as Record<string, string>
+  );
+};

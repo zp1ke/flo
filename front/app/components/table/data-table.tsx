@@ -146,10 +146,7 @@ export function DataTable<TData, TValue>({
         setFetchState(FetchState.Loading);
       },
     },
-    onColumnFiltersChange: (state) => {
-      setColumnFilters(state);
-      setFetchState(FetchState.Loading);
-    },
+    onColumnFiltersChange: setColumnFilters,
     onColumnVisibilityChange: setColumnVisibility,
     onPaginationChange: (state) => {
       setPagination(state);

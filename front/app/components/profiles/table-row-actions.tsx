@@ -35,7 +35,9 @@ export function DataTableRowActions<TData>({ row, table }: DataTableRowActionsPr
         <DropdownMenuItem disabled={disabled}>{t('profiles.edit')}</DropdownMenuItem>
         <DropdownMenuItem disabled={disabled}>{t('profiles.defaultProfile')}</DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem disabled={disabled}>{t('profiles.delete')}</DropdownMenuItem>
+        <DropdownMenuItem disabled={disabled} className="text-danger">
+          {t('profiles.delete')}
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

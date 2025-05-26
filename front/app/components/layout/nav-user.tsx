@@ -77,7 +77,7 @@ export function NavUser({ user }: { user: User }) {
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DialogTrigger asChild>
-                <DropdownMenuItem>
+                <DropdownMenuItem className="cursor-pointer text-danger">
                   <LogOut />
                   {t('signOut.title')}
                 </DropdownMenuItem>
