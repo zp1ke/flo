@@ -77,4 +77,11 @@ public class ProfileService {
             .and(ProfileSpec.nameLike(nameFilter));
         return profileRepository.findAll(specification, pageable);
     }
+
+    public void delete(@NonNull Profile profile) {
+        if (profileRepository.countByUser(profile.getUser()) == 1) {
+            throw new IllegalArgumentException("profile.one-profile-required");
+        }
+        profileRepository.delete(profile);
+    }
 }

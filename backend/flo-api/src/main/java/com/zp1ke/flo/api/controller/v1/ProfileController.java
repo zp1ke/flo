@@ -63,4 +63,16 @@ public class ProfileController {
         }
         return ResponseEntity.notFound().build();
     }
+
+    @DeleteMapping("/{profileCode}")
+    @Operation(summary = "Delete profile data")
+    public ResponseEntity<Void> deleteProfile(@AuthenticationPrincipal User user,
+                                              @PathVariable String profileCode) {
+        var profile = profileService.profileOfUserByCode(user, profileCode);
+        if (profile.isPresent()) {
+            profileService.delete(profile.get());
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
 }
