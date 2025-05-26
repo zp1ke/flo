@@ -1,4 +1,3 @@
-import { use } from 'react';
 import config from '~/config';
 import type { Profile } from '~/types/profile';
 import type { User } from '~/types/user';
@@ -25,6 +24,11 @@ export const signIn = async (data: { email: string; password: string }): Promise
   await fetchUser();
 };
 
+interface UserProfiles {
+  user: User;
+  profiles: Profile[];
+}
+
 export const fetchUser = async (): Promise<User | null> => {
   const token = getAuthToken();
   if (!token) {
@@ -33,31 +37,43 @@ export const fetchUser = async (): Promise<User | null> => {
     return Promise.resolve(null);
   }
 
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     const userTs = localStorage.getItem(USER_KEY_TS);
-    if (userTs && Date.now() - parseInt(userTs) < config.refreshUserMilliseconds) {
+    let activeProfileCode: string | null = null;
+    if (userTs) {
       const user = localStorage.getItem(USER_KEY);
       if (user) {
-        console.debug('Fetching user from CACHE...', Date.now());
-        return resolve(JSON.parse(user));
+        if (Date.now() - parseInt(userTs) < config.refreshUserMilliseconds) {
+          console.debug('Fetching user from CACHE...', Date.now());
+          return resolve(JSON.parse(user));
+        } else {
+          const parsedUser: User = JSON.parse(user);
+          activeProfileCode = parsedUser.activeProfile?.code || null;
+        }
       }
     }
 
     console.debug('Fetching user from API...', Date.now());
-    setTimeout(() => {
-      const profile = {
-        code: token,
-        name: 'Mock User',
-      } satisfies Profile;
-      const user = {
-        email: 'mock@mail.com',
-        activeProfile: profile,
-        profiles: [profile] satisfies Profile[],
-      } satisfies User;
-      localStorage.setItem(USER_KEY_TS, Date.now().toString());
-      localStorage.setItem(USER_KEY, JSON.stringify(user));
-      resolve(user);
-    }, 1000);
+    restClient
+      .getJson<UserProfiles>(`${basePath}/me`)
+      .then((userProfiles) => {
+        const user = userProfiles.user;
+        user.profiles = userProfiles.profiles;
+        if (!user.activeProfile) {
+          user.activeProfile = user.profiles[0];
+          if (activeProfileCode) {
+            const activeProfile = user.profiles.find((p) => p.code === activeProfileCode);
+            if (activeProfile) {
+              user.activeProfile = activeProfile;
+            }
+          }
+        }
+
+        localStorage.setItem(USER_KEY_TS, Date.now().toString());
+        localStorage.setItem(USER_KEY, JSON.stringify(user));
+        resolve(user);
+      })
+      .catch(reject);
   });
 };
 
@@ -70,6 +86,7 @@ export const saveUserProfile = async (
     throw new Error('user.notFound');
   }
 
+  // TODO: rest api call to save profile
   if (!profile.code) {
     profile.code = Date.now().toString();
     user.profiles.push(profile);
@@ -108,12 +125,8 @@ export const setActiveProfile = async (profile: Profile): Promise<User> => {
 };
 
 export const signOut = async (): Promise<void> => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      setAuthToken(null);
-      resolve();
-    }, 100);
-  });
+  await restClient.postJson(`${basePath}/sign-out`, {});
+  setAuthToken(null);
 };
 
 export const getAuthToken = (): string | null => {

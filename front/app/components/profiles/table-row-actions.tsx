@@ -34,10 +34,11 @@ export function DataTableRowActions<TData>({ row, table }: DataTableRowActionsPr
   const profile = profileSchema.parse(row.original);
   const disabled = table.options?.meta?.isLoading();
 
+  const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
   const [deleting, setDeleting] = useState<boolean>(false);
 
   return (
-    <Dialog>
+    <Dialog open={deleteOpen} onOpenChange={setDeleteOpen}>
       <DropdownMenu>
         <DropdownMenuTrigger asChild disabled={disabled}>
           <Button variant="ghost" className="flex h-8 w-8 p-0 data-[state=open]:bg-muted">
@@ -49,11 +50,12 @@ export function DataTableRowActions<TData>({ row, table }: DataTableRowActionsPr
           <DropdownMenuItem disabled={disabled}>{t('profiles.edit')}</DropdownMenuItem>
           <DropdownMenuItem disabled={disabled}>{t('profiles.defaultProfile')}</DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DialogTrigger asChild>
-            <DropdownMenuItem disabled={disabled} className="text-destructive">
-              {t('profiles.delete')}
-            </DropdownMenuItem>
-          </DialogTrigger>
+          <DropdownMenuItem
+            disabled={disabled}
+            className="text-destructive"
+            onClick={() => setDeleteOpen(true)}>
+            {t('profiles.delete')}
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
       <DialogContent

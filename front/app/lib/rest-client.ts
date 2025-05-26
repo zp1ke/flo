@@ -49,6 +49,22 @@ class RestClient {
     }
   }
 
+  async getJson<T>(url: string, params?: Record<string, any>): Promise<T> {
+    const getParams = new URLSearchParams();
+    Object.entries(params || {}).forEach(([key, value]) => {
+      if (value !== undefined && value !== null) {
+        getParams.set(key, String(value));
+      }
+    });
+
+    try {
+      const response = await this.axios.get<T>(url, { params: getParams, headers: headers() });
+      return response.data;
+    } catch (error) {
+      throw parseError(error);
+    }
+  }
+
   async postJson<T>(url: string, data: Record<string, any>): Promise<T> {
     try {
       const response = await this.axios.post<T>(url, data, { headers: headers() });

@@ -37,6 +37,7 @@ import { DataTablePagination } from './data-table-pagination';
 import { DataTableToolbar } from './data-table-toolbar';
 
 interface DataTableProps<TData, TValue> extends HTMLAttributes<HTMLDivElement> {
+  addElement?: React.ReactNode;
   columns: ColumnDef<TData, TValue>[];
   dataFetcher: (pageFilters: PageFilters) => Promise<DataPage<TData>>;
   facetedFilters?: DataTableSelectFilter[];
@@ -47,6 +48,7 @@ const pageKey = 'page';
 const pageSizeKey = 'pageSize';
 
 export function DataTable<TData, TValue>({
+  addElement,
   columns,
   dataFetcher,
   facetedFilters,
@@ -170,10 +172,11 @@ export function DataTable<TData, TValue>({
   return (
     <div className="space-y-4">
       <DataTableToolbar
+        addElement={addElement}
+        facetedFilters={facetedFilters}
         fetchState={fetchState}
         table={table}
         textFilters={textFilters}
-        facetedFilters={facetedFilters}
       />
       <div className="rounded-md border">
         <Table>

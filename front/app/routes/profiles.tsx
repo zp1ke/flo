@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import PageContent from '~/components/layout/page-content';
+import AddProfileButton from '~/components/profiles/add-profile-button';
 import { tableColumns } from '~/components/profiles/table-columns';
 import { DataTable } from '~/components/table/data-table';
 import { fetchProfiles } from '~/lib/profiles';
@@ -13,6 +14,7 @@ export default function Profiles() {
   return (
     <PageContent title={t('profiles.title')} subtitle={t('profiles.subtitle')}>
       <DataTable
+        addElement={<AddProfileButton />}
         columns={columns}
         dataFetcher={(pageFilters) => fetchProfiles(pageFilters)}
         textFilters={[{ title: t('profiles.name'), column: 'name' }]}

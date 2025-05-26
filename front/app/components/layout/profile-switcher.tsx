@@ -20,7 +20,7 @@ import {
 import useAuth from '~/contexts/auth/use-auth';
 import type { Profile } from '~/types/profile';
 
-import { SaveProfileDialog } from '../form/save-profile-dialog';
+import { AddProfileDialog } from '../profiles/add-profile-dialog';
 
 export function ProfileSwitcher({
   activeIndex,
@@ -47,7 +47,7 @@ export function ProfileSwitcher({
   return (
     <SidebarMenu>
       <SidebarMenuItem>
-        <SaveProfileDialog
+        <AddProfileDialog
           onSaved={(profile, setAsDefault) => {
             setProfilesList([...profilesList, profile]);
             if (setAsDefault) {
@@ -101,7 +101,7 @@ export function ProfileSwitcher({
               </DialogTrigger>
             </DropdownMenuContent>
           </DropdownMenu>
-        </SaveProfileDialog>
+        </AddProfileDialog>
       </SidebarMenuItem>
     </SidebarMenu>
   );
