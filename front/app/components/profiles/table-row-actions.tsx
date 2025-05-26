@@ -1,7 +1,18 @@
 import type { Row, Table } from '@tanstack/react-table';
-import { MoreHorizontal } from 'lucide-react';
+import { Loader2, MoreHorizontal } from 'lucide-react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '~/components/ui/button';
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '~/components/ui/dialog';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,22 +34,61 @@ export function DataTableRowActions<TData>({ row, table }: DataTableRowActionsPr
   const profile = profileSchema.parse(row.original);
   const disabled = table.options?.meta?.isLoading();
 
+  const [deleting, setDeleting] = useState<boolean>(false);
+
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild disabled={disabled}>
-        <Button variant="ghost" className="flex h-8 w-8 p-0 data-[state=open]:bg-muted">
-          <MoreHorizontal />
-          <span className="sr-only">{t('table.openMenu')}</span>
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-[160px]">
-        <DropdownMenuItem disabled={disabled}>{t('profiles.edit')}</DropdownMenuItem>
-        <DropdownMenuItem disabled={disabled}>{t('profiles.defaultProfile')}</DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem disabled={disabled} className="text-danger">
-          {t('profiles.delete')}
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <Dialog>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild disabled={disabled}>
+          <Button variant="ghost" className="flex h-8 w-8 p-0 data-[state=open]:bg-muted">
+            <MoreHorizontal />
+            <span className="sr-only">{t('table.openMenu')}</span>
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end" className="w-[160px]">
+          <DropdownMenuItem disabled={disabled}>{t('profiles.edit')}</DropdownMenuItem>
+          <DropdownMenuItem disabled={disabled}>{t('profiles.defaultProfile')}</DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DialogTrigger asChild>
+            <DropdownMenuItem disabled={disabled} className="text-danger">
+              {t('profiles.delete')}
+            </DropdownMenuItem>
+          </DialogTrigger>
+        </DropdownMenuContent>
+      </DropdownMenu>
+      <DialogContent
+        className="[&>button]:hidden"
+        onInteractOutside={(e) => {
+          if (deleting) {
+            e.preventDefault();
+          }
+        }}>
+        <DialogHeader>
+          <DialogTitle>{t('profiles.confirmDelete')}</DialogTitle>
+          <DialogDescription>
+            {t('profiles.confirmDeleteMessage', { name: profile.name })}
+          </DialogDescription>
+        </DialogHeader>
+        <DialogFooter>
+          <DialogClose asChild>
+            <Button type="button" variant="secondary" disabled={deleting}>
+              {t('profiles.cancel')}
+            </Button>
+          </DialogClose>
+          <Button
+            className="ml-auto flex"
+            variant="destructive"
+            disabled={deleting}
+            onClick={() => {
+              setDeleting(true);
+              // TODO
+            }}>
+            {deleting && <Loader2 className="animate-spin" />}
+            {deleting && t('profiles.deleting')}
+            {!deleting && t('profiles.confirm')}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }
