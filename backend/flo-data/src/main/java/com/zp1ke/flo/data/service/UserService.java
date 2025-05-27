@@ -6,6 +6,7 @@ import com.zp1ke.flo.data.domain.UserToken;
 import com.zp1ke.flo.data.repository.UserRepository;
 import com.zp1ke.flo.data.repository.UserTokenRepository;
 import com.zp1ke.flo.utils.StringUtils;
+import jakarta.transaction.Transactional;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
 import java.time.OffsetDateTime;
@@ -119,6 +120,7 @@ public class UserService {
         userTokenRepository.save(userToken);
     }
 
+    @Transactional
     public void disableUserToken(@NonNull String token,
                                  @NonNull String remoteAddress) {
         userTokenRepository.deleteByTokenAndRemoteAddress(token, remoteAddress);
