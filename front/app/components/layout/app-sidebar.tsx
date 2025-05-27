@@ -7,7 +7,7 @@ import {
 import type { ComponentProps } from 'react';
 import { NavMain } from '~/components/layout/nav-main';
 import { NavUser } from '~/components/layout/nav-user';
-import { ProfileSwitcher } from '~/components/layout/profile-switcher';
+import { ProfileSwitcher } from '~/components/profiles/profile-switcher';
 import Loading from '~/components/ui/loading';
 import {
   Sidebar,

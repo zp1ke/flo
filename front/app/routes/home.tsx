@@ -7,7 +7,7 @@ import { ThemeModeSelector } from '~/components/layout/theme-mode-selector';
 import { fetchUser } from '~/lib/auth';
 
 export async function clientLoader() {
-  const user = await fetchUser();
+  const user = await fetchUser(false);
   if (user) {
     return redirect('/dashboard');
   }

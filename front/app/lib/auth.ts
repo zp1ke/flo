@@ -3,6 +3,7 @@ import type { Profile } from '~/types/profile';
 import type { User } from '~/types/user';
 
 import restClient from './rest-client';
+import { addProfile, updateProfile } from './profiles';
 
 const TOKEN_KEY = 'auth_token';
 const USER_KEY = 'auth_user';
@@ -21,7 +22,7 @@ export const signIn = async (data: { email: string; password: string }): Promise
     password: data.password,
   });
   setAuthToken(authResponse.token);
-  await fetchUser();
+  await fetchUser(true);
 };
 
 interface UserProfiles {
@@ -29,7 +30,7 @@ interface UserProfiles {
   profiles: Profile[];
 }
 
-export const fetchUser = async (): Promise<User | null> => {
+export const fetchUser = async (force: boolean): Promise<User | null> => {
   const token = getAuthToken();
   if (!token) {
     localStorage.removeItem(USER_KEY);
@@ -43,7 +44,7 @@ export const fetchUser = async (): Promise<User | null> => {
     if (userTs) {
       const user = localStorage.getItem(USER_KEY);
       if (user) {
-        if (Date.now() - parseInt(userTs) < config.refreshUserMilliseconds) {
+        if (!force && Date.now() - parseInt(userTs) < config.refreshUserMilliseconds) {
           console.debug('Fetching user from CACHE...', Date.now());
           return resolve(JSON.parse(user));
         } else {
@@ -81,38 +82,27 @@ export const saveUserProfile = async (
   profile: Profile,
   setDefault: boolean
 ): Promise<{ user: User; profile: Profile }> => {
-  const user = await fetchUser();
+  let user = await fetchUser(false);
   if (!user) {
     throw new Error('user.notFound');
   }
 
-  // TODO: rest api call to save profile
+  let savedProfile: Profile;
   if (!profile.code) {
-    profile.code = Date.now().toString();
-    user.profiles.push(profile);
+    savedProfile = await addProfile(profile);
   } else {
-    const index = user.profiles.findIndex((p) => p.code === profile.code);
-    if (index === -1) {
-      throw new Error('profile.notFound');
-    }
-    user.profiles[index] = profile;
+    savedProfile = await updateProfile(profile);
   }
 
+  await fetchUser(true);
   if (setDefault) {
-    user.activeProfile = profile;
+    await setActiveProfile(savedProfile);
   }
-
-  localStorage.setItem(USER_KEY, JSON.stringify(user));
-
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve({ user, profile });
-    }, 1000);
-  });
+  return { user, profile: savedProfile };
 };
 
 export const setActiveProfile = async (profile: Profile): Promise<User> => {
-  const user = await fetchUser();
+  const user = await fetchUser(false);
   if (!user) {
     throw new Error('user.notFound');
   }

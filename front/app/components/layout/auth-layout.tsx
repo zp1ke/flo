@@ -8,7 +8,7 @@ import AuthProvider from '~/contexts/auth/auth-provider';
 import { fetchUser } from '~/lib/auth';
 
 export async function clientLoader() {
-  const user = await fetchUser();
+  const user = await fetchUser(false);
   if (!user) {
     throw redirect('/');
   }

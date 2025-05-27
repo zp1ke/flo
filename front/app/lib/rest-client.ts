@@ -70,6 +70,15 @@ class RestClient {
     }
   }
 
+  async putJson<T>(url: string, data: Record<string, any>): Promise<T> {
+    try {
+      const response = await this.axios.put<T>(url, data, { headers: headers() });
+      return response.data;
+    } catch (error) {
+      throw parseError(error);
+    }
+  }
+
   async delete(url: string, params?: Record<string, any>): Promise<void> {
     try {
       const response = await this.axios.delete(url, {

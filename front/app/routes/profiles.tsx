@@ -6,19 +6,23 @@ import { tableColumns } from '~/components/profiles/table-columns';
 import { DataTable } from '~/components/table/data-table';
 import useAuth from '~/contexts/auth/use-auth';
 import { fetchProfiles } from '~/lib/profiles';
+import { ListenerHandler } from '~/types/listener';
+import type { Profile } from '~/types/profile';
 
 export default function Profiles() {
   const { user } = useAuth();
   const { t } = useTranslation();
 
   const columns = useMemo(() => tableColumns({ user, t }), [user, t]);
+  const listenerHandler = new ListenerHandler<Profile>();
 
   return (
     <PageContent title={t('profiles.title')} subtitle={t('profiles.subtitle')}>
       <DataTable
-        addElement={<AddProfileButton />}
+        addElement={<AddProfileButton onAdded={(profile) => listenerHandler.trigger(profile)} />}
         columns={columns}
         dataFetcher={(pageFilters) => fetchProfiles(pageFilters)}
+        onAddedListener={listenerHandler}
         textFilters={[{ title: t('profiles.name'), column: 'name' }]}
       />
     </PageContent>

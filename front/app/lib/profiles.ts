@@ -11,6 +11,16 @@ export const fetchProfiles = async (pageFilters: PageFilters): Promise<DataPage<
   return data;
 };
 
+export const addProfile = async (profile: Profile): Promise<Profile> => {
+  const saved = await restClient.postJson<Profile>(basePath, profile);
+  return saved;
+};
+
+export const updateProfile = async (profile: Profile): Promise<Profile> => {
+  const saved = await restClient.putJson<Profile>(`${basePath}/${profile.code}`, profile);
+  return saved;
+};
+
 export const deleteProfile = async (profile: Profile): Promise<void> => {
   await restClient.delete(`${basePath}/${profile.code}`);
 };

@@ -28,7 +28,7 @@ import useAuth from '~/contexts/auth/use-auth';
 import { cn } from '~/lib/utils';
 import type { Profile } from '~/types/profile';
 
-import { EditProfileForm } from '../profiles/edit-profile-form';
+import { EditProfileForm } from './edit-profile-form';
 
 export function ProfileSwitcher({
   activeIndex,

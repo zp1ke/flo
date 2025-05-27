@@ -13,7 +13,7 @@ const onAuthStateChanged = (callback: (user: User | null) => void): (() => void)
   };
   const refresh = () => {
     if (refreshing) {
-      fetchUser().then((user) => {
+      fetchUser(true).then((user) => {
         callback(user);
       });
       setTimeout(refresh, config.refreshUserMilliseconds);
@@ -45,7 +45,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const refreshUser = async (): Promise<void> => {
-    const user = await fetchUser();
+    const user = await fetchUser(true);
     setUser(user);
   };
 
