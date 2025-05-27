@@ -2,8 +2,8 @@ import config from '~/config';
 import type { Profile } from '~/types/profile';
 import type { User } from '~/types/user';
 
-import restClient from './rest-client';
 import { addProfile, updateProfile } from './profiles';
+import restClient from './rest-client';
 
 const TOKEN_KEY = 'auth_token';
 const USER_KEY = 'auth_user';

@@ -22,8 +22,8 @@
     "@radix-ui/react-separator": "^1.1.7",
     "@radix-ui/react-slot": "^1.2.3",
     "@radix-ui/react-tooltip": "^1.2.7",
-    "@react-router/node": "^7.6.0",
-    "@react-router/serve": "^7.6.0",
+    "@react-router/node": "^7.6.1",
+    "@react-router/serve": "^7.6.1",
     "@tanstack/react-table": "^8.21.3",
     "axios": "^1.9.0",
     "class-variance-authority": "^0.7.1",
@@ -39,14 +39,14 @@
     "react-dom": "^19.1.0",
     "react-hook-form": "^7.56.4",
     "react-i18next": "^15.5.2",
-    "react-router": "^7.6.0",
+    "react-router": "^7.6.1",
     "recharts": "^2.15.3",
     "sonner": "^2.0.3",
     "tailwind-merge": "^3.3.0",
-    "zod": "^3.25.28"
+    "zod": "^3.25.30"
   },
   "devDependencies": {
-    "@react-router/dev": "^7.6.0",
+    "@react-router/dev": "^7.6.1",
     "@tailwindcss/vite": "^4.1.7",
     "@trivago/prettier-plugin-sort-imports": "^5.2.2",
     "@types/node": "^22",
