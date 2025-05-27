@@ -1,7 +1,6 @@
 import type { ColumnDef } from '@tanstack/react-table';
 import { CheckCircleIcon, CircleIcon } from 'lucide-react';
 import { DataTableColumnHeader } from '~/components/table/data-table-column-header';
-import { Checkbox } from '~/components/ui/checkbox';
 import type { User } from '~/types/user';
 
 import type { Profile } from '../../types/profile';

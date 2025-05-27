@@ -13,7 +13,8 @@
   "importOrderSortSpecifiers": true,
   "jsxSingleQuote": false,
   "plugins": [
-    "@trivago/prettier-plugin-sort-imports"
+    "@trivago/prettier-plugin-sort-imports",
+    "prettier-plugin-unused-imports-configurable"
   ],
   "printWidth": 100,
   "semi": true,

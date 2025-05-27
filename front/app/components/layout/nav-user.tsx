@@ -2,7 +2,7 @@ import { ChevronsUpDown, Loader2, LogOut, UserCircleIcon } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router';
-import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar';
+import { Avatar } from '~/components/ui/avatar';
 import {
   Dialog,
   DialogClose,
