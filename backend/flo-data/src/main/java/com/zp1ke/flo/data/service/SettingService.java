@@ -20,13 +20,16 @@ public class SettingService {
 
     private static final String DEFAULT_USER_MAX_WALLETS = "3";
 
+    private static final String DEFAULT_USER_MAX_TRANSACTIONS_PER_DAY = "20";
+
     private final SettingRepository settingRepository;
 
     public void saveDefaultSettings(@NonNull User user) {
         var defaultSettings = Map.of(
             SettingCode.USER_MAX_PROFILES, DEFAULT_USER_MAX_PROFILES,
             SettingCode.USER_MAX_CATEGORIES, DEFAULT_USER_MAX_CATEGORIES,
-            SettingCode.USER_MAX_WALLETS, DEFAULT_USER_MAX_WALLETS
+            SettingCode.USER_MAX_WALLETS, DEFAULT_USER_MAX_WALLETS,
+            SettingCode.USER_MAX_TRANSACTIONS_PER_DAY, DEFAULT_USER_MAX_TRANSACTIONS_PER_DAY
         );
         defaultSettings.forEach((code, value) -> {
             if (!settingRepository.existsByCodeAndUser(code, user)) {

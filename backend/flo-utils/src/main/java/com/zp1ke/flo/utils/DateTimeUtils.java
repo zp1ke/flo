@@ -37,7 +37,13 @@ public class DateTimeUtils {
         return null;
     }
 
-    private static OffsetDateTime toOffsetDateTime(LocalDateTime datetime) {
+    /**
+     * Converts a LocalDateTime to an OffsetDateTime using the system default time zone.
+     *
+     * @param datetime the LocalDateTime to convert
+     * @return the corresponding OffsetDateTime, or null if the input datetime is null
+     */
+    public static OffsetDateTime toOffsetDateTime(LocalDateTime datetime) {
         if (datetime != null) {
             var zoneOffSet = ZoneId.systemDefault().getRules().getOffset(datetime);
             return datetime.atOffset(zoneOffSet);

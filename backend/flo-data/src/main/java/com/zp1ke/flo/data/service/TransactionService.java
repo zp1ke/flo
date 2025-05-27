@@ -2,13 +2,17 @@ package com.zp1ke.flo.data.service;
 
 import com.zp1ke.flo.data.domain.Profile;
 import com.zp1ke.flo.data.domain.Transaction;
+import com.zp1ke.flo.data.model.SettingCode;
 import com.zp1ke.flo.data.model.TransactionsStats;
 import com.zp1ke.flo.data.repository.TransactionRepository;
 import com.zp1ke.flo.data.repository.TransactionSpec;
 import com.zp1ke.flo.data.util.DomainUtils;
+import com.zp1ke.flo.utils.DateTimeUtils;
 import com.zp1ke.flo.utils.StringUtils;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -31,11 +35,25 @@ public class TransactionService {
 
     private final WalletService walletService;
 
+    private final ProfileService profileService;
+
+    private final SettingService settingService;
+
     @NonNull
     public Transaction save(@NonNull Transaction transaction) {
         if (StringUtils.isBlank(transaction.getCode())) {
             transaction.setCode(DomainUtils
                 .generateRandomCode((code) -> transactionRepository.existsByProfileAndCode(transaction.getProfile(), code)));
+        }
+
+        var maxTransactions = settingService
+            .getIntegerValue(transaction.getProfile().getUser(), SettingCode.USER_MAX_TRANSACTIONS_PER_DAY);
+        var profiles = profileService.profilesOfUser(transaction.getProfile().getUser());
+        var from = DateTimeUtils.toOffsetDateTime(LocalDate.now());
+        var to = DateTimeUtils.toOffsetDateTime(LocalDate.now().atTime(LocalTime.MAX));
+        if (maxTransactions != null && transactionRepository
+            .countByCreatedAtBetweenAndProfileIn(from, to, profiles) >= maxTransactions) {
+            throw new IllegalArgumentException("transaction.max-transactions-per-day-reached");
         }
 
         var violations = validator.validate(transaction);
