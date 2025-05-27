@@ -26,6 +26,13 @@ const onAuthStateChanged = (callback: (user: User | null) => void): (() => void)
 export default function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
 
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged((user: User | null) => {
+      setUser(user);
+    });
+    return () => unsubscribe();
+  }, []);
+
   const saveProfile = async (profile: Profile, setDefault: boolean): Promise<Profile> => {
     const userProfile = await saveUserProfile(profile, setDefault);
     setUser(userProfile.user);
@@ -37,15 +44,13 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
     setUser(theUser);
   };
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged((user: User | null) => {
-      setUser(user);
-    });
-    return () => unsubscribe();
-  }, []);
+  const refreshUser = async (): Promise<void> => {
+    const user = await fetchUser();
+    setUser(user);
+  };
 
   return (
-    <AuthContext.Provider value={{ user, saveProfile, activateProfile }}>
+    <AuthContext.Provider value={{ user, saveProfile, activateProfile, refreshUser }}>
       {children}
     </AuthContext.Provider>
   );

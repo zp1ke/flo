@@ -50,15 +50,11 @@ class RestClient {
   }
 
   async getJson<T>(url: string, params?: Record<string, any>): Promise<T> {
-    const getParams = new URLSearchParams();
-    Object.entries(params || {}).forEach(([key, value]) => {
-      if (value !== undefined && value !== null) {
-        getParams.set(key, String(value));
-      }
-    });
-
     try {
-      const response = await this.axios.get<T>(url, { params: getParams, headers: headers() });
+      const response = await this.axios.get<T>(url, {
+        params: parseParams(params),
+        headers: headers(),
+      });
       return response.data;
     } catch (error) {
       throw parseError(error);
@@ -68,6 +64,18 @@ class RestClient {
   async postJson<T>(url: string, data: Record<string, any>): Promise<T> {
     try {
       const response = await this.axios.post<T>(url, data, { headers: headers() });
+      return response.data;
+    } catch (error) {
+      throw parseError(error);
+    }
+  }
+
+  async delete(url: string, params?: Record<string, any>): Promise<void> {
+    try {
+      const response = await this.axios.delete(url, {
+        params: parseParams(params),
+        headers: headers(),
+      });
       return response.data;
     } catch (error) {
       throw parseError(error);
@@ -102,6 +110,17 @@ const paramsFrom = (pageFilters?: PageFilters): URLSearchParams => {
     }
   }
   return params;
+};
+
+const parseParams = (params?: Record<string, any>): Record<string, any> => {
+  if (!params) return {};
+  const parsedParams = new URLSearchParams();
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined && value !== null) {
+      parsedParams.set(key, String(value));
+    }
+  });
+  return parsedParams;
 };
 
 const parseError = (error: unknown): RestError => {

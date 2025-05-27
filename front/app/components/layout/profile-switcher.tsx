@@ -1,7 +1,14 @@
 import { ChevronsUpDown, GalleryVerticalEnd, GalleryVerticalIcon, Plus } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { DialogTrigger } from '~/components/ui/dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '~/components/ui/dialog';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,9 +25,10 @@ import {
   useSidebar,
 } from '~/components/ui/sidebar';
 import useAuth from '~/contexts/auth/use-auth';
+import { cn } from '~/lib/utils';
 import type { Profile } from '~/types/profile';
 
-import { AddProfileDialog } from '../profiles/add-profile-dialog';
+import { EditProfileForm } from '../profiles/edit-profile-form';
 
 export function ProfileSwitcher({
   activeIndex,
@@ -35,6 +43,7 @@ export function ProfileSwitcher({
 
   const [activeProfile, setActiveProfile] = useState(profiles[activeIndex]);
   const [profilesList, setProfilesList] = useState(profiles);
+  const [addOpen, setAddOpen] = useState(false);
   const [processing, setProcessing] = useState(false);
 
   const setProfile = async (profile: Profile) => {
@@ -44,16 +53,17 @@ export function ProfileSwitcher({
     setProcessing(false);
   };
 
+  const onAddProfile = (profile: Profile, setAsDefault: boolean) => {
+    setProfilesList([...profilesList, profile]);
+    if (setAsDefault) {
+      setProfile(profile);
+    }
+  };
+
   return (
     <SidebarMenu>
       <SidebarMenuItem>
-        <AddProfileDialog
-          onSaved={(profile, setAsDefault) => {
-            setProfilesList([...profilesList, profile]);
-            if (setAsDefault) {
-              setProfile(profile);
-            }
-          }}>
+        <Dialog open={addOpen} onOpenChange={setAddOpen}>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <SidebarMenuButton
@@ -101,7 +111,20 @@ export function ProfileSwitcher({
               </DialogTrigger>
             </DropdownMenuContent>
           </DropdownMenu>
-        </AddProfileDialog>
+          <DialogContent
+            className={cn('sm:max-w-[425px]', processing && '[&>button]:hidden')}
+            onInteractOutside={(e) => {
+              if (processing) {
+                e.preventDefault();
+              }
+            }}>
+            <DialogHeader>
+              <DialogTitle>{t('profiles.add')}</DialogTitle>
+              <DialogDescription>{t('profiles.editDescription')}</DialogDescription>
+            </DialogHeader>
+            <EditProfileForm onSaved={onAddProfile} onProcessing={setProcessing} />
+          </DialogContent>
+        </Dialog>
       </SidebarMenuItem>
     </SidebarMenu>
   );

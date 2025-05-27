@@ -4,6 +4,7 @@ import type { User } from '~/types/user';
 
 interface AuthContextType {
   user: User | null;
+  refreshUser: () => Promise<void>;
   saveProfile: (profile: Profile, setDefault: boolean) => Promise<Profile>;
   activateProfile: (profile: Profile) => Promise<void>;
 }

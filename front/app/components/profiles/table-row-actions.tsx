@@ -11,7 +11,6 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from '~/components/ui/dialog';
 import {
   DropdownMenu,
@@ -20,6 +19,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '~/components/ui/dropdown-menu';
+import useAuth from '~/contexts/auth/use-auth';
+import { deleteProfile } from '~/lib/profiles';
 
 import { profileSchema } from '../../types/profile';
 
@@ -29,6 +30,7 @@ interface DataTableRowActionsProps<TData> {
 }
 
 export function DataTableRowActions<TData>({ row, table }: DataTableRowActionsProps<TData>) {
+  const { user, refreshUser } = useAuth();
   const { t } = useTranslation();
 
   const profile = profileSchema.parse(row.original);
@@ -36,6 +38,17 @@ export function DataTableRowActions<TData>({ row, table }: DataTableRowActionsPr
 
   const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
   const [deleting, setDeleting] = useState<boolean>(false);
+
+  const onDelete = async () => {
+    setDeleting(true);
+
+    await deleteProfile(profile);
+    await refreshUser();
+    table.options.meta?.onRefresh();
+
+    setDeleteOpen(false);
+    setDeleting(false);
+  };
 
   return (
     <Dialog open={deleteOpen} onOpenChange={setDeleteOpen}>
@@ -48,14 +61,18 @@ export function DataTableRowActions<TData>({ row, table }: DataTableRowActionsPr
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-[160px]">
           <DropdownMenuItem disabled={disabled}>{t('profiles.edit')}</DropdownMenuItem>
-          <DropdownMenuItem disabled={disabled}>{t('profiles.defaultProfile')}</DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem
-            disabled={disabled}
-            className="text-destructive"
-            onClick={() => setDeleteOpen(true)}>
-            {t('profiles.delete')}
-          </DropdownMenuItem>
+          {user?.activeProfile?.code !== profile.code && (
+            <DropdownMenuItem disabled={disabled}>{t('profiles.defaultProfile')}</DropdownMenuItem>
+          )}
+          {user?.activeProfile?.code !== profile.code && <DropdownMenuSeparator />}
+          {user?.activeProfile?.code !== profile.code && (
+            <DropdownMenuItem
+              disabled={disabled}
+              className="text-destructive"
+              onClick={() => setDeleteOpen(true)}>
+              {t('profiles.delete')}
+            </DropdownMenuItem>
+          )}
         </DropdownMenuContent>
       </DropdownMenu>
       <DialogContent
@@ -81,10 +98,7 @@ export function DataTableRowActions<TData>({ row, table }: DataTableRowActionsPr
             className="ml-auto flex"
             variant="destructive"
             disabled={deleting}
-            onClick={() => {
-              setDeleting(true);
-              // TODO
-            }}>
+            onClick={onDelete}>
             {deleting && <Loader2 className="animate-spin" />}
             {deleting && t('profiles.deleting')}
             {!deleting && t('profiles.confirm')}

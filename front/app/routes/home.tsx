@@ -1,7 +1,7 @@
 import { GalleryVerticalEnd } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { redirect } from 'react-router';
-import SignInForm from '~/components/form/sign-in-form';
+import SignInForm from '~/components/home/sign-in-form';
 import { LanguageSelector } from '~/components/layout/language-selector';
 import { ThemeModeSelector } from '~/components/layout/theme-mode-selector';
 import { fetchUser } from '~/lib/auth';

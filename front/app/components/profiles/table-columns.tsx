@@ -1,32 +1,27 @@
 import type { ColumnDef } from '@tanstack/react-table';
+import { CheckCircleIcon, CircleIcon } from 'lucide-react';
 import { DataTableColumnHeader } from '~/components/table/data-table-column-header';
 import { Checkbox } from '~/components/ui/checkbox';
+import type { User } from '~/types/user';
 
 import type { Profile } from '../../types/profile';
 import { DataTableRowActions } from './table-row-actions';
 
-export const tableColumns = ({ t }: { t: (key: string) => string }): ColumnDef<Profile>[] => [
+export const tableColumns = ({
+  user,
+  t,
+}: {
+  user: User | null;
+  t: (key: string) => string;
+}): ColumnDef<Profile>[] => [
   {
-    id: 'select',
-    header: ({ table }) => (
-      <Checkbox
-        disabled={table.options?.meta?.isLoading()}
-        checked={
-          table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate')
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label={t('table.selectAll')}
-        className="translate-y-[2px]"
-      />
-    ),
-    cell: ({ row, table }) => (
-      <Checkbox
-        disabled={table.options?.meta?.isLoading()}
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label={t('table.selectRow')}
-        className="translate-y-[2px]"
-      />
+    id: 'active',
+    header: () => <></>,
+    cell: ({ row }) => (
+      <>
+        {user?.activeProfile?.code === row.getValue('code') && <CheckCircleIcon />}
+        {user?.activeProfile?.code !== row.getValue('code') && <CircleIcon />}
+      </>
     ),
     enableSorting: false,
     enableHiding: false,

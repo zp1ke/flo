@@ -10,3 +10,7 @@ export const fetchProfiles = async (pageFilters: PageFilters): Promise<DataPage<
   const data = await restClient.getPage<Profile>(basePath, pageFilters);
   return data;
 };
+
+export const deleteProfile = async (profile: Profile): Promise<void> => {
+  await restClient.delete(`${basePath}/${profile.code}`);
+};

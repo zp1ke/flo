@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2 } from 'lucide-react';
-import { type ReactNode, useState } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
@@ -45,9 +45,13 @@ export function EditProfileForm({
     },
   });
 
+  const toggleProcessing = (value: boolean) => {
+    setProcessing(value);
+    onProcessing(value);
+  };
+
   const onSave = async (data: z.infer<typeof formSchema>) => {
-    onProcessing(true);
-    setProcessing(true);
+    toggleProcessing(true);
 
     const { name, setDefault } = data;
     const setAsDefault = setDefault ?? false;
@@ -55,8 +59,7 @@ export function EditProfileForm({
     const saved = await saveProfile({ code: profile?.code, name } satisfies Profile, setAsDefault);
     onSaved(saved, setAsDefault);
 
-    setProcessing(false);
-    onProcessing(false);
+    toggleProcessing(false);
     form.reset();
   };
 
