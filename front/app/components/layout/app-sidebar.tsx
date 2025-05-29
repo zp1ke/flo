@@ -49,14 +49,10 @@ export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
     return <Loading />;
   }
 
-  const activeProfileIndex = user.profiles.findIndex(
-    (profile) => profile.code === user.activeProfile.code
-  );
-
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <ProfileSwitcher profiles={user.profiles} activeIndex={activeProfileIndex} />
+        <ProfileSwitcher />
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />

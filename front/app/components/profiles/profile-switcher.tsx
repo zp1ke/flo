@@ -30,34 +30,26 @@ import type { Profile } from '~/types/profile';
 
 import { EditProfileForm } from './edit-profile-form';
 
-export function ProfileSwitcher({
-  activeIndex,
-  profiles,
-}: {
-  activeIndex: number;
-  profiles: Profile[];
-}) {
+export function ProfileSwitcher() {
   const { t } = useTranslation();
   const { isMobile } = useSidebar();
-  const { activateProfile } = useAuth();
+  const { user, refreshUser, activateProfile } = useAuth();
 
-  const [activeProfile, setActiveProfile] = useState(profiles[activeIndex]);
-  const [profilesList, setProfilesList] = useState(profiles);
   const [addOpen, setAddOpen] = useState(false);
   const [processing, setProcessing] = useState(false);
 
   const setProfile = async (profile: Profile) => {
     setProcessing(true);
     await activateProfile(profile);
-    setActiveProfile(profile);
     setProcessing(false);
   };
 
   const onAddProfile = (profile: Profile, setAsDefault: boolean) => {
-    setProfilesList([...profilesList, profile]);
-    if (setAsDefault) {
-      setProfile(profile);
-    }
+    refreshUser().then(() => {
+      if (setAsDefault) {
+        setProfile(profile);
+      }
+    });
   };
 
   return (
@@ -73,8 +65,8 @@ export function ProfileSwitcher({
                   <GalleryVerticalEnd className="size-4" />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">{activeProfile.name}</span>
-                  <span className="truncate text-xs">{activeProfile.code}</span>
+                  <span className="truncate font-semibold">{user?.activeProfile.name}</span>
+                  <span className="truncate text-xs">{user?.activeProfile.code}</span>
                 </div>
                 <ChevronsUpDown className="ml-auto" />
               </SidebarMenuButton>
@@ -87,12 +79,12 @@ export function ProfileSwitcher({
               <DropdownMenuLabel className="text-xs text-muted-foreground">
                 {t('profiles.title')}
               </DropdownMenuLabel>
-              {profilesList.map((profile, index) => (
+              {user?.profiles.map((profile, index) => (
                 <DropdownMenuItem
                   key={profile.code}
                   onClick={() => setProfile(profile)}
                   className="gap-2 p-2"
-                  disabled={processing || profile.code === activeProfile.code}>
+                  disabled={processing || profile.code === user?.activeProfile.code}>
                   <div className="flex size-6 items-center justify-center rounded-sm border">
                     <GalleryVerticalIcon className="size-4 shrink-0" />
                   </div>
