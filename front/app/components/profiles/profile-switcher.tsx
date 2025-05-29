@@ -33,7 +33,7 @@ import { EditProfileForm } from './edit-profile-form';
 export function ProfileSwitcher() {
   const { t } = useTranslation();
   const { isMobile } = useSidebar();
-  const { user, refreshUser, activateProfile } = useAuth();
+  const { activateProfile, user } = useAuth();
 
   const [addOpen, setAddOpen] = useState(false);
   const [processing, setProcessing] = useState(false);
@@ -44,12 +44,8 @@ export function ProfileSwitcher() {
     setProcessing(false);
   };
 
-  const onAddProfile = (profile: Profile, setAsDefault: boolean) => {
-    refreshUser().then(() => {
-      if (setAsDefault) {
-        setProfile(profile);
-      }
-    });
+  const onAddedProfile = async () => {
+    setAddOpen(false);
   };
 
   return (
@@ -114,7 +110,7 @@ export function ProfileSwitcher() {
               <DialogTitle>{t('profiles.add')}</DialogTitle>
               <DialogDescription>{t('profiles.editDescription')}</DialogDescription>
             </DialogHeader>
-            <EditProfileForm onSaved={onAddProfile} onProcessing={setProcessing} />
+            <EditProfileForm onSaved={onAddedProfile} onProcessing={setProcessing} />
           </DialogContent>
         </Dialog>
       </SidebarMenuItem>

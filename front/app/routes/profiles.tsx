@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import PageContent from '~/components/layout/page-content';
 import AddProfileButton from '~/components/profiles/add-profile-button';
@@ -15,6 +15,12 @@ export default function Profiles() {
 
   const columns = useMemo(() => tableColumns({ user, t }), [user, t]);
   const listenerHandler = new ListenerHandler<Profile>();
+
+  useEffect(() => {
+    if (user) {
+      listenerHandler.trigger(user.activeProfile);
+    }
+  }, [user]);
 
   return (
     <PageContent title={t('profiles.title')} subtitle={t('profiles.subtitle')}>

@@ -10,7 +10,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '~/components/ui/dialog';
-import useAuth from '~/contexts/auth/use-auth';
 import { cn } from '~/lib/utils';
 import type { Profile } from '~/types/profile';
 
@@ -22,15 +21,11 @@ interface AddProfileButtonProps {
 
 export default function AddProfileButton({ onAdded }: AddProfileButtonProps) {
   const { t } = useTranslation();
-  const { activateProfile } = useAuth();
 
   const [addOpen, setAddOpen] = useState(false);
   const [processing, setProcessing] = useState(false);
 
-  const onAddProfile = (profile: Profile, setAsDefault: boolean) => {
-    if (setAsDefault) {
-      activateProfile(profile);
-    }
+  const onAddedProfile = async (profile: Profile) => {
     onAdded(profile);
     setAddOpen(false);
   };
@@ -54,7 +49,7 @@ export default function AddProfileButton({ onAdded }: AddProfileButtonProps) {
           <DialogTitle>{t('profiles.add')}</DialogTitle>
           <DialogDescription>{t('profiles.editDescription')}</DialogDescription>
         </DialogHeader>
-        <EditProfileForm onSaved={onAddProfile} onProcessing={setProcessing} />
+        <EditProfileForm onSaved={onAddedProfile} onProcessing={setProcessing} />
       </DialogContent>
     </Dialog>
   );

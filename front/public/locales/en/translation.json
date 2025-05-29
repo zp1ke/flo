@@ -42,6 +42,7 @@
     "title": "Profiles"
   },
   "rest": {
+    "profile.max-profiles-reached": "You have reached the maximum number of profiles allowed.",
     "unknownError": "An unknown error occurred.",
     "user.invalid_credentials": "Invalid credentials."
   },

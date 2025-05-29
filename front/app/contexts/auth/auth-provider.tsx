@@ -44,9 +44,10 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
     setUser(theUser);
   };
 
-  const refreshUser = async (): Promise<void> => {
+  const refreshUser = async (): Promise<User | null> => {
     const user = await fetchUser(true);
     setUser(user);
+    return user;
   };
 
   return (

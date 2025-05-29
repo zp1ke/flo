@@ -3,6 +3,7 @@ import { Loader2 } from 'lucide-react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
 import { z } from 'zod';
 import { Button } from '~/components/ui/button';
 import { Checkbox } from '~/components/ui/checkbox';
@@ -16,6 +17,7 @@ import {
 } from '~/components/ui/form';
 import { Input } from '~/components/ui/input';
 import useAuth from '~/contexts/auth/use-auth';
+import type { RestError } from '~/lib/rest-client';
 import { type Profile, profileNameIsValid, profileSchema } from '~/types/profile';
 
 export function EditProfileForm({
@@ -24,11 +26,11 @@ export function EditProfileForm({
   onProcessing,
 }: {
   profile?: Profile;
-  onSaved: (profile: Profile, setDefault: boolean) => void;
+  onSaved: (profile: Profile, setDefault: boolean) => Promise<void>;
   onProcessing: (processing: boolean) => void;
 }) {
   const { t } = useTranslation();
-  const { saveProfile } = useAuth();
+  const { activateProfile, refreshUser, saveProfile } = useAuth();
 
   const [processing, setProcessing] = useState(false);
 
@@ -56,11 +58,22 @@ export function EditProfileForm({
     const { name, setDefault } = data;
     const setAsDefault = setDefault ?? false;
 
-    const saved = await saveProfile({ code: profile?.code, name } satisfies Profile, setAsDefault);
-    onSaved(saved, setAsDefault);
-
-    toggleProcessing(false);
-    form.reset();
+    try {
+      const saved = await saveProfile(
+        { code: profile?.code, name } satisfies Profile,
+        setAsDefault
+      );
+      await refreshUser();
+      if (setAsDefault) {
+        await activateProfile(saved);
+      }
+      await onSaved(saved, setAsDefault);
+      form.reset();
+    } catch (e) {
+      toast.error(t('profiles.fetchError'), { description: t((e as RestError).message) });
+    } finally {
+      toggleProcessing(false);
+    }
   };
 
   return (
