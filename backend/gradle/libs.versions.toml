@@ -3,8 +3,8 @@ jjwt = "0.12.6"
 junit = "5.12.2"
 karate = "1.5.1"
 lombok = "1.18.38"
-openapi = "2.8.6"
-preliquibase = "1.6.0"
+openapi = "2.8.8"
+preliquibase = "1.6.1"
 
 [libraries]
 jjwt-api = { module = "io.jsonwebtoken:jjwt-api", version.ref = "jjwt" }
