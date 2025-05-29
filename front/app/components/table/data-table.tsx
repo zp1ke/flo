@@ -16,7 +16,7 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 import { Loader2 } from 'lucide-react';
-import { type HTMLAttributes, type ReactNode, useEffect, useState } from 'react';
+import { type HTMLAttributes, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useSearchParams } from 'react-router';
 import { toast } from 'sonner';
@@ -30,7 +30,6 @@ import {
 } from '~/components/ui/table';
 import type { PageFilters, RestError } from '~/lib/rest-client';
 import { FetchState } from '~/types/fetch-state';
-import type { ListenerHandler } from '~/types/listener';
 import type { DataPage } from '~/types/page';
 import { SortDirection, sortPrefix } from '~/types/sort';
 
@@ -38,8 +37,6 @@ import { DataTablePagination } from './data-table-pagination';
 import { DataTableToolbar } from './data-table-toolbar';
 
 interface DataTableProps<TData, TValue> extends HTMLAttributes<HTMLDivElement> {
-  addElement?: ReactNode;
-  onAddedListener?: ListenerHandler<TData>;
   columns: ColumnDef<TData, TValue>[];
   dataFetcher: (pageFilters: PageFilters) => Promise<DataPage<TData>>;
   facetedFilters?: DataTableSelectFilter[];
@@ -50,8 +47,6 @@ const pageKey = 'page';
 const pageSizeKey = 'pageSize';
 
 export function DataTable<TData, TValue>({
-  addElement,
-  onAddedListener,
   columns,
   dataFetcher,
   facetedFilters,
@@ -73,8 +68,6 @@ export function DataTable<TData, TValue>({
   const [pagination, setPagination] = useState<PaginationState>(initialPagination);
   const [sorting, setSorting] = useState<SortingState>(sortingFrom(searchParams, columns));
   const [rowSelection, setRowSelection] = useState({});
-
-  onAddedListener?.add(() => setFetchState(FetchState.Loading));
 
   useEffect(() => {
     if (fetchState === FetchState.Loading) {
@@ -177,7 +170,6 @@ export function DataTable<TData, TValue>({
   return (
     <div className="space-y-4">
       <DataTableToolbar
-        addElement={addElement}
         facetedFilters={facetedFilters}
         fetchState={fetchState}
         table={table}

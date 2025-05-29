@@ -11,22 +11,16 @@ import {
   DialogTrigger,
 } from '~/components/ui/dialog';
 import { cn } from '~/lib/utils';
-import type { Profile } from '~/types/profile';
 
 import { EditProfileForm } from './edit-profile-form';
 
-interface AddProfileButtonProps {
-  onAdded: (profile: Profile) => void;
-}
-
-export default function AddProfileButton({ onAdded }: AddProfileButtonProps) {
+export default function AddProfileButton() {
   const { t } = useTranslation();
 
   const [addOpen, setAddOpen] = useState(false);
   const [processing, setProcessing] = useState(false);
 
-  const onAddedProfile = async (profile: Profile) => {
-    onAdded(profile);
+  const onAddedProfile = async () => {
     setAddOpen(false);
   };
 

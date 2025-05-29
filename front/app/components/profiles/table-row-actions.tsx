@@ -1,6 +1,6 @@
 import type { Row, Table } from '@tanstack/react-table';
 import { Loader2, MoreHorizontal } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '~/components/ui/button';
 import {
@@ -30,7 +30,7 @@ interface DataTableRowActionsProps<TData> {
 }
 
 export function DataTableRowActions<TData>({ row, table }: DataTableRowActionsProps<TData>) {
-  const { user, refreshUser } = useAuth();
+  const { activateProfile, refreshUser, user } = useAuth();
   const { t } = useTranslation();
 
   const profile = profileSchema.parse(row.original);
@@ -39,12 +39,15 @@ export function DataTableRowActions<TData>({ row, table }: DataTableRowActionsPr
   const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
   const [deleting, setDeleting] = useState<boolean>(false);
 
+  useEffect(() => {
+    table.options.meta?.onRefresh();
+  }, [user]);
+
   const onDelete = async () => {
     setDeleting(true);
 
     await deleteProfile(profile);
     await refreshUser();
-    table.options.meta?.onRefresh();
 
     setDeleteOpen(false);
     setDeleting(false);
@@ -62,7 +65,9 @@ export function DataTableRowActions<TData>({ row, table }: DataTableRowActionsPr
         <DropdownMenuContent align="end" className="w-[160px]">
           <DropdownMenuItem disabled={disabled}>{t('profiles.edit')}</DropdownMenuItem>
           {user?.activeProfile?.code !== profile.code && (
-            <DropdownMenuItem disabled={disabled}>{t('profiles.defaultProfile')}</DropdownMenuItem>
+            <DropdownMenuItem disabled={disabled} onClick={() => activateProfile(profile)}>
+              {t('profiles.defaultProfile')}
+            </DropdownMenuItem>
           )}
           {user?.activeProfile?.code !== profile.code && <DropdownMenuSeparator />}
           {user?.activeProfile?.code !== profile.code && (
