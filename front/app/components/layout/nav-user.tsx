@@ -31,6 +31,7 @@ import { signOut } from '~/lib/auth';
 import type { User } from '~/types/user';
 
 import { Button } from '../ui/button';
+import { cn } from '~/lib/utils';
 
 export function NavUser({ user }: { user: User }) {
   const { t } = useTranslation();
@@ -85,7 +86,7 @@ export function NavUser({ user }: { user: User }) {
             </DropdownMenuContent>
           </DropdownMenu>
           <DialogContent
-            className="[&>button]:hidden"
+            className={cn('sm:max-w-[425px]', signingOut && '[&>button]:hidden')}
             onInteractOutside={(e) => {
               if (signingOut) {
                 e.preventDefault();

@@ -23,6 +23,8 @@ import useAuth from '~/contexts/auth/use-auth';
 import { deleteProfile } from '~/lib/profiles';
 
 import { profileSchema } from '../../types/profile';
+import { EditProfileForm } from './edit-profile-form';
+import { cn } from '~/lib/utils';
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -36,12 +38,19 @@ export function DataTableRowActions<TData>({ row, table }: DataTableRowActionsPr
   const profile = profileSchema.parse(row.original);
   const disabled = table.options?.meta?.isLoading();
 
+  const [editOpen, setEditOpen] = useState<boolean>(false);
+  const [editing, setEditing] = useState<boolean>(false);
   const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
   const [deleting, setDeleting] = useState<boolean>(false);
 
   useEffect(() => {
     table.options.meta?.onRefresh();
   }, [user]);
+
+  const onSavedProfile = async () => {
+    setEditOpen(false);
+    setEditing(false);
+  };
 
   const onDelete = async () => {
     setDeleting(true);
@@ -54,7 +63,12 @@ export function DataTableRowActions<TData>({ row, table }: DataTableRowActionsPr
   };
 
   return (
-    <Dialog open={deleteOpen} onOpenChange={setDeleteOpen}>
+    <Dialog
+      open={editOpen || deleteOpen}
+      onOpenChange={(open) => {
+        setEditOpen(open);
+        setDeleteOpen(open);
+      }}>
       <DropdownMenu>
         <DropdownMenuTrigger asChild disabled={disabled}>
           <Button variant="ghost" className="flex h-8 w-8 p-0 data-[state=open]:bg-muted">
@@ -63,7 +77,9 @@ export function DataTableRowActions<TData>({ row, table }: DataTableRowActionsPr
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-[160px]">
-          <DropdownMenuItem disabled={disabled}>{t('profiles.edit')}</DropdownMenuItem>
+          <DropdownMenuItem disabled={disabled} onClick={() => setEditOpen(true)}>
+            {t('profiles.edit')}
+          </DropdownMenuItem>
           {user?.activeProfile?.code !== profile.code && (
             <DropdownMenuItem disabled={disabled} onClick={() => activateProfile(profile)}>
               {t('profiles.defaultProfile')}
@@ -81,34 +97,46 @@ export function DataTableRowActions<TData>({ row, table }: DataTableRowActionsPr
         </DropdownMenuContent>
       </DropdownMenu>
       <DialogContent
-        className="[&>button]:hidden"
+        className={cn('sm:max-w-[425px]', (editing || deleting) && '[&>button]:hidden')}
         onInteractOutside={(e) => {
-          if (deleting) {
+          if (editing || deleting) {
             e.preventDefault();
           }
         }}>
         <DialogHeader>
-          <DialogTitle>{t('profiles.confirmDelete')}</DialogTitle>
+          <DialogTitle>{t(editOpen ? 'profiles.edit' : 'profiles.confirmDelete')}</DialogTitle>
           <DialogDescription>
-            {t('profiles.confirmDeleteMessage', { name: profile.name })}
+            {t(editOpen ? 'profiles.editDescription' : 'profiles.confirmDeleteMessage', {
+              name: profile.name,
+            })}
           </DialogDescription>
         </DialogHeader>
-        <DialogFooter>
-          <DialogClose asChild>
-            <Button type="button" variant="secondary" disabled={deleting}>
-              {t('profiles.cancel')}
+        {editOpen && (
+          <EditProfileForm
+            profile={profile}
+            onSaved={onSavedProfile}
+            onProcessing={setEditing}
+            onCancel={() => setEditOpen(false)}
+          />
+        )}
+        {deleteOpen && (
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button type="button" variant="secondary" disabled={deleting}>
+                {t('profiles.cancel')}
+              </Button>
+            </DialogClose>
+            <Button
+              className="ml-auto flex"
+              variant="destructive"
+              disabled={deleting}
+              onClick={onDelete}>
+              {deleting && <Loader2 className="animate-spin" />}
+              {deleting && t('profiles.deleting')}
+              {!deleting && t('profiles.confirm')}
             </Button>
-          </DialogClose>
-          <Button
-            className="ml-auto flex"
-            variant="destructive"
-            disabled={deleting}
-            onClick={onDelete}>
-            {deleting && <Loader2 className="animate-spin" />}
-            {deleting && t('profiles.deleting')}
-            {!deleting && t('profiles.confirm')}
-          </Button>
-        </DialogFooter>
+          </DialogFooter>
+        )}
       </DialogContent>
     </Dialog>
   );

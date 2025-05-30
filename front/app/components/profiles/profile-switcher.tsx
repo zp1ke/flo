@@ -110,7 +110,11 @@ export function ProfileSwitcher() {
               <DialogTitle>{t('profiles.add')}</DialogTitle>
               <DialogDescription>{t('profiles.editDescription')}</DialogDescription>
             </DialogHeader>
-            <EditProfileForm onSaved={onAddedProfile} onProcessing={setProcessing} />
+            <EditProfileForm
+              onSaved={onAddedProfile}
+              onProcessing={setProcessing}
+              onCancel={() => setAddOpen(false)}
+            />
           </DialogContent>
         </Dialog>
       </SidebarMenuItem>

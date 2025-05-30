@@ -21,13 +21,17 @@ import type { RestError } from '~/lib/rest-client';
 import { type Profile, profileNameIsValid, profileSchema } from '~/types/profile';
 
 export function EditProfileForm({
-  profile,
-  onSaved,
+  disableCancel,
+  onCancel,
   onProcessing,
+  onSaved,
+  profile,
 }: {
-  profile?: Profile;
-  onSaved: (profile: Profile, setDefault: boolean) => Promise<void>;
+  disableCancel?: boolean;
+  onCancel: () => void;
   onProcessing: (processing: boolean) => void;
+  onSaved: (profile: Profile, setDefault: boolean) => Promise<void>;
+  profile?: Profile;
 }) {
   const { t } = useTranslation();
   const { activateProfile, refreshUser, saveProfile } = useAuth();
@@ -99,30 +103,44 @@ export function EditProfileForm({
               </FormItem>
             )}
           />
-          <FormField
-            control={form.control}
-            name="setDefault"
-            render={({ field }) => (
-              <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow">
-                <FormControl>
-                  <Checkbox
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
-                    disabled={processing}
-                  />
-                </FormControl>
-                <div className="space-y-1 leading-none">
-                  <FormLabel>{t('profiles.defaultProfile')}</FormLabel>
-                </div>
-              </FormItem>
-            )}
-          />
+          {!profile && (
+            <FormField
+              control={form.control}
+              name="setDefault"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow">
+                  <FormControl>
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                      disabled={processing}
+                    />
+                  </FormControl>
+                  <div className="space-y-1 leading-none">
+                    <FormLabel>{t('profiles.defaultProfile')}</FormLabel>
+                  </div>
+                </FormItem>
+              )}
+            />
+          )}
         </div>
-        <Button type="submit" disabled={processing}>
-          {processing && <Loader2 className="animate-spin" />}
-          {processing && t('profiles.processing')}
-          {!processing && t('profiles.save')}
-        </Button>
+        <div className="flex justify-between">
+          {!disableCancel && (
+            <Button
+              type="button"
+              variant="secondary"
+              disabled={processing}
+              className="flex"
+              onClick={onCancel}>
+              {t('profiles.cancel')}
+            </Button>
+          )}
+          <Button type="submit" disabled={processing} className="ml-auto flex">
+            {processing && <Loader2 className="animate-spin" />}
+            {processing && t('profiles.processing')}
+            {!processing && t('profiles.save')}
+          </Button>
+        </div>
       </form>
     </Form>
   );
