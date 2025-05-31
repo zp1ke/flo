@@ -41,6 +41,18 @@
     "subtitle": "Manage your profiles",
     "title": "Profiles"
   },
+  "recover": {
+    "description": "Recover access to your account",
+    "email": "Email",
+    "emailDescription": "Enter your email address",
+    "emailMax255": "Email must be at most 255 characters long.",
+    "emailPlaceholder": "example@mail.com",
+    "error": "Could not send recover email.",
+    "noAccount": "Don't have an account?",
+    "processing": "Processing...",
+    "title": "Recover Account",
+    "validEmail": "Please enter a valid email address."
+  },
   "rest": {
     "profile.max-profiles-reached": "You have reached the maximum number of profiles allowed.",
     "unknownError": "An unknown error occurred.",
@@ -61,8 +73,7 @@
     "passwordSize": "Password must be at least 8 characters long and max 100 characters long.",
     "processing": "Processing...",
     "title": "Sign In",
-    "validEmail": "Please enter a valid email address.",
-    "validPassword": "Password must contain at least one letter and one number."
+    "validEmail": "Please enter a valid email address."
   },
   "signOut": {
     "cancel": "Cancel",
@@ -73,7 +84,27 @@
     "title": "Sign Out"
   },
   "signUp": {
-    "title": "Sign Up"
+    "description": "Sign up for a new account",
+    "email": "Email",
+    "emailDescription": "Enter your email address",
+    "emailMax255": "Email must be at most 255 characters long.",
+    "emailPlaceholder": "example@mail.com",
+    "error": "Could not sign up.",
+    "name": "Name",
+    "nameSize": "Name must be at least 3 characters long and max 255 characters long.",
+    "namePlaceholder": "Your name",
+    "password": "Password",
+    "passwordDescription": "Enter your password",
+    "passwordPlaceholder": "Your super secret password",
+    "passwordSize": "Password must be at least 8 characters long and max 100 characters long.",
+    "processing": "Processing...",
+    "title": "Sign Up",
+    "termsParagraphPre": "By signing up, you agree to our ",
+    "termsParagraphAnd": " and ",
+    "termsParagraphLink1": "Terms of Service",
+    "termsParagraphLink2": "Privacy Policy.",
+    "validEmail": "Please enter a valid email address.",
+    "validPassword": "Password must contain at least one letter and one number."
   },
   "table": {
     "clearFilters": "Clear filters",

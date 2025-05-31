@@ -4,6 +4,7 @@ export default [
   layout('components/layout/anon-layout.tsx', [
     index('routes/home.tsx'),
     route('recover', 'routes/recover.tsx'),
+    route('sign-up', 'routes/sign-up.tsx'),
   ]),
   layout('components/layout/auth-layout.tsx', [
     route('dashboard', 'routes/dashboard.tsx'),

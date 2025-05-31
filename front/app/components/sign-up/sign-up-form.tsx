@@ -3,7 +3,6 @@ import { Loader2 } from 'lucide-react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { Link, useNavigate } from 'react-router';
 import { toast } from 'sonner';
 import { z } from 'zod';
 import { Button } from '~/components/ui/button';
@@ -17,37 +16,40 @@ import {
   FormMessage,
 } from '~/components/ui/form';
 import { Input } from '~/components/ui/input';
-import { signIn } from '~/lib/auth';
 import type { RestError } from '~/lib/rest-client';
 
-export default function SignInForm() {
+export default function SignUpForm() {
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const [processing, setProcessing] = useState(false);
 
   const formSchema = z.object({
-    email: z.string().email(t('signIn.validEmail')).max(255, t('signIn.emailMax255')),
-    password: z.string().min(3, t('signIn.passwordSize')).max(100, t('signIn.passwordSize')),
+    email: z.string().email(t('signUp.validEmail')).max(255, t('signUp.emailMax255')),
+    name: z.string().min(3, t('signUp.nameSize')).max(255, t('signUp.nameSize')),
+    password: z
+      .string()
+      .min(3, t('signUp.passwordSize'))
+      .max(100, t('signUp.passwordSize'))
+      .regex(/(?=.*[0-9])/, t('signUp.validPassword')),
   });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       email: '',
+      name: '',
       password: '',
     },
   });
 
-  const onSignIn = async (data: z.infer<typeof formSchema>) => {
+  const onSignUp = async (data: z.infer<typeof formSchema>) => {
     setProcessing(true);
 
-    const { email, password } = data;
+    const { email, name, password } = data;
 
     try {
-      await signIn({ email, password });
-      navigate('/');
+      // await signUp({ email, password });
     } catch (e) {
-      toast.error(t('signIn.error'), { description: t((e as RestError).message) });
+      toast.error(t('signUp.error'), { description: t((e as RestError).message) });
       setProcessing(false);
     }
   };
@@ -56,22 +58,41 @@ export default function SignInForm() {
     <div className="flex flex-col gap-6">
       <Card>
         <CardHeader>
-          <CardTitle className="text-2xl">{t('signIn.title')}</CardTitle>
-          <CardDescription>{t('signIn.description')}</CardDescription>
+          <CardTitle className="text-2xl">{t('signUp.title')}</CardTitle>
+          <CardDescription>{t('signUp.description')}</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSignIn)} className="space-y-8">
+            <form onSubmit={form.handleSubmit(onSignUp)} className="space-y-8">
               <div className="flex flex-col gap-6">
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem className="grid gap-2">
+                      <FormLabel>{t('signUp.name')}</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder={t('signUp.namePlaceholder')}
+                          type="text"
+                          required
+                          disabled={processing}
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
                 <FormField
                   control={form.control}
                   name="email"
                   render={({ field }) => (
                     <FormItem className="grid gap-2">
-                      <FormLabel>{t('signIn.email')}</FormLabel>
+                      <FormLabel>{t('signUp.email')}</FormLabel>
                       <FormControl>
                         <Input
-                          placeholder={t('signIn.emailPlaceholder')}
+                          placeholder={t('signUp.emailPlaceholder')}
                           type="email"
                           required
                           disabled={processing}
@@ -88,20 +109,15 @@ export default function SignInForm() {
                   render={({ field }) => (
                     <FormItem className="grid gap-2">
                       <div className="flex items-center">
-                        <FormLabel>{t('signIn.password')}</FormLabel>
-                        <Link
-                          to="/recover"
-                          className="ml-auto inline-block text-sm underline-offset-4 hover:underline">
-                          {t('signIn.forgotPassword')}
-                        </Link>
+                        <FormLabel>{t('signUp.password')}</FormLabel>
                       </div>
                       <FormControl>
                         <Input
-                          placeholder={t('signIn.passwordPlaceholder')}
+                          placeholder={t('signUp.passwordPlaceholder')}
                           type="password"
                           required
                           disabled={processing}
-                          autoComplete="signin-password"
+                          autoComplete="signup-password"
                           {...field}
                         />
                       </FormControl>
@@ -111,17 +127,15 @@ export default function SignInForm() {
                 />
                 <Button type="submit" className="w-full" disabled={processing}>
                   {processing && <Loader2 className="animate-spin" />}
-                  {processing && t('signIn.processing')}
-                  {!processing && t('signIn.title')}
+                  {processing && t('signUp.processing')}
+                  {!processing && t('signUp.title')}
                 </Button>
               </div>
             </form>
           </Form>
-          <div className="flex mt-4 text-center justify-between text-sm">
-            <span className="text-muted-foreground">{t('signIn.noAccount')}</span>
-            <Link to="/sign-up" className="underline underline-offset-4">
-              {t('signUp.title')}
-            </Link>
+          <div className="text-muted-foreground *:[a]:hover:text-primary text-center text-xs text-balance *:[a]:underline *:[a]:underline-offset-4 mt-6">
+            {t('signUp.termsParagraphPre')} <a href="#">{t('signUp.termsParagraphLink1')}</a>{' '}
+            {t('signUp.termsParagraphAnd')} <a href="#">{t('signUp.termsParagraphLink2')}</a>.
           </div>
         </CardContent>
       </Card>
