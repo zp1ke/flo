@@ -89,11 +89,11 @@ export default function SignInForm() {
                     <FormItem className="grid gap-2">
                       <div className="flex items-center">
                         <FormLabel>{t('signIn.password')}</FormLabel>
-                        <a
-                          href="#"
+                        <Link
+                          to="/recover"
                           className="ml-auto inline-block text-sm underline-offset-4 hover:underline">
                           {t('signIn.forgotPassword')}
-                        </a>
+                        </Link>
                       </div>
                       <FormControl>
                         <Input

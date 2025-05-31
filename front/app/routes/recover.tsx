@@ -1,14 +1,13 @@
 import { useEffect } from 'react';
 import { useOutletContext } from 'react-router';
-import SignInForm from '~/components/home/sign-in-form';
 import type { AnonContextType } from '~/components/layout/anon-layout';
 
-export default function Home() {
+export default function Recover() {
   const { setPlaceholderPosition } = useOutletContext<AnonContextType>();
 
   useEffect(() => {
-    setPlaceholderPosition('left');
+    setPlaceholderPosition('right');
   }, [setPlaceholderPosition]);
 
-  return <SignInForm />;
+  return <span>TODO</span>;
 }
