@@ -12,6 +12,7 @@ dependencies {
     implementation project(':flo-utils')
     implementation project(':flo-data')
     implementation libs.jjwt.api
+    implementation libs.jobrunr
     implementation libs.liquibase
     implementation libs.openapi.ui
     implementation libs.preliquibase

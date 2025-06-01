@@ -10,3 +10,7 @@ jwt:
 
 server:
   port: 8080
+
+org.jobrunr:
+  dashboard:
+    port: 8081

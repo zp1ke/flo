@@ -37,6 +37,18 @@ management:
       exposure:
         include: info,health
 
+org.jobrunr:
+  background-job-server:
+    enabled: true
+  dashboard:
+    enabled: true
+  database:
+    table-prefix: jobrunr.
+    type: sql
+  jobs:
+    metrics:
+      enabled: true
+
 logging:
   level:
     root: INFO

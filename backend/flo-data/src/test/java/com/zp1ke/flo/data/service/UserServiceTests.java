@@ -25,7 +25,8 @@ class UserServiceTests {
     private UserService createUserService(UserRepository userRepository) {
         return new UserService(validator, userRepository,
             mock(UserTokenRepository.class), mock(PasswordEncoder.class),
-            mock(ProfileService.class), mock(SettingService.class));
+            mock(ProfileService.class), mock(SettingService.class),
+            mock(NotificationService.class));
     }
 
     @Test

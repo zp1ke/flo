@@ -32,6 +32,8 @@ public class UserService {
 
     private final SettingService settingService;
 
+    private final NotificationService notificationService;
+
     @Nullable
     public User findByUsernameAndValidToken(@NonNull String username,
                                             @NonNull String token,
@@ -55,12 +57,12 @@ public class UserService {
             throw new ConstraintViolationException("user.invalid", violations);
         }
 
-        if (userRepository.existsByUsername(user.getUsername())) {
-            throw new IllegalArgumentException("user.username_already_exists");
-        }
-
         if (userRepository.existsByEmail(user.getEmail())) {
             throw new IllegalArgumentException("user.email_already_exists");
+        }
+
+        if (userRepository.existsByUsername(user.getUsername())) {
+            throw new IllegalArgumentException("user.username_already_exists");
         }
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -70,7 +72,7 @@ public class UserService {
         profileService.save(Profile.fromUser(saved));
         settingService.saveDefaultSettings(saved);
 
-        // TODO: send verification email with verify code
+        notificationService.sendVerificationEmail(saved);
 
         return saved;
     }

@@ -64,4 +64,9 @@ public class User extends Auditable {
     public boolean isNotVerified() {
         return !isVerified();
     }
+
+    @Override
+    public String toString() {
+        return String.format("User{id=%d, email='%s'}", id, email);
+    }
 }

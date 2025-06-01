@@ -1,5 +1,6 @@
 [versions]
 jjwt = "0.12.6"
+jobrunr = "7.5.1"
 junit = "5.12.2"
 karate = "1.5.1"
 lombok = "1.18.38"
@@ -10,6 +11,7 @@ preliquibase = "1.6.1"
 jjwt-api = { module = "io.jsonwebtoken:jjwt-api", version.ref = "jjwt" }
 jjwt-impl = { module = "io.jsonwebtoken:jjwt-impl", version.ref = "jjwt" }
 jjwt-jackson = { module = "io.jsonwebtoken:jjwt-jackson", version.ref = "jjwt" }
+jobrunr = { module = "org.jobrunr:jobrunr-spring-boot-3-starter", version.ref = "jobrunr" }
 junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit" }
 junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
 karate-junit = { module = "io.karatelabs:karate-junit5", version.ref = "karate" }

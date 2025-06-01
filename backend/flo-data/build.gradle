@@ -10,6 +10,8 @@ dependencies {
     developmentOnly libs.spring.dev
 
     implementation project(':flo-utils')
+    implementation project(':flo-tools')
+    implementation libs.jobrunr
     implementation libs.spring.jpa
     implementation libs.spring.security
     implementation libs.spring.validation
