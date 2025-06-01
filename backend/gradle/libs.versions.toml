@@ -1,4 +1,5 @@
 [versions]
+angus = "2.0.3"
 jjwt = "0.12.6"
 jobrunr = "7.5.1"
 junit = "5.12.2"
@@ -8,6 +9,7 @@ openapi = "2.8.8"
 preliquibase = "1.6.1"
 
 [libraries]
+angus = { module = "org.eclipse.angus:angus-mail", version.ref = "angus" }
 jjwt-api = { module = "io.jsonwebtoken:jjwt-api", version.ref = "jjwt" }
 jjwt-impl = { module = "io.jsonwebtoken:jjwt-impl", version.ref = "jjwt" }
 jjwt-jackson = { module = "io.jsonwebtoken:jjwt-jackson", version.ref = "jjwt" }

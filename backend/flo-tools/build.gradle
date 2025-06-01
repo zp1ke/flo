@@ -8,6 +8,7 @@ dependencies {
     compileOnly libs.lombok
 
     implementation project(':flo-utils')
+    implementation libs.angus
 
     testImplementation libs.junit.jupiter
 
