@@ -23,11 +23,14 @@ public class UserDto {
     @NotBlank(message = "user.password-empty")
     private String password;
 
+    private boolean verified;
+
     @NonNull
     public static UserDto fromUser(@NonNull User user) {
         return UserDto.builder()
             .email(user.getEmail())
             .username(user.getUsername())
+            .verified(user.isVerified())
             .build();
     }
 

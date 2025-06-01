@@ -62,6 +62,13 @@ public class AuthController {
         return ResponseEntity.ok(new AuthResponse(token, UserDto.fromUser(user)));
     }
 
+    @PostMapping("/verify/{code}")
+    @Operation(summary = "Verifies user")
+    public ResponseEntity<Void> verify(@PathVariable String code) {
+        userService.verifyUserByCode(code);
+        return ResponseEntity.noContent().build();
+    }
+
     @GetMapping("/me")
     @Operation(summary = "Get current user with profiles")
     public ResponseEntity<UserWithProfilesDto> me(@AuthenticationPrincipal User user) {
@@ -83,7 +90,7 @@ public class AuthController {
     }
 
     @NonNull
-    public String generateToken(@NonNull User user) {
+    private String generateToken(@NonNull User user) {
         var remoteAddress = RequestUtils.remoteAddress(httpRequest);
         return generateToken(user, remoteAddress);
     }

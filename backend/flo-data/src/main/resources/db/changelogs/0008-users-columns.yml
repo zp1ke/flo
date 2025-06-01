@@ -1,0 +1,20 @@
+databaseChangeLog:
+  - changeSet:
+      id: flo-0008
+      author: zp1ke
+      changes:
+        - addColumn:
+            tableName: users
+            columns:
+              - column:
+                  name: verify_code
+                  type: varchar(50)
+              - column:
+                  name: verified_at
+                  type: timestamp with time zone
+        - createIndex:
+            columns:
+              - column:
+                  name: verify_code
+            indexName: users_idx_verify_code
+            tableName: users

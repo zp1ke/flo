@@ -48,6 +48,7 @@ public class KarateRunnerTest {
             .password("12345678")
             .build();
         var user = userService.create(userDto.toUser());
+        userService.verifyUserByCode(user.getVerifyCode());
 
         var profiles = profileService.profilesOfUser(user);
         var profile = profiles.getFirst();

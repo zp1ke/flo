@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import java.time.OffsetDateTime;
 import lombok.*;
 
 @Entity
@@ -14,6 +15,7 @@ import lombok.*;
     @Index(name = "users_unq_username", columnList = "username", unique = true),
     @Index(name = "users_idx_created_at", columnList = "created_at"),
     @Index(name = "users_idx_updated_at", columnList = "updated_at"),
+    @Index(name = "users_idx_verify_code", columnList = "verify_code"),
 })
 @Getter
 @Setter
@@ -43,9 +45,23 @@ public class User extends Auditable {
     @Column(nullable = false)
     private String password;
 
+    @Column(name = "verify_code")
+    private String verifyCode;
+
+    @Column(name = "verified_at")
+    private OffsetDateTime verifiedAt;
+
     public void generateUsernameIfMissing() {
         if (StringUtils.isBlank(username) && StringUtils.isNotBlank(email)) {
             username = email.split("@")[0];
         }
+    }
+
+    public boolean isVerified() {
+        return verifiedAt != null;
+    }
+
+    public boolean isNotVerified() {
+        return !isVerified();
     }
 }

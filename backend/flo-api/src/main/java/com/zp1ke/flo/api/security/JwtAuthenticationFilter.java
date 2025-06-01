@@ -1,5 +1,7 @@
 package com.zp1ke.flo.api.security;
 
+import com.zp1ke.flo.api.model.UserAuthority;
+import com.zp1ke.flo.api.model.UserGrantedAuthority;
 import com.zp1ke.flo.api.utils.RequestUtils;
 import com.zp1ke.flo.data.domain.Profile;
 import com.zp1ke.flo.data.domain.User;
@@ -11,12 +13,14 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -72,7 +76,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         if (user != null) {
-            var authentication = new UsernamePasswordAuthenticationToken(user, token, Collections.emptyList());
+            var authentication = new UsernamePasswordAuthenticationToken(user, token, authoritiesOf(user));
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
     }
@@ -97,5 +101,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return profileService.profileOfUserByCode(user, profileCode).orElse(null);
         }
         return null;
+    }
+
+    @NonNull
+    private Collection<? extends GrantedAuthority> authoritiesOf(@NonNull User user) {
+        var authorities = new ArrayList<GrantedAuthority>();
+        if (user.isVerified()) {
+            authorities.add(new UserGrantedAuthority(UserAuthority.VERIFIED));
+        }
+        return authorities;
     }
 }

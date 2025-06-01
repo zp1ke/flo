@@ -64,10 +64,13 @@ public class UserService {
         }
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setVerifyCode(StringUtils.generateRandomCode(6));
         var saved = userRepository.save(user);
 
         profileService.save(Profile.fromUser(saved));
         settingService.saveDefaultSettings(saved);
+
+        // TODO: send verification email with verify code
 
         return saved;
     }
@@ -124,5 +127,17 @@ public class UserService {
     public void disableUserToken(@NonNull String token,
                                  @NonNull String remoteAddress) {
         userTokenRepository.deleteByTokenAndRemoteAddress(token, remoteAddress);
+    }
+
+    public void verifyUserByCode(@NonNull String code) {
+        var userByCode = userRepository.findByVerifyCode(code);
+        if (userByCode.isEmpty()) {
+            throw new IllegalArgumentException("user.verify_code_not_found");
+        }
+
+        var user = userByCode.get();
+        user.setVerifyCode(null);
+        user.setVerifiedAt(OffsetDateTime.now());
+        userRepository.save(user);
     }
 }

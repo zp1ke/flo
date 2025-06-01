@@ -2,6 +2,7 @@ package com.zp1ke.flo.api.controller.v1;
 
 import com.zp1ke.flo.api.dto.PageDto;
 import com.zp1ke.flo.api.dto.ProfileDto;
+import com.zp1ke.flo.api.security.UserIsVerified;
 import com.zp1ke.flo.data.domain.User;
 import com.zp1ke.flo.data.service.ProfileService;
 import com.zp1ke.flo.data.service.UserService;
@@ -38,6 +39,7 @@ public class ProfileController {
 
     @PostMapping
     @Operation(summary = "Add profile data")
+    @UserIsVerified
     public ResponseEntity<ProfileDto> addProfile(@AuthenticationPrincipal User user,
                                                  @RequestBody ProfileDto request) {
         var profile = request.toProfile();
@@ -49,6 +51,7 @@ public class ProfileController {
 
     @PutMapping("/{profileCode}")
     @Operation(summary = "Update profile data")
+    @UserIsVerified
     public ResponseEntity<ProfileDto> updateProfile(@AuthenticationPrincipal User user,
                                                     @PathVariable String profileCode,
                                                     @RequestBody ProfileDto request) {
@@ -66,6 +69,7 @@ public class ProfileController {
 
     @DeleteMapping("/{profileCode}")
     @Operation(summary = "Delete profile data")
+    @UserIsVerified
     public ResponseEntity<Void> deleteProfile(@AuthenticationPrincipal User user,
                                               @PathVariable String profileCode) {
         var profile = profileService.profileOfUserByCode(user, profileCode);
