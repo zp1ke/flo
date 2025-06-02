@@ -1,27 +1,42 @@
 import {
   Body,
+  Button,
+  CodeInline,
   Container,
   Head,
   Heading,
   Hr,
   Html,
   Img,
-  Link,
   Preview,
   Tailwind,
   Text,
 } from '@react-email/components';
 
-export const UserVerification = () => {
-  const previewText = 'Hello ${profile.name}, please verify your email address.';
+const texts = {
+  lang: 'en',
+  hello: 'Hello',
+  orCopyAndPaste: 'or copy and paste this URL into your browser:',
+  preview: 'Hello ${profile.name}, please verify your email address.',
+  thatsIt: "That's it! Nice to have you onboard.",
+  thisVerification: 'This verification was intended for',
+  thisVerificationDescription:
+    "If you were not expecting this verification, you can ignore this email. If you are concerned about your account's safety, please reply to this email to get in touch with us.",
+  welcome: 'Welcome aboard.',
+  verifyEmail: 'Please verify your email address.',
+  verifyNow: 'Verify now',
+};
 
+export const UserVerification = () => {
   return (
-    <Html>
-      <Head />
-      <Preview>{previewText}</Preview>
+    <Html lang={texts.lang}>
+      <Head>
+        <title>{texts.preview}</title>
+      </Head>
+      <Preview>{texts.preview}</Preview>
       <Tailwind>
         <Body className="mx-auto my-auto bg-white px-2 font-sans">
-          <Container className="mx-auto my-[40px] max-w-[465px] rounded border border-[#eaeaea] border-solid p-[20px]">
+          <Container className="mx-auto my-[40px] max-w-[465px] rounded border border-gray-200 border-solid p-[20px]">
             <Img
               src="https://reactrouter.com/_brand/React%20Router%20Brand%20Assets/React%20Router%20Lockup/Light.svg"
               height="24"
@@ -29,31 +44,26 @@ export const UserVerification = () => {
               className="mx-auto my-0"
             />
             <Heading className="mx-0 my-[30px] p-0 text-center font-normal text-[24px] text-black">
-              Hello <strong>{'${profile.name}'}</strong>,
+              {texts.hello} <strong>{'${profile.name}'}</strong>,
             </Heading>
             <Text className="text-[16px] text-black leading-[24px]">
-              Welcome aboard! Please verify your email address.
+              {texts.welcome} {texts.verifyEmail}
             </Text>
             <Text className="text-[14px] text-black leading-[24px]">
-              <Link href="${verificationLink}" className="text-blue-600 no-underline">
-                Verify now
-              </Link>
+              <Button
+                href="${verificationLink}"
+                className="p-[10px_20px] bg-blue-400 text-white rounded">
+                {texts.verifyNow}
+              </Button>
             </Text>
             <Text className="text-[14px] text-black leading-[24px]">
-              or copy and paste this URL into your browser:{' '}
-              <Link href="${verificationLink}" className="text-blue-600 no-underline">
-                Verification Link
-              </Link>
+              {texts.orCopyAndPaste} <CodeInline>{'${verificationLink}'}</CodeInline>
             </Text>
-            <Text className="text-[12px] text-black leading-[24px]">
-              That's it! Nice to have you onboard.
-            </Text>
-            <Hr className="mx-0 my-[26px] w-full border border-[#eaeaea] border-solid" />
-            <Text className="text-[#666666] text-[12px] leading-[24px]">
-              This invitation was intended for{' '}
-              <span className="text-black">{'${profile.name}'}</span>. If you were not expecting
-              this invitation, you can ignore this email. If you are concerned about your account's
-              safety, please reply to this email to get in touch with us.
+            <Text className="text-[12px] text-black leading-[24px]">{texts.thatsIt}</Text>
+            <Hr className="mx-0 my-[26px] w-full border border-gray-300 border-solid" />
+            <Text className="text-gray-500 text-[12px] leading-[24px]">
+              {texts.thisVerification} <span className="text-black">{'${profile.name}'}</span>.{' '}
+              {texts.thisVerificationDescription}
             </Text>
           </Container>
         </Body>
