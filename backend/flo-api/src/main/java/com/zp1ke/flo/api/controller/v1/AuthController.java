@@ -16,6 +16,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import java.util.Locale;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -43,8 +44,12 @@ public class AuthController {
 
     @PostMapping("/sign-up")
     @Operation(summary = "Create a new user")
-    public ResponseEntity<AuthResponse> signUp(@Valid @RequestBody UserRequest request) {
-        var user = userService.create(request.toUser(), request.toProfile());
+    public ResponseEntity<AuthResponse> signUp(@Valid @RequestBody UserRequest request,
+                                               Locale locale) {
+        var profile = request.toProfile().toBuilder()
+            .language(locale.toLanguageTag())
+            .build();
+        var user = userService.create(request.toUser(), profile);
 
         var token = generateToken(user);
         return ResponseEntity.status(HttpStatus.CREATED)

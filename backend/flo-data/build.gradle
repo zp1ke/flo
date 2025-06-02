@@ -11,9 +11,11 @@ dependencies {
 
     implementation project(':flo-utils')
     implementation project(':flo-tools')
+    implementation libs.spring.freemarker
     implementation libs.jobrunr
     implementation libs.spring.jpa
     implementation libs.spring.security
+    implementation libs.spring.web
     implementation libs.spring.validation
 
     testImplementation libs.spring.security.test

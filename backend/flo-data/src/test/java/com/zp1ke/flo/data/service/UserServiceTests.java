@@ -9,6 +9,7 @@ import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
+import org.springframework.lang.NonNull;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -21,6 +22,14 @@ class UserServiceTests {
         try (var validatorFactory = Validation.buildDefaultValidatorFactory()) {
             validator = validatorFactory.getValidator();
         }
+    }
+
+    @NonNull
+    private static Profile profileFromUser(@NonNull User user) {
+        return Profile.builder()
+            .user(user)
+            .name(user.getUsername())
+            .build();
     }
 
     private UserService createUserService(UserRepository userRepository) {
@@ -36,7 +45,7 @@ class UserServiceTests {
 
         var userService = createUserService(mock(UserRepository.class));
 
-        assertThrows(ConstraintViolationException.class, () -> userService.create(user, Profile.fromUser(user)));
+        assertThrows(ConstraintViolationException.class, () -> userService.create(user, profileFromUser(user)));
     }
 
     @Test
@@ -47,7 +56,7 @@ class UserServiceTests {
 
         var userService = createUserService(mock(UserRepository.class));
 
-        assertThrows(ConstraintViolationException.class, () -> userService.create(user, Profile.fromUser(user)));
+        assertThrows(ConstraintViolationException.class, () -> userService.create(user, profileFromUser(user)));
     }
 
     @Test
@@ -62,7 +71,7 @@ class UserServiceTests {
 
         var userService = createUserService(userRepository);
 
-        assertThrows(ConstraintViolationException.class, () -> userService.create(user, Profile.fromUser(user)));
+        assertThrows(ConstraintViolationException.class, () -> userService.create(user, profileFromUser(user)));
     }
 
     @Test
@@ -89,7 +98,7 @@ class UserServiceTests {
 
         var userService = createUserService(userRepository);
 
-        var createdUser = userService.create(user, Profile.fromUser(user));
+        var createdUser = userService.create(user, profileFromUser(user));
         assertNotNull(createdUser);
         assertNotNull(createdUser.getUsername());
         verify(userRepository).existsByUsername(anyString());
@@ -115,7 +124,7 @@ class UserServiceTests {
 
         var userService = createUserService(userRepository);
 
-        var createdUser = userService.create(user, Profile.fromUser(user));
+        var createdUser = userService.create(user, profileFromUser(user));
 
         assertNotNull(createdUser.getUsername());
         verify(userRepository).save(user);

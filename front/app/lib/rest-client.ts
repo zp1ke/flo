@@ -4,6 +4,7 @@ import type { DataPage } from '~/types/page';
 import { SortDirection, sortPrefix } from '~/types/sort';
 
 import { getAuthToken } from './auth';
+import { getLanguage } from './i18n';
 
 export interface RestError {
   message: string;
@@ -96,6 +97,7 @@ const headers = (): Record<string, string> => {
   const authToken = getAuthToken();
   return {
     'Content-Type': 'application/json',
+    'Accept-Language': getLanguage(),
     Accept: 'application/json',
     ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
   };

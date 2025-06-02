@@ -5,7 +5,7 @@ import com.zp1ke.flo.data.domain.User;
 import jakarta.validation.constraints.NotBlank;
 import org.springframework.lang.NonNull;
 
-public record UserRequest(@NotBlank(message = "user.invalid-emailOrUsername") String email,
+public record UserRequest(@NotBlank(message = "user.invalid-email") String email,
                           @NotBlank(message = "user.invalid-name") String name,
                           @NotBlank(message = "user.password-empty") String password) {
 

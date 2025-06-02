@@ -14,3 +14,11 @@ i18next
     returnObjects: true,
     supportedLngs: ['en'],
   });
+
+export function saveLanguage(language: string) {
+  localStorage.setItem('language', language);
+}
+
+export function getLanguage(): string {
+  return localStorage.getItem('language') || 'en';
+}

@@ -1,12 +1,13 @@
 package com.zp1ke.flo.data.domain;
 
 import com.zp1ke.flo.data.domain.core.Auditable;
+import com.zp1ke.flo.utils.StringUtils;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import java.util.Locale;
 import lombok.*;
-import org.springframework.lang.NonNull;
 
 @Entity
 @Table(name = "profiles", indexes = {
@@ -41,11 +42,19 @@ public class Profile extends Auditable {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
-    @NonNull
-    public static Profile fromUser(@NonNull User user) {
-        return Profile.builder()
-            .user(user)
-            .name(user.getUsername())
-            .build();
+    @Size(max = 50, message = "profile.language-size")
+    @Column(length = 50)
+    private String language;
+
+    public Locale getLocale() {
+        if (StringUtils.isNotBlank(language)) {
+            return Locale.forLanguageTag(language);
+        }
+        return Locale.getDefault();
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Profile{code=%s}", code);
     }
 }

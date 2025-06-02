@@ -9,6 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '~/components/ui/dropdown-menu';
+import { saveLanguage } from '~/lib/i18n';
 
 const languages: string[] = ['en'];
 
@@ -20,7 +21,9 @@ export function LanguageSelector() {
 
   const handleLanguage = (lang: string) => {
     setLanguage(lang);
-    i18next.changeLanguage(lang).then(() => {});
+    i18next.changeLanguage(lang).then(() => {
+      saveLanguage(lang);
+    });
   };
 
   useEffect(() => {

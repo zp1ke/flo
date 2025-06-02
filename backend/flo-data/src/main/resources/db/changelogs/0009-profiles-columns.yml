@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - changeSet:
+      id: flo-0009
+      author: zp1ke
+      changes:
+        - addColumn:
+            tableName: profiles
+            columns:
+              - column:
+                  name: language
+                  type: varchar(50)
