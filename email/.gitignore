@@ -1,2 +1,4 @@
 .DS_Store
+/.react-email/
 /node_modules/
+/out/
