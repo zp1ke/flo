@@ -137,5 +137,9 @@
     "light": "Light",
     "system": "System",
     "toggle": "Toggle Theme"
+  },
+  "user": {
+    "verified": "Your account has been verified.",
+    "verifyError": "Could not verify your account."
   }
 }

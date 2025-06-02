@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jobrunr.jobs.annotations.Job;
 import org.jobrunr.scheduling.JobScheduler;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +26,9 @@ public class NotificationService {
 
     private final MessageService messageService;
 
+    @Value("${web.baseUrl:}")
+    private String webBaseUrl;
+
     public void sendVerificationEmail(@NonNull User user, @NonNull Profile profile) {
         jobScheduler.enqueue(() -> doSendVerificationEmail(user, profile));
     }
@@ -36,8 +40,13 @@ public class NotificationService {
             var locale = profile.getLocale();
             var subject = messageService
                 .message(templateCode + "-subject", new String[] {profile.getName()}, locale);
+            var data = Map.<String, Object>of(
+                "user", user,
+                "profile", profile,
+                "verificationLink", String.format("%s/verify/%s", webBaseUrl, user.getVerifyCode())
+            );
             var body = messageService
-                .template(templateCode + ".ftl", Map.of("user", user, "profile", profile), locale);
+                .template(templateCode + ".ftl", data, locale);
             var notification = EmailNotification.builder()
                 .subject(subject)
                 .body(body)

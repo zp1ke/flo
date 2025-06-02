@@ -62,7 +62,7 @@ class RestClient {
     }
   }
 
-  async postJson<T>(url: string, data: Record<string, any>): Promise<T> {
+  async postJson<T>(url: string, data?: Record<string, any>): Promise<T> {
     try {
       const response = await this.axios.post<T>(url, data, { headers: headers() });
       return response.data;

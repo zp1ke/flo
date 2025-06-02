@@ -130,3 +130,7 @@ const setAuthToken = (token: string | null): void => {
     localStorage.removeItem(TOKEN_KEY);
   }
 };
+
+export const verifyUser = async (code: string): Promise<void> => {
+  await restClient.postJson(`${basePath}/verify/${code}`);
+};
