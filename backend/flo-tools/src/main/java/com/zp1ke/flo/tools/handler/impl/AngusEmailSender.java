@@ -21,6 +21,8 @@ public class AngusEmailSender implements EmailSender {
 
     private final String password;
 
+    private final Contact sender;
+
     public AngusEmailSender(EmailConfig config) {
         properties = new Properties();
         properties.put("mail.smtp.starttls.enable", String.valueOf(config.isUseTLS()));
@@ -34,13 +36,14 @@ public class AngusEmailSender implements EmailSender {
         }
         username = config.getUsername();
         password = config.getPassword();
+        sender = config.getSender();
     }
 
     @Override
     public void sendEmail(EmailNotification notification) throws EmailException {
         try {
             var message = new MimeMessage(createSession());
-            message.setFrom(toInternetAddress(notification.getSender()));
+            message.setFrom(toInternetAddress(sender));
             message.setRecipients(Message.RecipientType.TO,
                 new InternetAddress[] {toInternetAddress(notification.getRecipient())});
             message.setSubject(notification.getSubject());

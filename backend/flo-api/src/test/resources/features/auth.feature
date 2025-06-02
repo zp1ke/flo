@@ -2,7 +2,7 @@ Feature: Authentication API testing
 
   Background:
     * def baseUrl = karate.properties['baseUrl'] + '/api/v1/auth'
-    * def user = { 'email': 'test-user@flo.com', 'password': '12345678' }
+    * def user = { 'email': 'test-user@flo.com', name: 'Test User', 'password': '12345678' }
 
   Scenario: Signup a user creates a user
     Given url baseUrl + '/sign-up'

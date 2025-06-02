@@ -10,6 +10,7 @@ dependencies {
     developmentOnly libs.spring.dev
 
     implementation project(':flo-utils')
+    implementation project(':flo-tools')
     implementation project(':flo-data')
     implementation libs.jjwt.api
     implementation libs.jobrunr

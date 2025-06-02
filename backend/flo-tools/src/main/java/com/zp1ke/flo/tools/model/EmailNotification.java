@@ -10,7 +10,5 @@ public class EmailNotification {
 
     private final String body;
 
-    private final Contact sender;
-
     private final Contact recipient;
 }

@@ -5,6 +5,7 @@ import com.zp1ke.flo.api.dto.UserDto;
 import com.zp1ke.flo.api.dto.UserWithProfilesDto;
 import com.zp1ke.flo.api.model.AuthRequest;
 import com.zp1ke.flo.api.model.AuthResponse;
+import com.zp1ke.flo.api.model.UserRequest;
 import com.zp1ke.flo.api.security.JwtTokenProvider;
 import com.zp1ke.flo.api.utils.RequestUtils;
 import com.zp1ke.flo.data.domain.User;
@@ -42,8 +43,8 @@ public class AuthController {
 
     @PostMapping("/sign-up")
     @Operation(summary = "Create a new user")
-    public ResponseEntity<AuthResponse> signUp(@Valid @RequestBody UserDto request) {
-        var user = userService.create(request.toUser());
+    public ResponseEntity<AuthResponse> signUp(@Valid @RequestBody UserRequest request) {
+        var user = userService.create(request.toUser(), request.toProfile());
 
         var token = generateToken(user);
         return ResponseEntity.status(HttpStatus.CREATED)

@@ -34,15 +34,6 @@ public class UserDto {
             .build();
     }
 
-    @NonNull
-    public User toUser() {
-        return User.builder()
-            .email(email)
-            .username(getUsername())
-            .password(password)
-            .build();
-    }
-
     public String getUsername() {
         if (username == null && StringUtils.isNotBlank(email)) {
             return email.split("@")[0];

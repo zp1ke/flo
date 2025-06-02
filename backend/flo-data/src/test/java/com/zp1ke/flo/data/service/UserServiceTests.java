@@ -1,5 +1,6 @@
 package com.zp1ke.flo.data.service;
 
+import com.zp1ke.flo.data.domain.Profile;
 import com.zp1ke.flo.data.domain.User;
 import com.zp1ke.flo.data.repository.UserRepository;
 import com.zp1ke.flo.data.repository.UserTokenRepository;
@@ -35,7 +36,7 @@ class UserServiceTests {
 
         var userService = createUserService(mock(UserRepository.class));
 
-        assertThrows(ConstraintViolationException.class, () -> userService.create(user));
+        assertThrows(ConstraintViolationException.class, () -> userService.create(user, Profile.fromUser(user)));
     }
 
     @Test
@@ -46,7 +47,7 @@ class UserServiceTests {
 
         var userService = createUserService(mock(UserRepository.class));
 
-        assertThrows(ConstraintViolationException.class, () -> userService.create(user));
+        assertThrows(ConstraintViolationException.class, () -> userService.create(user, Profile.fromUser(user)));
     }
 
     @Test
@@ -61,7 +62,7 @@ class UserServiceTests {
 
         var userService = createUserService(userRepository);
 
-        assertThrows(ConstraintViolationException.class, () -> userService.create(user));
+        assertThrows(ConstraintViolationException.class, () -> userService.create(user, Profile.fromUser(user)));
     }
 
     @Test
@@ -88,7 +89,7 @@ class UserServiceTests {
 
         var userService = createUserService(userRepository);
 
-        var createdUser = userService.create(user);
+        var createdUser = userService.create(user, Profile.fromUser(user));
         assertNotNull(createdUser);
         assertNotNull(createdUser.getUsername());
         verify(userRepository).existsByUsername(anyString());
@@ -114,7 +115,7 @@ class UserServiceTests {
 
         var userService = createUserService(userRepository);
 
-        var createdUser = userService.create(user);
+        var createdUser = userService.create(user, Profile.fromUser(user));
 
         assertNotNull(createdUser.getUsername());
         verify(userRepository).save(user);

@@ -1,5 +1,6 @@
 package com.zp1ke.flo.tools.model;
 
+import com.zp1ke.flo.utils.StringUtils;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -17,4 +18,10 @@ public class EmailConfig {
     private final boolean useSSL;
 
     private final boolean useTLS;
+
+    private final Contact sender;
+
+    public boolean isNotValid() {
+        return sender == null || sender.isNotValid() || StringUtils.isBlank(host) || port <= 0;
+    }
 }

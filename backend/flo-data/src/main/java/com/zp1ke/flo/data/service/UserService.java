@@ -49,12 +49,16 @@ public class UserService {
     }
 
     @NonNull
-    public User create(@NonNull User user) {
+    public User create(@NonNull User user, @NonNull Profile profile) {
         user.generateUsernameIfMissing();
 
         var violations = validator.validate(user);
         if (!violations.isEmpty()) {
             throw new ConstraintViolationException("user.invalid", violations);
+        }
+
+        if (StringUtils.isNotEmail(user.getEmail())) {
+            throw new IllegalArgumentException("user.invalid_email");
         }
 
         if (userRepository.existsByEmail(user.getEmail())) {
@@ -69,10 +73,11 @@ public class UserService {
         user.setVerifyCode(StringUtils.generateRandomCode(6));
         var saved = userRepository.save(user);
 
-        profileService.save(Profile.fromUser(saved));
+        profile.setUser(saved);
+        var savedProfile = profileService.save(profile);
         settingService.saveDefaultSettings(saved);
 
-        notificationService.sendVerificationEmail(saved);
+        notificationService.sendVerificationEmail(saved, savedProfile);
 
         return saved;
     }

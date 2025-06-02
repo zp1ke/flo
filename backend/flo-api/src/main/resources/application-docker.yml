@@ -11,6 +11,13 @@ jwt:
 server:
   port: 8080
 
+mail:
+  host: ${MAIL_HOST}
+  port: ${MAIL_PORT}
+  handler: ${MAIL_HANDLER:SMTP}
+  useTLS: ${MAIL_USE_TLS:false}
+  useSSL: ${MAIL_USE_SSL:false}
+
 org.jobrunr:
   dashboard:
     port: 8081

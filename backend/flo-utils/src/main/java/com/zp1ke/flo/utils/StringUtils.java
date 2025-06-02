@@ -71,4 +71,21 @@ public class StringUtils {
 
         return code.toString();
     }
+
+    /**
+     * Checks if the provided email is not valid.
+     * <p>
+     * A valid email must not be blank and must match a simple regex pattern.
+     * </p>
+     *
+     * @param email the email to check, may be null
+     * @return true if the email is not valid, false otherwise
+     */
+    public static boolean isNotEmail(String email) {
+        if (isBlank(email)) {
+            return true;
+        }
+        String emailRegex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
+        return !email.matches(emailRegex);
+    }
 }
