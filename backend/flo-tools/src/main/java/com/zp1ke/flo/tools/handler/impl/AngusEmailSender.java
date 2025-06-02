@@ -15,6 +15,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.Properties;
 
 public class AngusEmailSender implements EmailSender {
+
     private final Properties properties;
 
     private final String username;

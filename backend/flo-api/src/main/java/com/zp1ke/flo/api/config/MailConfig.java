@@ -1,15 +1,18 @@
 package com.zp1ke.flo.api.config;
 
 import com.zp1ke.flo.tools.handler.EmailSender;
+import com.zp1ke.flo.tools.model.Contact;
 import com.zp1ke.flo.tools.model.EmailConfig;
 import com.zp1ke.flo.tools.model.EmailHandler;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @Getter
+@Slf4j
 public class MailConfig {
 
     @Value("${mail.handler:NONE}")
@@ -48,7 +51,13 @@ public class MailConfig {
             .password(password)
             .useSSL(useSSL)
             .useTLS(useTLS)
+            .sender(Contact.builder()
+                .email(senderEmail)
+                .name(senderName)
+                .build())
             .build();
-        return EmailSender.create(handler, emailConfig);
+        var emailSender = EmailSender.create(handler, emailConfig);
+        log.debug("Email Sender initialized: {}", emailSender.getClass().getSimpleName());
+        return emailSender;
     }
 }
