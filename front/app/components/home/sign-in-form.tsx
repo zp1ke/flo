@@ -47,7 +47,10 @@ export default function SignInForm() {
       await signIn({ email, password });
       navigate('/');
     } catch (e) {
-      toast.error(t('signIn.error'), { description: t((e as RestError).message) });
+      toast.error(t('signIn.error'), {
+        description: t((e as RestError).message),
+        closeButton: true,
+      });
       setProcessing(false);
     }
   };

@@ -80,7 +80,10 @@ export function DataTable<TData, TValue>({
         .catch((e) => {
           setData({ data: [], total: 0 });
           setFetchState(FetchState.Error);
-          toast.error(t('profiles.fetchError'), { description: t((e as RestError).message) });
+          toast.error(t('profiles.fetchError'), {
+            description: t((e as RestError).message),
+            closeButton: true,
+          });
         });
     }
   }, [fetchState]);

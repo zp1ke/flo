@@ -42,7 +42,10 @@ export default function RecoverForm() {
     try {
       // await sendRecover({ email });
     } catch (e) {
-      toast.error(t('recover.error'), { description: t((e as RestError).message) });
+      toast.error(t('recover.error'), {
+        description: t((e as RestError).message),
+        closeButton: true,
+      });
       setProcessing(false);
     }
   };

@@ -49,7 +49,10 @@ export default function SignUpForm() {
     try {
       // await signUp({ email, password });
     } catch (e) {
-      toast.error(t('signUp.error'), { description: t((e as RestError).message) });
+      toast.error(t('signUp.error'), {
+        description: t((e as RestError).message),
+        closeButton: true,
+      });
       setProcessing(false);
     }
   };
