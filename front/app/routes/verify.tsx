@@ -6,6 +6,7 @@ import { verifyUser } from '~/lib/auth';
 import type { RestError } from '~/lib/rest-client';
 import type { Route } from './+types/verify';
 import { Link } from 'react-router';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '~/components/ui/card';
 
 export default function Verify({ params }: Route.LoaderArgs) {
   const { t } = useTranslation();
@@ -33,22 +34,29 @@ export default function Verify({ params }: Route.LoaderArgs) {
 
   if (error) {
     return (
-      <div className="flex h-full w-full justify-center flex-col">
-        <p className="text-destructive text-xl">{t('verify.verifyError')}</p>
-        <p className="text-destructive mt-2">{error}</p>
-      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-destructive text-2xl">{t('verify.verifyError')}</CardTitle>
+          <CardDescription className="text-destructive">{error}</CardDescription>
+        </CardHeader>
+      </Card>
     );
   }
 
   return (
-    <div className="flex h-full w-full items-center justify-center flex-col">
-      <p className="text-2xl">{t('verify.verified')}</p>
-      <div className="flex mt-4 text-center justify-between text-sm">
-        <span className="text-muted-foreground">{t('verify.nextStep')}</span>
-        <Link to="/" className="underline underline-offset-4 ml-2">
-          {t('signIn.title')}
-        </Link>
-      </div>
-    </div>
+    <Card>
+      <CardHeader>
+        <CardTitle className="text-2xl">{t('verify.verified')}</CardTitle>
+        <CardDescription>{t('verify.verifiedDescription')}</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="flex mt-4 text-center justify-between text-sm">
+          <span className="text-muted-foreground">{t('verify.goSignIn')}</span>
+          <Link to="/" className="underline underline-offset-4 ml-2">
+            {t('signIn.title')}
+          </Link>
+        </div>
+      </CardContent>
+    </Card>
   );
 }

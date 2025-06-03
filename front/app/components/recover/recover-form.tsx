@@ -17,11 +17,13 @@ import {
   FormMessage,
 } from '~/components/ui/form';
 import { Input } from '~/components/ui/input';
+import { sendEmailRecover } from '~/lib/auth';
 import type { RestError } from '~/lib/rest-client';
 
 export default function RecoverForm() {
   const { t } = useTranslation();
   const [processing, setProcessing] = useState(false);
+  const [sent, setSent] = useState(false);
 
   const formSchema = z.object({
     email: z.string().email(t('recover.validEmail')).max(255, t('recover.emailMax255')),
@@ -40,15 +42,36 @@ export default function RecoverForm() {
     const { email } = data;
 
     try {
-      // await sendRecover({ email });
+      await sendEmailRecover(email);
+      setSent(true);
     } catch (e) {
       toast.error(t('recover.error'), {
         description: t((e as RestError).message),
         closeButton: true,
       });
+    } finally {
       setProcessing(false);
     }
   };
+
+  if (sent) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-2xl">{t('recover.sent')}</CardTitle>
+          <CardDescription>{t('recover.sentDescription')}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="flex mt-4 text-center justify-between text-sm">
+            <span className="text-muted-foreground">{t('recover.goSignIn')}</span>
+            <Link to="/" className="underline underline-offset-4 ml-2">
+              {t('signIn.title')}
+            </Link>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-6">

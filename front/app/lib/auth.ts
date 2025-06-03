@@ -40,6 +40,12 @@ export const signIn = async (data: AuthRequest): Promise<void> => {
   await fetchUser(true);
 };
 
+export const sendEmailRecover = async (email: String): Promise<void> => {
+  await restClient.postJson<AuthResponse>(`${basePath}/recover`, {
+    email,
+  });
+};
+
 interface UserProfiles {
   user: User;
   profiles: Profile[];

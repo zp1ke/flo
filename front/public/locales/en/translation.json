@@ -48,8 +48,11 @@
     "emailMax255": "Email must be at most 255 characters long.",
     "emailPlaceholder": "example@mail.com",
     "error": "Could not send recover email.",
+    "goSignIn": "Go to Sign In",
     "noAccount": "Don't have an account?",
     "processing": "Processing...",
+    "sent": "A recovery email has been sent to your email address.",
+    "sentDescription": "Please check your inbox and follow the instructions to recover your account.",
     "title": "Recover Account",
     "validEmail": "Please enter a valid email address."
   },
@@ -146,9 +149,10 @@
     "toggle": "Toggle Theme"
   },
   "verify": {
-    "nextStep": "Now you can sign in with your account.",
+    "goSignIn": "Go to Sign In",
     "user_not_verified": "Your account is not verified.",
     "verified": "Your account has been verified.",
+    "verifiedDescription": "Now you can sign in with your account.",
     "verifyError": "Could not verify your account."
   }
 }
