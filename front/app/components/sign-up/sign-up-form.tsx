@@ -3,6 +3,7 @@ import { Loader2 } from 'lucide-react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router';
 import { toast } from 'sonner';
 import { z } from 'zod';
 import { Button } from '~/components/ui/button';
@@ -16,10 +17,12 @@ import {
   FormMessage,
 } from '~/components/ui/form';
 import { Input } from '~/components/ui/input';
+import { signUp } from '~/lib/auth';
 import type { RestError } from '~/lib/rest-client';
 
 export default function SignUpForm() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [processing, setProcessing] = useState(false);
 
   const formSchema = z.object({
@@ -47,7 +50,8 @@ export default function SignUpForm() {
     const { email, name, password } = data;
 
     try {
-      // await signUp({ email, password });
+      await signUp({ email, name, password });
+      navigate('/');
     } catch (e) {
       toast.error(t('signUp.error'), {
         description: t((e as RestError).message),

@@ -3,7 +3,7 @@ import type { Profile } from '~/types/profile';
 import type { User } from '~/types/user';
 
 import { addProfile, updateProfile } from './profiles';
-import restClient from './rest-client';
+import restClient, { type RestError } from './rest-client';
 
 const TOKEN_KEY = 'auth_token';
 const USER_KEY = 'auth_user';
@@ -11,15 +11,30 @@ const USER_KEY_TS = 'auth_user_ts';
 
 const basePath = '/auth';
 
+interface AuthRequest {
+  email: string;
+  password: string;
+}
+
+interface SignUpRequest extends AuthRequest {
+  name: string;
+}
+
 interface AuthResponse {
   token: string;
   user: User;
 }
 
-export const signIn = async (data: { email: string; password: string }): Promise<void> => {
+export const signUp = async (data: SignUpRequest): Promise<void> => {
+  const authResponse = await restClient.postJson<AuthResponse>(`${basePath}/sign-up`, data);
+  setAuthToken(authResponse.token);
+  await fetchUser(true);
+};
+
+export const signIn = async (data: AuthRequest): Promise<void> => {
   const authResponse = await restClient.postJson<AuthResponse>(`${basePath}/sign-in`, {
+    ...data,
     username: data.email,
-    password: data.password,
   });
   setAuthToken(authResponse.token);
   await fetchUser(true);
@@ -74,7 +89,14 @@ export const fetchUser = async (force: boolean): Promise<User | null> => {
         localStorage.setItem(USER_KEY, JSON.stringify(user));
         resolve(user);
       })
-      .catch(reject);
+      .catch((e) => {
+        console.error('Error fetching user:', e);
+        if ((e as RestError).status === 401) {
+          localStorage.removeItem(USER_KEY);
+          localStorage.removeItem(USER_KEY_TS);
+        }
+        reject(e);
+      });
   });
 };
 

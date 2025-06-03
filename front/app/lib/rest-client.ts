@@ -8,6 +8,7 @@ import { getLanguage } from './i18n';
 
 export interface RestError {
   message: string;
+  status: number;
 }
 
 export interface PageFilters {
@@ -139,15 +140,16 @@ const parseError = (error: unknown): RestError => {
     return {
       ...error.response.data,
       message: 'rest.' + (error.response.data.message || 'unknownError'),
+      status: error.response.status || 0,
     } satisfies RestError;
   }
   if (error instanceof Error) {
-    return { message: error.message } satisfies RestError;
+    return { message: error.message, status: 0 } satisfies RestError;
   }
   if (typeof error === 'string') {
-    return { message: error } satisfies RestError;
+    return { message: error, status: 0 } satisfies RestError;
   }
-  return { message: 'rest.unknownError' } satisfies RestError;
+  return { message: 'rest.unknownError', status: 0 } satisfies RestError;
 };
 
 const restClient = new RestClient(config.restApiBaseUrl);
