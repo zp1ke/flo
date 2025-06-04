@@ -147,4 +147,16 @@ public class UserService {
         user.setVerifiedAt(OffsetDateTime.now());
         userRepository.save(user);
     }
+
+    public void sendRecoveryEmail(@NonNull String email) {
+        var userByEmail = userRepository.findByEmail(email);
+        if (userByEmail.isPresent()) {
+            var user = userByEmail.get();
+            user.setVerifyCode(StringUtils.generateRandomCode(6));
+            var saved = userRepository.save(user);
+
+            profileService.firstProfileOfUser(saved)
+                .ifPresent(profile -> notificationService.sendRecoveryEmail(saved, profile));
+        }
+    }
 }

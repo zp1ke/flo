@@ -5,6 +5,7 @@ import com.zp1ke.flo.api.dto.UserDto;
 import com.zp1ke.flo.api.dto.UserWithProfilesDto;
 import com.zp1ke.flo.api.model.AuthRequest;
 import com.zp1ke.flo.api.model.AuthResponse;
+import com.zp1ke.flo.api.model.EmailRequest;
 import com.zp1ke.flo.api.model.UserRequest;
 import com.zp1ke.flo.api.security.JwtTokenProvider;
 import com.zp1ke.flo.api.utils.RequestUtils;
@@ -72,6 +73,13 @@ public class AuthController {
     @Operation(summary = "Verifies user")
     public ResponseEntity<Void> verify(@PathVariable String code) {
         userService.verifyUserByCode(code);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/recover")
+    @Operation(summary = "Send email with recovery code")
+    public ResponseEntity<Void> recover(@Valid @RequestBody EmailRequest emailRequest) {
+        userService.sendRecoveryEmail(emailRequest.email());
         return ResponseEntity.noContent().build();
     }
 

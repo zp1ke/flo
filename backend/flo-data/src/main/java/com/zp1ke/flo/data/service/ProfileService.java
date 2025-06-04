@@ -84,4 +84,8 @@ public class ProfileService {
         }
         profileRepository.delete(profile);
     }
+
+    public Optional<Profile> firstProfileOfUser(@NonNull User user) {
+        return profileRepository.findTopByUserOrderByCreatedAtAsc(user);
+    }
 }

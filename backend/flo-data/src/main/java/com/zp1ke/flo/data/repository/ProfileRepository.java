@@ -24,4 +24,6 @@ public interface ProfileRepository extends JpaRepository<Profile, Long>, JpaSpec
     Integer countByUser(@NonNull User user);
 
     boolean existsByUserAndNameAndIdNot(@NonNull User user, @NonNull String name, @NonNull Long id);
+
+    Optional<Profile> findTopByUserOrderByCreatedAtAsc(@NonNull User user);
 }
