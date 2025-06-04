@@ -159,4 +159,23 @@ public class UserService {
                 .ifPresent(profile -> notificationService.sendRecoveryEmail(saved, profile));
         }
     }
+
+    public void recoverUser(@NonNull String code,
+                            @NonNull String username,
+                            @NonNull String password) {
+        var userByCode = userRepository.findByVerifyCode(code);
+        if (userByCode.isEmpty()) {
+            throw new IllegalArgumentException("user.verify_code_not_found");
+        }
+
+        var user = userByCode.get();
+        if (!user.getEmail().equals(username) && !user.getUsername().equals(username)) {
+            throw new IllegalArgumentException("user.email_does_not_match");
+        }
+
+        user.setVerifyCode(null);
+        user.setVerifiedAt(OffsetDateTime.now());
+        user.setPassword(passwordEncoder.encode(password));
+        userRepository.save(user);
+    }
 }

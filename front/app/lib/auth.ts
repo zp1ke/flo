@@ -51,7 +51,10 @@ export const sendEmailRecover = async (email: String): Promise<void> => {
 };
 
 export const recoverPassword = async (data: RecoveryRequest): Promise<void> => {
-  await restClient.postJson<AuthResponse>(`${basePath}/recovery/${data.code}`, data);
+  await restClient.postJson<AuthResponse>(`${basePath}/recovery/${data.code}`, {
+    ...data,
+    username: data.email,
+  });
 };
 
 interface UserProfiles {

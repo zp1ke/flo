@@ -83,6 +83,14 @@ public class AuthController {
         return ResponseEntity.noContent().build();
     }
 
+    @PostMapping("/recovery/{code}")
+    @Operation(summary = "Recover user by code")
+    public ResponseEntity<Void> recovery(@PathVariable String code,
+                                         @Valid @RequestBody AuthRequest authRequest) {
+        userService.recoverUser(code, authRequest.username(), authRequest.password());
+        return ResponseEntity.noContent().build();
+    }
+
     @GetMapping("/me")
     @Operation(summary = "Get current user with profiles")
     public ResponseEntity<UserWithProfilesDto> me(@AuthenticationPrincipal User user) {
