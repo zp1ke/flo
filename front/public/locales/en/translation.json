@@ -80,6 +80,8 @@
   "rest": {
     "profile.max-profiles-reached": "You have reached the maximum number of profiles allowed.",
     "unknownError": "An unknown error occurred.",
+    "user.email_already_exists": "Email already exists.",
+    "user.invalid": "Invalid data.",
     "user.invalid_credentials": "Invalid credentials.",
     "user.not_verified": "Your account is not verified.",
     "user.verify_code_not_found": "Verification code not found."

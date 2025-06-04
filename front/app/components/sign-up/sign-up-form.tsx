@@ -51,7 +51,7 @@ export default function SignUpForm() {
 
     try {
       await signUp({ email, name, password });
-      navigate('/');
+      navigate('/', { replace: true });
     } catch (e) {
       toast.error(t('signUp.error'), {
         description: t((e as RestError).message),
@@ -80,6 +80,7 @@ export default function SignUpForm() {
                       <FormLabel>{t('signUp.name')}</FormLabel>
                       <FormControl>
                         <Input
+                          id="sign-up-name"
                           placeholder={t('signUp.namePlaceholder')}
                           type="text"
                           required
@@ -99,6 +100,7 @@ export default function SignUpForm() {
                       <FormLabel>{t('signUp.email')}</FormLabel>
                       <FormControl>
                         <Input
+                          id="sign-up-email"
                           placeholder={t('signUp.emailPlaceholder')}
                           type="email"
                           required
@@ -120,11 +122,12 @@ export default function SignUpForm() {
                       </div>
                       <FormControl>
                         <Input
+                          id="sign-up-password"
                           placeholder={t('signUp.passwordPlaceholder')}
                           type="password"
                           required
                           disabled={processing}
-                          autoComplete="signup-password"
+                          autoComplete="sign-up-password"
                           {...field}
                         />
                       </FormControl>

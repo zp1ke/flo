@@ -1,3 +1,4 @@
+name: flo-app
 services:
   postgres:
     image: postgres
