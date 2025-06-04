@@ -25,6 +25,10 @@ interface AuthResponse {
   user: User;
 }
 
+interface RecoveryRequest extends AuthRequest {
+  code: string;
+}
+
 export const signUp = async (data: SignUpRequest): Promise<void> => {
   const authResponse = await restClient.postJson<AuthResponse>(`${basePath}/sign-up`, data);
   setAuthToken(authResponse.token);
@@ -44,6 +48,10 @@ export const sendEmailRecover = async (email: String): Promise<void> => {
   await restClient.postJson<AuthResponse>(`${basePath}/recover`, {
     email,
   });
+};
+
+export const recoverPassword = async (data: RecoveryRequest): Promise<void> => {
+  await restClient.postJson<AuthResponse>(`${basePath}/recovery/${data.code}`, data);
 };
 
 interface UserProfiles {

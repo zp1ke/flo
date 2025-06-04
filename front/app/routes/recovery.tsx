@@ -1,14 +1,15 @@
 import { useEffect } from 'react';
 import { useOutletContext } from 'react-router';
 import type { AnonContextType } from '~/components/layout/anon-layout';
-import SignUpForm from '~/components/sign-up/sign-up-form';
+import type { Route } from './+types/recovery';
+import RecoveryForm from '~/components/recovery/recovery-form';
 
-export default function SignUp() {
+export default function Recovery({ params }: Route.LoaderArgs) {
   const { setPlaceholderPosition } = useOutletContext<AnonContextType>();
 
   useEffect(() => {
-    setPlaceholderPosition('left');
+    setPlaceholderPosition('right');
   }, [setPlaceholderPosition]);
 
-  return <SignUpForm />;
+  return <RecoveryForm code={params.code} />;
 }

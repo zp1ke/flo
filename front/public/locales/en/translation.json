@@ -56,6 +56,27 @@
     "title": "Recover Account",
     "validEmail": "Please enter a valid email address."
   },
+  "recovery": {
+    "action": "Recover Account",
+    "description": "Confirm your email and enter your new password to recover access to your account.",
+    "email": "Email",
+    "emailDescription": "Enter your email address",
+    "emailMax255": "Email must be at most 255 characters long.",
+    "emailPlaceholder": "example@mail.com",
+    "error": "Could not recover your account.",
+    "goSignIn": "Go to Sign In",
+    "noAccount": "Don't have an account?",
+    "password": "Password",
+    "passwordDescription": "Enter your password",
+    "passwordPlaceholder": "Your super secret password",
+    "passwordSize": "Password must be at least 8 characters long and max 100 characters long.",
+    "processing": "Processing...",
+    "saved": "Your account has been recovered.",
+    "savedDescription": "Your account is now accessible with your new password.",
+    "title": "Account Recovery",
+    "validEmail": "Please enter a valid email address.",
+    "validPassword": "Password must contain at least one letter and one number."
+  },
   "rest": {
     "profile.max-profiles-reached": "You have reached the maximum number of profiles allowed.",
     "unknownError": "An unknown error occurred.",
