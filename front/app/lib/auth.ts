@@ -9,7 +9,8 @@ const TOKEN_KEY = 'auth_token';
 const USER_KEY = 'auth_user';
 const USER_KEY_TS = 'auth_user_ts';
 
-const basePath = '/auth';
+const authPath = '/auth';
+const userPath = '/user';
 
 interface AuthRequest {
   email: string;
@@ -30,13 +31,13 @@ interface RecoveryRequest extends AuthRequest {
 }
 
 export const signUp = async (data: SignUpRequest): Promise<void> => {
-  const authResponse = await restClient.postJson<AuthResponse>(`${basePath}/sign-up`, data);
+  const authResponse = await restClient.postJson<AuthResponse>(`${authPath}/sign-up`, data);
   setAuthToken(authResponse.token);
   await fetchUser(true);
 };
 
 export const signIn = async (data: AuthRequest): Promise<void> => {
-  const authResponse = await restClient.postJson<AuthResponse>(`${basePath}/sign-in`, {
+  const authResponse = await restClient.postJson<AuthResponse>(`${authPath}/sign-in`, {
     ...data,
     username: data.email,
   });
@@ -45,13 +46,13 @@ export const signIn = async (data: AuthRequest): Promise<void> => {
 };
 
 export const sendEmailRecover = async (email: String): Promise<void> => {
-  await restClient.postJson<AuthResponse>(`${basePath}/recover`, {
+  await restClient.postJson<AuthResponse>(`${authPath}/recover`, {
     email,
   });
 };
 
 export const recoverPassword = async (data: RecoveryRequest): Promise<void> => {
-  await restClient.postJson<AuthResponse>(`${basePath}/recovery/${data.code}`, {
+  await restClient.postJson<AuthResponse>(`${authPath}/recovery/${data.code}`, {
     ...data,
     username: data.email,
   });
@@ -88,7 +89,7 @@ export const fetchUser = async (force: boolean): Promise<User | null> => {
 
     console.debug('Fetching user from API...', Date.now());
     restClient
-      .getJson<UserProfiles>(`${basePath}/me`)
+      .getJson<UserProfiles>(`${userPath}/me`)
       .then((userProfiles) => {
         const user = userProfiles.user;
         user.profiles = userProfiles.profiles;
@@ -108,7 +109,7 @@ export const fetchUser = async (force: boolean): Promise<User | null> => {
       })
       .catch((e) => {
         console.error('Error fetching user:', e);
-        if ((e as RestError).status === 401) {
+        if ((e as RestError).status === 401 || (e as RestError).status === 403) {
           localStorage.removeItem(USER_KEY);
           localStorage.removeItem(USER_KEY_TS);
         }
@@ -154,7 +155,7 @@ export const setActiveProfile = async (profile: Profile): Promise<User> => {
 };
 
 export const signOut = async (): Promise<void> => {
-  await restClient.postJson(`${basePath}/sign-out`, {});
+  await restClient.postJson(`${userPath}/sign-out`, {});
   setAuthToken(null);
 };
 
@@ -171,5 +172,5 @@ const setAuthToken = (token: string | null): void => {
 };
 
 export const verifyUser = async (code: string): Promise<void> => {
-  await restClient.postJson(`${basePath}/verify/${code}`);
+  await restClient.postJson(`${authPath}/verify/${code}`);
 };

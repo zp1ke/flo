@@ -20,3 +20,8 @@ mail:
 org.jobrunr:
   dashboard:
     port: 8081
+
+logging:
+  level:
+    com.zp1ke.flo: DEBUG
+    org.springframework.web: DEBUG

@@ -8,8 +8,8 @@ services:
       POSTGRES_DB: flo
     ports:
       - 5432:5432
-    volumes:
-      - ./data/postgres:/var/lib/postgresql/data
+    # volumes:
+    #   - ./data/postgres:/var/lib/postgresql/data
     healthcheck:
       test: [ "CMD-SHELL", "sh -c 'pg_isready -U postgres -d flo'" ]
       interval: 10s
@@ -24,5 +24,5 @@ services:
     ports:
       - 1080:1080
       - 1025:1025
-    volumes:
-      - ./data/maildev:/home/maildev
+    # volumes:
+    #   - ./data/maildev:/home/maildev

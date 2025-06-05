@@ -51,7 +51,7 @@ export default function SignUpForm() {
 
     try {
       await signUp({ email, name, password });
-      navigate('/', { replace: true });
+      navigate('/dashboard', { replace: true });
     } catch (e) {
       toast.error(t('signUp.error'), {
         description: t((e as RestError).message),

@@ -1,8 +1,6 @@
 package com.zp1ke.flo.api.controller.v1;
 
-import com.zp1ke.flo.api.dto.ProfileDto;
 import com.zp1ke.flo.api.dto.UserDto;
-import com.zp1ke.flo.api.dto.UserWithProfilesDto;
 import com.zp1ke.flo.api.model.AuthRequest;
 import com.zp1ke.flo.api.model.AuthResponse;
 import com.zp1ke.flo.api.model.EmailRequest;
@@ -10,7 +8,6 @@ import com.zp1ke.flo.api.model.UserRequest;
 import com.zp1ke.flo.api.security.JwtTokenProvider;
 import com.zp1ke.flo.api.utils.RequestUtils;
 import com.zp1ke.flo.data.domain.User;
-import com.zp1ke.flo.data.service.ProfileService;
 import com.zp1ke.flo.data.service.UserService;
 import com.zp1ke.flo.utils.DateTimeUtils;
 import io.swagger.v3.oas.annotations.Operation;
@@ -24,8 +21,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -37,8 +32,6 @@ public class AuthController {
     private final JwtTokenProvider jwtTokenProvider;
 
     private final UserService userService;
-
-    private final ProfileService profileService;
 
     @Autowired(required = false)
     private HttpServletRequest httpRequest;
@@ -88,26 +81,6 @@ public class AuthController {
     public ResponseEntity<Void> recovery(@PathVariable String code,
                                          @Valid @RequestBody AuthRequest authRequest) {
         userService.recoverUser(code, authRequest.username(), authRequest.password());
-        return ResponseEntity.noContent().build();
-    }
-
-    @GetMapping("/me")
-    @Operation(summary = "Get current user with profiles")
-    public ResponseEntity<UserWithProfilesDto> me(@AuthenticationPrincipal User user) {
-        var profiles = profileService.profilesOfUser(user);
-        var dto = UserWithProfilesDto.builder()
-            .user(UserDto.fromUser(user))
-            .profiles(profiles.stream().map(ProfileDto::fromProfile).toList())
-            .build();
-        return ResponseEntity.ok(dto);
-    }
-
-    @PostMapping("/sign-out")
-    @Operation(summary = "Sign out session user")
-    public ResponseEntity<AuthResponse> signOut(Authentication auth) {
-        if (auth != null && auth.getCredentials() instanceof String token) {
-            userService.disableUserToken(token, RequestUtils.remoteAddress(httpRequest));
-        }
         return ResponseEntity.noContent().build();
     }
 

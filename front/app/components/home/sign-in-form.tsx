@@ -45,7 +45,7 @@ export default function SignInForm() {
 
     try {
       await signIn({ email, password });
-      navigate('/', { replace: true });
+      navigate('/dashboard', { replace: true });
     } catch (e) {
       toast.error(t('signIn.error'), {
         description: t((e as RestError).message),
