@@ -1,14 +1,14 @@
 describe('Sign Up Test', () => {
-  it('Visits the Sign Up page', () => {
-    cy.visit('http://localhost/sign-up');
+  it('Sign Up flow', () => {
+    cy.visit('/sign-up');
 
     cy.get('.flo-app-loading').should('not.exist');
     cy.contains('Flo');
 
-    const userName = 'Fake User';
+    const userName = 'Sign Up User';
     cy.get('input[id="sign-up-name"]').type(userName);
-    cy.get('input[id="sign-up-email"]').type('fake@email.com');
-    cy.get('input[id="sign-up-password"]').type('fakepassworD1#');
+    cy.get('input[id="sign-up-email"]').type('sign-up@email.com');
+    cy.get('input[id="sign-up-password"]').type('passworD1#');
 
     cy.get('button[type="submit"]').click();
 
