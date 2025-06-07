@@ -74,6 +74,7 @@ export default function SignInForm() {
                       <FormLabel>{t('signIn.email')}</FormLabel>
                       <FormControl>
                         <Input
+                          id="sign-in-email"
                           placeholder={t('signIn.emailPlaceholder')}
                           type="email"
                           required
@@ -100,6 +101,7 @@ export default function SignInForm() {
                       </div>
                       <FormControl>
                         <Input
+                          id="sign-in-password"
                           placeholder={t('signIn.passwordPlaceholder')}
                           type="password"
                           required

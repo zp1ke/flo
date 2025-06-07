@@ -48,6 +48,7 @@ export function NavUser({ user }: { user: User }) {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <SidebarMenuButton
+                id="sign-out-menu"
                 size="lg"
                 className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground">
                 <Avatar className="h-8 w-8">

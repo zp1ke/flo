@@ -7,14 +7,14 @@
     "apply-updates": "npx npm-check-updates -u",
     "build": "react-router build",
     "check-updates": "npx npm-check-updates",
-    "cy:open": "cypress open",
+    "cy:open": "cypress open -c baseUrl=http://localhost -e apiBaseUrl=http://localhost:8080/api/v1",
     "dev": "react-router dev",
     "e2e:firefox": "cypress run -b firefox -c baseUrl=http://localhost -e apiBaseUrl=http://localhost:8080/api/v1",
     "format": "prettier --write ./app ./cypress",
     "typecheck": "react-router typegen && tsc"
   },
   "dependencies": {
-    "@hookform/resolvers": "^5.0.1",
+    "@hookform/resolvers": "^5.1.0",
     "@radix-ui/react-avatar": "^1.1.10",
     "@radix-ui/react-checkbox": "^1.3.2",
     "@radix-ui/react-collapsible": "^1.1.11",
@@ -47,7 +47,7 @@
     "recharts": "^2.15.3",
     "sonner": "^2.0.5",
     "tailwind-merge": "^3.3.0",
-    "zod": "^3.25.51"
+    "zod": "^3.25.56"
   },
   "devDependencies": {
     "@react-router/dev": "^7.6.2",

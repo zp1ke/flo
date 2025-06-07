@@ -15,6 +15,9 @@ describe('Sign In & Out Test', () => {
     });
 
     // Sign In
+    cy.intercept('POST', '/api/v1/auth/sign-in').as('signInRequest');
+    cy.intercept('GET', '/api/v1/user/me').as('getUserRequest');
+
     cy.visit('/sign-in');
 
     cy.get('.flo-app-loading').should('not.exist');
@@ -25,23 +28,23 @@ describe('Sign In & Out Test', () => {
 
     cy.get('button[type="submit"]').click();
 
-    cy.intercept('POST', '/api/v1/auth/sign-in').as('signInRequest');
-    cy.intercept('GET', '/api/v1/user/me').as('getUserRequest');
     cy.wait('@signInRequest').its('response.statusCode').should('eq', 200);
     cy.wait('@getUserRequest').its('response.statusCode').should('eq', 200);
-    cy.wait(500);
+    cy.wait(100);
     cy.url().should('include', '/dashboard');
 
     cy.contains('Flo');
     cy.contains(userName);
 
     // Sign Out
+    cy.intercept('POST', '/api/v1/user/sign-out').as('signOutRequest');
+
+    cy.get('#sign-out-menu').click();
     cy.get('#sign-out').click();
     cy.get('button[id="sign-out-confirm"]').click();
 
-    cy.intercept('POST', '/api/v1/auth/sign-out').as('signOutRequest');
-    cy.wait('@signOutRequest').its('response.statusCode').should('eq', 200);
-    cy.wait(500);
+    cy.wait('@signOutRequest').its('response.statusCode').should('eq', 204);
+    cy.wait(100);
     cy.url().should('not.include', '/dashboard');
 
     cy.contains('Flo');
