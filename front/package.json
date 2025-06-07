@@ -9,7 +9,7 @@
     "check-updates": "npx npm-check-updates",
     "cy:open": "cypress open",
     "dev": "react-router dev",
-    "e2e:firefox": "cypress run -b firefox -c baseUrl=http://localhost",
+    "e2e:firefox": "cypress run -b firefox -c baseUrl=http://localhost -e apiBaseUrl=http://localhost:8080/api/v1",
     "format": "prettier --write ./app ./cypress",
     "typecheck": "react-router typegen && tsc"
   },

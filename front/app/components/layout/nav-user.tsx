@@ -78,7 +78,7 @@ export function NavUser({ user }: { user: User }) {
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DialogTrigger asChild>
-                <DropdownMenuItem className="cursor-pointer text-destructive">
+                <DropdownMenuItem className="cursor-pointer text-destructive" id="sign-out">
                   <LogOut />
                   {t('signOut.title')}
                 </DropdownMenuItem>
@@ -103,6 +103,7 @@ export function NavUser({ user }: { user: User }) {
                 </Button>
               </DialogClose>
               <Button
+                id="sign-out-confirm"
                 className="ml-auto flex"
                 variant="destructive"
                 disabled={signingOut}
