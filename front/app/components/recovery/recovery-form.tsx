@@ -17,8 +17,8 @@ import {
   FormMessage,
 } from '~/components/ui/form';
 import { Input } from '~/components/ui/input';
-import { recoverPassword } from '~/lib/auth';
-import type { RestError } from '~/lib/rest-client';
+import { recoverPassword } from '~/api/auth';
+import type { ApiError } from '~/api/client';
 
 export default function RecoveryForm({ code }: { code: string }) {
   const { t } = useTranslation();
@@ -52,7 +52,7 @@ export default function RecoveryForm({ code }: { code: string }) {
       setSaved(true);
     } catch (e) {
       toast.error(t('recovery.error'), {
-        description: t((e as RestError).message),
+        description: t((e as ApiError).message),
         closeButton: true,
       });
     } finally {

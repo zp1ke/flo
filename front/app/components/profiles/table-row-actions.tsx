@@ -20,7 +20,7 @@ import {
   DropdownMenuTrigger,
 } from '~/components/ui/dropdown-menu';
 import useAuth from '~/contexts/auth/use-auth';
-import { deleteProfile } from '~/lib/profiles';
+import { deleteProfile } from '~/api/profiles';
 
 import { profileSchema } from '../../types/profile';
 import { EditProfileForm } from './edit-profile-form';

@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Link, Outlet, redirect } from 'react-router';
 import { LanguageSelector } from '~/components/layout/language-selector';
 import { ThemeModeSelector } from '~/components/layout/theme-mode-selector';
-import { fetchUser } from '~/lib/auth';
+import { fetchUser } from '~/api/auth';
 import type { HorizontalPosition } from '~/types/position';
 
 export async function clientLoader() {

@@ -4,9 +4,9 @@ import type { DataPage } from '~/types/page';
 import { SortDirection, sortPrefix } from '~/types/sort';
 
 import { getAuthToken } from './auth';
-import { getLanguage } from './i18n';
+import { getLanguage } from '~/lib/i18n';
 
-export interface RestError {
+export interface ApiError {
   message: string;
   status: number;
 }
@@ -18,7 +18,7 @@ export interface PageFilters {
   filters?: Record<string, any>;
 }
 
-type RestPage<T> = {
+type ApiPage<T> = {
   list: T[];
   page: number;
   size: number;
@@ -26,7 +26,7 @@ type RestPage<T> = {
   totalPages: number;
 };
 
-class RestClient {
+class ApiClient {
   private axios: AxiosInstance;
 
   constructor(baseUrl: string) {
@@ -38,7 +38,7 @@ class RestClient {
 
   async getPage<T>(url: string, pageFilters?: PageFilters): Promise<DataPage<T>> {
     try {
-      const response = await this.axios.get<RestPage<T>>(url, {
+      const response = await this.axios.get<ApiPage<T>>(url, {
         params: paramsFrom(pageFilters),
         headers: headers(),
       });
@@ -135,23 +135,23 @@ const parseParams = (params?: Record<string, any>): Record<string, any> => {
   return parsedParams;
 };
 
-const parseError = (error: unknown): RestError => {
+const parseError = (error: unknown): ApiError => {
   if (axios.isAxiosError(error) && error.response?.data) {
     return {
       ...error.response.data,
-      message: 'rest.' + (error.response.data.message || 'unknownError'),
+      message: 'api.' + (error.response.data.message || 'unknownError'),
       status: error.response.status || 0,
-    } satisfies RestError;
+    } satisfies ApiError;
   }
   if (error instanceof Error) {
-    return { message: error.message, status: 0 } satisfies RestError;
+    return { message: error.message, status: 0 } satisfies ApiError;
   }
   if (typeof error === 'string') {
-    return { message: error, status: 0 } satisfies RestError;
+    return { message: error, status: 0 } satisfies ApiError;
   }
-  return { message: 'rest.unknownError', status: 0 } satisfies RestError;
+  return { message: 'api.unknownError', status: 0 } satisfies ApiError;
 };
 
-const restClient = new RestClient(config.restApiBaseUrl);
+const apiClient = new ApiClient(config.apiBaseUrl);
 
-export default restClient;
+export default apiClient;

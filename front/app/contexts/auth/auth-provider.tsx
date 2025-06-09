@@ -1,6 +1,6 @@
 import { type ReactNode, useEffect, useState } from 'react';
 import config from '~/config';
-import { fetchUser, saveUserProfile, setActiveProfile } from '~/lib/auth';
+import { fetchUser, saveUserProfile, setActiveProfile } from '~/api/auth';
 import type { Profile } from '~/types/profile';
 import type { User } from '~/types/user';
 

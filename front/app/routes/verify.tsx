@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import Loading from '~/components/ui/loading';
-import { verifyUser } from '~/lib/auth';
-import type { RestError } from '~/lib/rest-client';
+import { verifyUser } from '~/api/auth';
+import type { ApiError } from '~/api/client';
 import type { Route } from './+types/verify';
 import { Link } from 'react-router';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '~/components/ui/card';
@@ -18,7 +18,7 @@ export default function Verify({ params }: Route.LoaderArgs) {
     if (loading) {
       verifyUser(params.code)
         .catch((e) => {
-          const errorMessage = t((e as RestError).message);
+          const errorMessage = t((e as ApiError).message);
           toast.error(t('verify.verifyError'), { description: errorMessage, closeButton: true });
           setError(errorMessage);
         })

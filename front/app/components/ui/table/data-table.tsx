@@ -28,7 +28,7 @@ import {
   TableHeader,
   TableRow,
 } from '~/components/ui/table';
-import type { PageFilters, RestError } from '~/lib/rest-client';
+import type { PageFilters, ApiError } from '~/api/client';
 import { FetchState } from '~/types/fetch-state';
 import type { DataPage } from '~/types/page';
 import { SortDirection, sortPrefix } from '~/types/sort';
@@ -81,7 +81,7 @@ export function DataTable<TData, TValue>({
           setData({ data: [], total: 0 });
           setFetchState(FetchState.Error);
           toast.error(t('profiles.fetchError'), {
-            description: t((e as RestError).message),
+            description: t((e as ApiError).message),
             closeButton: true,
           });
         });

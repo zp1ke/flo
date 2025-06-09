@@ -14,7 +14,7 @@ import './app.css';
 import Loading from './components/ui/loading';
 import { Toaster } from './components/ui/sonner';
 import './lib/i18n';
-import type { RestError } from './lib/rest-client';
+import type { ApiError } from './api/client';
 
 export function meta({}: Route.MetaArgs) {
   return [{ title: 'Flo APP' }, { name: 'description', content: 'Welcome to Flo APP' }];
@@ -81,9 +81,9 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
   if (isRouteErrorResponse(error)) {
     message = error.status === 404 ? '404' : 'Error';
     details = error.status === 404 ? 'Page not found.' : error.statusText || details;
-  } else if (error as RestError) {
-    const restError = error as RestError;
-    details += ' ' + restError.message;
+  } else if (error as ApiError) {
+    const ApiError = error as ApiError;
+    details += ' ' + ApiError.message;
   } else if (import.meta.env.DEV && error && error instanceof Error) {
     details = error.message;
     stack = error.stack;

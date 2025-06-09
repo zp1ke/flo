@@ -27,7 +27,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from '~/components/ui/sidebar';
-import { signOut } from '~/lib/auth';
+import { signOut } from '~/api/auth';
 import type { User } from '~/types/user';
 
 import { Button } from '../ui/button';

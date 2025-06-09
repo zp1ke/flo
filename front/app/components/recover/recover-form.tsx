@@ -17,8 +17,8 @@ import {
   FormMessage,
 } from '~/components/ui/form';
 import { Input } from '~/components/ui/input';
-import { sendEmailRecover } from '~/lib/auth';
-import type { RestError } from '~/lib/rest-client';
+import { sendEmailRecover } from '~/api/auth';
+import type { ApiError } from '~/api/client';
 
 export default function RecoverForm() {
   const { t } = useTranslation();
@@ -46,7 +46,7 @@ export default function RecoverForm() {
       setSent(true);
     } catch (e) {
       toast.error(t('recover.error'), {
-        description: t((e as RestError).message),
+        description: t((e as ApiError).message),
         closeButton: true,
       });
     } finally {

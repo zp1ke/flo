@@ -17,8 +17,8 @@ import {
   FormMessage,
 } from '~/components/ui/form';
 import { Input } from '~/components/ui/input';
-import { signIn } from '~/lib/auth';
-import type { RestError } from '~/lib/rest-client';
+import { signIn } from '~/api/auth';
+import type { ApiError } from '~/api/client';
 
 export default function SignInForm() {
   const { t } = useTranslation();
@@ -48,7 +48,7 @@ export default function SignInForm() {
       navigate('/dashboard', { replace: true });
     } catch (e) {
       toast.error(t('signIn.error'), {
-        description: t((e as RestError).message),
+        description: t((e as ApiError).message),
         closeButton: true,
       });
       setProcessing(false);

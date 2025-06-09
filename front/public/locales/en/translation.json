@@ -1,4 +1,13 @@
 {
+  "api": {
+    "profile.max-profiles-reached": "You have reached the maximum number of profiles allowed.",
+    "unknownError": "An unknown error occurred.",
+    "user.email_already_exists": "Email already exists.",
+    "user.invalid": "Invalid data.",
+    "user.invalid_credentials": "Invalid credentials.",
+    "user.not_verified": "Your account is not verified.",
+    "user.verify_code_not_found": "Verification code not found."
+  },
   "app": {
     "name": "Flo",
     "title": "Flo APP",
@@ -76,15 +85,6 @@
     "title": "Account Recovery",
     "validEmail": "Please enter a valid email address.",
     "validPassword": "Password must contain at least one letter and one number."
-  },
-  "rest": {
-    "profile.max-profiles-reached": "You have reached the maximum number of profiles allowed.",
-    "unknownError": "An unknown error occurred.",
-    "user.email_already_exists": "Email already exists.",
-    "user.invalid": "Invalid data.",
-    "user.invalid_credentials": "Invalid credentials.",
-    "user.not_verified": "Your account is not verified.",
-    "user.verify_code_not_found": "Verification code not found."
   },
   "sidebar": {
     "description": "Displays the mobile sidebar",

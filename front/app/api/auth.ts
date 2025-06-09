@@ -3,7 +3,7 @@ import type { Profile } from '~/types/profile';
 import type { User } from '~/types/user';
 
 import { addProfile, updateProfile } from './profiles';
-import restClient, { type RestError } from './rest-client';
+import apiClient, { type ApiError } from './client';
 
 const TOKEN_KEY = 'auth_token';
 const USER_KEY = 'auth_user';
@@ -31,13 +31,13 @@ interface RecoveryRequest extends AuthRequest {
 }
 
 export const signUp = async (data: SignUpRequest): Promise<void> => {
-  const authResponse = await restClient.postJson<AuthResponse>(`${authPath}/sign-up`, data);
+  const authResponse = await apiClient.postJson<AuthResponse>(`${authPath}/sign-up`, data);
   setAuthToken(authResponse.token);
   await fetchUser(true);
 };
 
 export const signIn = async (data: AuthRequest): Promise<void> => {
-  const authResponse = await restClient.postJson<AuthResponse>(`${authPath}/sign-in`, {
+  const authResponse = await apiClient.postJson<AuthResponse>(`${authPath}/sign-in`, {
     ...data,
     username: data.email,
   });
@@ -46,13 +46,13 @@ export const signIn = async (data: AuthRequest): Promise<void> => {
 };
 
 export const sendEmailRecover = async (email: String): Promise<void> => {
-  await restClient.postJson<AuthResponse>(`${authPath}/recover`, {
+  await apiClient.postJson<AuthResponse>(`${authPath}/recover`, {
     email,
   });
 };
 
 export const recoverPassword = async (data: RecoveryRequest): Promise<void> => {
-  await restClient.postJson<AuthResponse>(`${authPath}/recovery/${data.code}`, {
+  await apiClient.postJson<AuthResponse>(`${authPath}/recovery/${data.code}`, {
     ...data,
     username: data.email,
   });
@@ -88,7 +88,7 @@ export const fetchUser = async (force: boolean): Promise<User | null> => {
     }
 
     console.debug('Fetching user from API...', Date.now());
-    restClient
+    apiClient
       .getJson<UserProfiles>(`${userPath}/me`)
       .then((userProfiles) => {
         const user = userProfiles.user;
@@ -109,7 +109,7 @@ export const fetchUser = async (force: boolean): Promise<User | null> => {
       })
       .catch((e) => {
         console.error('Error fetching user:', e);
-        if ((e as RestError).status === 401 || (e as RestError).status === 403) {
+        if ((e as ApiError).status === 401 || (e as ApiError).status === 403) {
           localStorage.removeItem(USER_KEY);
           localStorage.removeItem(USER_KEY_TS);
         }
@@ -155,7 +155,7 @@ export const setActiveProfile = async (profile: Profile): Promise<User> => {
 };
 
 export const signOut = async (): Promise<void> => {
-  await restClient.postJson(`${userPath}/sign-out`, {});
+  await apiClient.postJson(`${userPath}/sign-out`, {});
   setAuthToken(null);
 };
 
@@ -172,5 +172,5 @@ const setAuthToken = (token: string | null): void => {
 };
 
 export const verifyUser = async (code: string): Promise<void> => {
-  await restClient.postJson(`${authPath}/verify/${code}`);
+  await apiClient.postJson(`${authPath}/verify/${code}`);
 };

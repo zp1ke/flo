@@ -5,7 +5,7 @@ import { ThemeModeSelector } from '~/components/layout/theme-mode-selector';
 import { Separator } from '~/components/ui/separator';
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '~/components/ui/sidebar';
 import AuthProvider from '~/contexts/auth/auth-provider';
-import { fetchUser } from '~/lib/auth';
+import { fetchUser } from '~/api/auth';
 import UserNotVerifiedBanner from './user-not-verified-banner';
 
 export async function clientLoader() {

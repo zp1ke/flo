@@ -17,7 +17,7 @@ import {
 } from '~/components/ui/form';
 import { Input } from '~/components/ui/input';
 import useAuth from '~/contexts/auth/use-auth';
-import type { RestError } from '~/lib/rest-client';
+import type { ApiError } from '~/api/client';
 import { type Profile, profileNameIsValid, profileSchema } from '~/types/profile';
 
 export function EditProfileForm({
@@ -75,7 +75,7 @@ export function EditProfileForm({
       form.reset();
     } catch (e) {
       toast.error(t('profiles.fetchError'), {
-        description: t((e as RestError).message),
+        description: t((e as ApiError).message),
         closeButton: true,
       });
     } finally {
