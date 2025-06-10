@@ -7,6 +7,7 @@ import type { ApiError } from '~/api/client';
 import type { Route } from './+types/verify';
 import { Link } from 'react-router';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '~/components/ui/card';
+import AnonContainer from '~/components/layout/anon-container';
 
 export default function Verify({ params }: Route.LoaderArgs) {
   const { t } = useTranslation();
@@ -27,6 +28,12 @@ export default function Verify({ params }: Route.LoaderArgs) {
         });
     }
   }, [loading]);
+
+  return <AnonContainer placeholderPosition="right">{content(loading, error)}</AnonContainer>;
+}
+
+const content = (loading: boolean, error: string | null) => {
+  const { t } = useTranslation();
 
   if (loading) {
     return <Loading />;
@@ -59,4 +66,4 @@ export default function Verify({ params }: Route.LoaderArgs) {
       </CardContent>
     </Card>
   );
-}
+};

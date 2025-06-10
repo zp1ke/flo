@@ -5,10 +5,10 @@ export default [
     index('routes/home.tsx'),
     route('sign-in', 'routes/sign-in.tsx'),
     route('sign-up', 'routes/sign-up.tsx'),
-    route('verify/:code', 'routes/verify.tsx'),
     route('recover', 'routes/recover.tsx'),
     route('recovery/:code', 'routes/recovery.tsx'),
   ]),
+  route('verify/:code', 'routes/verify.tsx'),
   layout('components/layout/auth-layout.tsx', [
     route('dashboard', 'routes/dashboard.tsx'),
     route('profiles', 'routes/profiles.tsx'),
