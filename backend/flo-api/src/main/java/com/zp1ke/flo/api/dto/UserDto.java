@@ -2,12 +2,12 @@ package com.zp1ke.flo.api.dto;
 
 import com.zp1ke.flo.data.domain.User;
 import com.zp1ke.flo.utils.StringUtils;
+import jakarta.annotation.Nonnull;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Getter;
-import org.springframework.lang.NonNull;
 
 @Getter
 @Builder
@@ -25,8 +25,8 @@ public class UserDto {
 
     private boolean verified;
 
-    @NonNull
-    public static UserDto fromUser(@NonNull User user) {
+    @Nonnull
+    public static UserDto fromUser(@Nonnull User user) {
         return UserDto.builder()
             .email(user.getEmail())
             .username(user.getUsername())

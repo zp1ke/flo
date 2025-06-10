@@ -12,6 +12,7 @@ import com.zp1ke.flo.data.service.UserService;
 import com.zp1ke.flo.utils.DateTimeUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.annotation.Nonnull;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import java.util.Locale;
@@ -19,7 +20,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.*;
 
@@ -84,14 +84,14 @@ public class AuthController {
         return ResponseEntity.noContent().build();
     }
 
-    @NonNull
-    private String generateToken(@NonNull User user) {
+    @Nonnull
+    private String generateToken(@Nonnull User user) {
         var remoteAddress = RequestUtils.remoteAddress(httpRequest);
         return generateToken(user, remoteAddress);
     }
 
-    @NonNull
-    public String generateToken(@NonNull User user, @NonNull String remoteAddress) {
+    @Nonnull
+    public String generateToken(@Nonnull User user, @Nonnull String remoteAddress) {
         var jwtToken = jwtTokenProvider.generateToken(user.getUsername());
         var expiresAt = DateTimeUtils.toOffsetDateTime(jwtToken.getExpirationDate());
         userService.saveUserToken(user, jwtToken.getToken(), remoteAddress, expiresAt);

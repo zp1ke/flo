@@ -5,7 +5,6 @@ import com.zp1ke.flo.api.dto.ProfileDto;
 import com.zp1ke.flo.api.security.UserIsVerified;
 import com.zp1ke.flo.data.domain.User;
 import com.zp1ke.flo.data.service.ProfileService;
-import com.zp1ke.flo.data.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -22,8 +21,6 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @Tag(name = "profiles", description = "User profiles")
 public class ProfileController {
-
-    private final UserService userService;
 
     private final ProfileService profileService;
 

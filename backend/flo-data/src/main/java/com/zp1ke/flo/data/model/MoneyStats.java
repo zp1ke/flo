@@ -1,9 +1,9 @@
 package com.zp1ke.flo.data.model;
 
+import jakarta.annotation.Nonnull;
 import java.math.BigDecimal;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
-import org.springframework.lang.NonNull;
 
 @Getter
 @SuperBuilder
@@ -29,7 +29,7 @@ public class MoneyStats {
      * @param amount the amount to add
      * @return a new instance of {@link MoneyStats} with the updated values
      */
-    protected MoneyStats add(@NonNull BigDecimal amount) {
+    protected MoneyStats add(@Nonnull BigDecimal amount) {
         var balance = this.balance.add(amount);
         var income = this.income;
         var outcome = this.outcome;

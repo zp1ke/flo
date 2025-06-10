@@ -7,6 +7,7 @@ import com.zp1ke.flo.data.repository.ProfileRepository;
 import com.zp1ke.flo.data.repository.ProfileSpec;
 import com.zp1ke.flo.data.util.DomainUtils;
 import com.zp1ke.flo.utils.StringUtils;
+import jakarta.annotation.Nonnull;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
 import java.util.List;
@@ -14,8 +15,6 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -28,8 +27,8 @@ public class ProfileService {
 
     private final SettingService settingService;
 
-    @NonNull
-    public Profile save(@NonNull Profile profile) {
+    @Nonnull
+    public Profile save(@Nonnull Profile profile) {
         if (StringUtils.isBlank(profile.getCode())) {
             profile.setCode(DomainUtils
                 .generateRandomCode((code) -> profileRepository.existsByUserAndCode(profile.getUser(), code)));
@@ -60,32 +59,32 @@ public class ProfileService {
         return profileRepository.save(profile);
     }
 
-    public Optional<Profile> profileOfUserByCode(@NonNull User user, @NonNull String code) {
+    public Optional<Profile> profileOfUserByCode(@Nonnull User user, @Nonnull String code) {
         return profileRepository.findByUserAndCode(user, code);
     }
 
-    @NonNull
-    public List<Profile> profilesOfUser(@NonNull User user) {
+    @Nonnull
+    public List<Profile> profilesOfUser(@Nonnull User user) {
         return profileRepository.findAllByUser(user);
     }
 
-    @NonNull
-    public Page<Profile> profilesOfUser(@NonNull User user,
-                                        @Nullable String nameFilter,
-                                        @NonNull Pageable pageable) {
+    @Nonnull
+    public Page<Profile> profilesOfUser(@Nonnull User user,
+                                        String nameFilter,
+                                        @Nonnull Pageable pageable) {
         var specification = ProfileSpec.withUser(user)
             .and(ProfileSpec.nameLike(nameFilter));
         return profileRepository.findAll(specification, pageable);
     }
 
-    public void delete(@NonNull Profile profile) {
+    public void delete(@Nonnull Profile profile) {
         if (profileRepository.countByUser(profile.getUser()) == 1) {
             throw new IllegalArgumentException("profile.one-profile-required");
         }
         profileRepository.delete(profile);
     }
 
-    public Optional<Profile> firstProfileOfUser(@NonNull User user) {
+    public Optional<Profile> firstProfileOfUser(@Nonnull User user) {
         return profileRepository.findTopByUserOrderByCreatedAtAsc(user);
     }
 }

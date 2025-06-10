@@ -1,11 +1,11 @@
 package com.zp1ke.flo.api.model;
 
+import jakarta.annotation.Nonnull;
 import java.util.List;
 import java.util.function.Function;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.data.domain.Page;
-import org.springframework.lang.NonNull;
 
 /**
  * A standardized pagination response wrapper for API endpoints.
@@ -71,8 +71,8 @@ public class ApiPage<T> {
      * @return a new ApiPage containing the transformed content and pagination metadata
      * @throws NullPointerException if the page or mapper is null
      */
-    @NonNull
-    public static <I, T> ApiPage<T> of(@NonNull Page<I> page, @NonNull Function<I, T> mapper) {
+    @Nonnull
+    public static <I, T> ApiPage<T> of(@Nonnull Page<I> page, @Nonnull Function<I, T> mapper) {
         return ApiPage.<T>builder()
             .content(page.getContent().stream().map(mapper).toList())
             .size(page.getSize())

@@ -1,5 +1,6 @@
 package com.zp1ke.flo.api.config;
 
+import jakarta.annotation.Nonnull;
 import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,7 +17,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebConfig implements WebMvcConfigurer {
 
     @Override
-    public void addCorsMappings(CorsRegistry registry) {
+    public void addCorsMappings(@Nonnull CorsRegistry registry) {
         registry
             .addMapping("/**")
             .allowedOrigins("*")

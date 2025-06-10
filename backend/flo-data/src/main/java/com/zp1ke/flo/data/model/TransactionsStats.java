@@ -3,6 +3,7 @@ package com.zp1ke.flo.data.model;
 import com.zp1ke.flo.data.domain.Category;
 import com.zp1ke.flo.data.domain.Transaction;
 import com.zp1ke.flo.data.domain.Wallet;
+import jakarta.annotation.Nonnull;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.HashMap;
@@ -11,7 +12,6 @@ import java.util.Map;
 import java.util.function.Function;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
-import org.springframework.lang.NonNull;
 
 @Getter
 @SuperBuilder
@@ -26,10 +26,10 @@ public class TransactionsStats extends MoneyStats {
 
     private final List<Transaction> transactions;
 
-    @NonNull
-    public static TransactionsStats build(@NonNull OffsetDateTime from,
-                                          @NonNull OffsetDateTime to,
-                                          @NonNull List<Transaction> transactions) {
+    @Nonnull
+    public static TransactionsStats build(@Nonnull OffsetDateTime from,
+                                          @Nonnull OffsetDateTime to,
+                                          @Nonnull List<Transaction> transactions) {
         var categoriesMap = Map.<Category, MoneyStats>of();
         var walletsMap = Map.<Wallet, MoneyStats>of();
         var stats = MoneyStats.empty();
@@ -53,10 +53,10 @@ public class TransactionsStats extends MoneyStats {
             .build();
     }
 
-    @NonNull
-    private static <T> List<GroupStats> mapToGroupsStats(@NonNull Map<T, MoneyStats> map,
-                                                         @NonNull Function<T, String> codeMapper,
-                                                         @NonNull Function<T, String> nameMapper) {
+    @Nonnull
+    private static <T> List<GroupStats> mapToGroupsStats(@Nonnull Map<T, MoneyStats> map,
+                                                         @Nonnull Function<T, String> codeMapper,
+                                                         @Nonnull Function<T, String> nameMapper) {
         return map.entrySet().stream()
             .<GroupStats>map(entry -> GroupStats.builder()
                 .code(codeMapper.apply(entry.getKey()))
@@ -68,10 +68,10 @@ public class TransactionsStats extends MoneyStats {
             .toList();
     }
 
-    @NonNull
-    private static <T> Map<T, MoneyStats> addToMap(@NonNull T key,
-                                                   @NonNull BigDecimal amount,
-                                                   @NonNull Map<T, MoneyStats> map) {
+    @Nonnull
+    private static <T> Map<T, MoneyStats> addToMap(@Nonnull T key,
+                                                   @Nonnull BigDecimal amount,
+                                                   @Nonnull Map<T, MoneyStats> map) {
         var theMap = new HashMap<>(map);
         var value = theMap.getOrDefault(key, MoneyStats.empty());
         value = value.add(amount);

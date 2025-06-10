@@ -3,11 +3,11 @@ package com.zp1ke.flo.api.dto;
 import com.zp1ke.flo.data.model.GroupStats;
 import com.zp1ke.flo.data.model.MoneyStats;
 import com.zp1ke.flo.data.model.TransactionsStats;
+import jakarta.annotation.Nonnull;
 import java.time.OffsetDateTime;
 import java.util.List;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
-import org.springframework.lang.NonNull;
 
 @Getter
 @SuperBuilder
@@ -23,8 +23,8 @@ public class TransactionsStatsDto extends MoneyStats {
 
     private final List<TransactionDto> transactions;
 
-    @NonNull
-    public static TransactionsStatsDto fromStats(@NonNull TransactionsStats stats) {
+    @Nonnull
+    public static TransactionsStatsDto fromStats(@Nonnull TransactionsStats stats) {
         var transactions = stats.getTransactions().stream()
             .map(TransactionDto::fromTransaction)
             .toList();

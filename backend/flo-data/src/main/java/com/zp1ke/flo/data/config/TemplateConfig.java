@@ -1,7 +1,6 @@
 package com.zp1ke.flo.data.config;
 
 import freemarker.cache.ClassTemplateLoader;
-import freemarker.cache.TemplateLookupStrategy;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;

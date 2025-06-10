@@ -6,13 +6,12 @@ import com.zp1ke.flo.data.domain.UserToken;
 import com.zp1ke.flo.data.repository.UserRepository;
 import com.zp1ke.flo.data.repository.UserTokenRepository;
 import com.zp1ke.flo.utils.StringUtils;
+import jakarta.annotation.Nonnull;
 import jakarta.transaction.Transactional;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
 import java.time.OffsetDateTime;
 import lombok.RequiredArgsConstructor;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -34,10 +33,9 @@ public class UserService {
 
     private final NotificationService notificationService;
 
-    @Nullable
-    public User findByUsernameAndValidToken(@NonNull String username,
-                                            @NonNull String token,
-                                            @NonNull String remoteAddress) {
+    public User findByUsernameAndValidToken(@Nonnull String username,
+                                            @Nonnull String token,
+                                            @Nonnull String remoteAddress) {
         var user = userRepository.findByUsername(username);
         if (user.isPresent()) {
             var userToken = userTokenRepository.findByTokenAndUserAndRemoteAddress(token, user.get(), remoteAddress);
@@ -48,8 +46,8 @@ public class UserService {
         return null;
     }
 
-    @NonNull
-    public User create(@NonNull User user, @NonNull Profile profile) {
+    @Nonnull
+    public User create(@Nonnull User user, @Nonnull Profile profile) {
         user.generateUsernameIfMissing();
 
         var violations = validator.validate(user);
@@ -82,8 +80,7 @@ public class UserService {
         return saved;
     }
 
-    @Nullable
-    public User findByEmailOrUsername(@Nullable String emailOrUsername) {
+    public User findByEmailOrUsername(String emailOrUsername) {
         if (StringUtils.isBlank(emailOrUsername)) {
             return null;
         }
@@ -95,8 +92,7 @@ public class UserService {
         return byEmailOrUsername.orElse(null);
     }
 
-    @Nullable
-    public User findByEmailOrUsernameAndMatchingPassword(@Nullable String emailOrUsername, @Nullable String password) {
+    public User findByEmailOrUsernameAndMatchingPassword(String emailOrUsername, String password) {
         if (StringUtils.isBlank(emailOrUsername) || StringUtils.isBlank(password)) {
             return null;
         }
@@ -116,10 +112,10 @@ public class UserService {
         return null;
     }
 
-    public void saveUserToken(@NonNull User user,
-                              @NonNull String token,
-                              @NonNull String remoteAddress,
-                              @NonNull OffsetDateTime expiresAt) {
+    public void saveUserToken(@Nonnull User user,
+                              @Nonnull String token,
+                              @Nonnull String remoteAddress,
+                              @Nonnull OffsetDateTime expiresAt) {
         var userToken = userTokenRepository
             .findByTokenAndUser(token, user).orElse(new UserToken()).toBuilder()
             .user(user)
@@ -131,12 +127,12 @@ public class UserService {
     }
 
     @Transactional
-    public void disableUserToken(@NonNull String token,
-                                 @NonNull String remoteAddress) {
+    public void disableUserToken(@Nonnull String token,
+                                 @Nonnull String remoteAddress) {
         userTokenRepository.deleteByTokenAndRemoteAddress(token, remoteAddress);
     }
 
-    public void verifyUserByCode(@NonNull String code) {
+    public void verifyUserByCode(@Nonnull String code) {
         var userByCode = userRepository.findByVerifyCode(code);
         if (userByCode.isEmpty()) {
             throw new IllegalArgumentException("user.verify_code_not_found");
@@ -148,7 +144,7 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public void sendRecoveryEmail(@NonNull String email) {
+    public void sendRecoveryEmail(@Nonnull String email) {
         var userByEmail = userRepository.findByEmail(email);
         if (userByEmail.isPresent()) {
             var user = userByEmail.get();
@@ -160,9 +156,9 @@ public class UserService {
         }
     }
 
-    public void recoverUser(@NonNull String code,
-                            @NonNull String username,
-                            @NonNull String password) {
+    public void recoverUser(@Nonnull String code,
+                            @Nonnull String username,
+                            @Nonnull String password) {
         var userByCode = userRepository.findByVerifyCode(code);
         if (userByCode.isEmpty()) {
             throw new IllegalArgumentException("user.verify_code_not_found");

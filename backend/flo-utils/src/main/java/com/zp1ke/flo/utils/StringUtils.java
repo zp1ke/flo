@@ -1,5 +1,7 @@
 package com.zp1ke.flo.utils;
 
+import jakarta.annotation.Nonnull;
+
 /**
  * Utility class providing common string operations.
  */
@@ -47,6 +49,7 @@ public class StringUtils {
      * @return a random alphanumeric code with the specified pattern
      * @throws IllegalArgumentException if length is less than or equal to 0
      */
+    @Nonnull
     public static String generateRandomCode(int length) {
         if (length <= 0) {
             throw new IllegalArgumentException("Length must be greater than 0");

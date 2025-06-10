@@ -6,13 +6,12 @@ import com.zp1ke.flo.data.model.SettingCode;
 import com.zp1ke.flo.data.repository.CategoryRepository;
 import com.zp1ke.flo.data.util.DomainUtils;
 import com.zp1ke.flo.utils.StringUtils;
+import jakarta.annotation.Nonnull;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -27,8 +26,8 @@ public class CategoryService {
 
     private final SettingService settingService;
 
-    @NonNull
-    public Category save(@NonNull Category category) {
+    @Nonnull
+    public Category save(@Nonnull Category category) {
         if (StringUtils.isBlank(category.getCode())) {
             category.setCode(DomainUtils
                 .generateRandomCode((code) -> categoryRepository.existsByProfileAndCode(category.getProfile(), code)));
@@ -60,17 +59,16 @@ public class CategoryService {
         return categoryRepository.save(category);
     }
 
-    public Optional<Category> categoryOfProfileByCode(@NonNull Profile profile, @NonNull String code) {
+    public Optional<Category> categoryOfProfileByCode(@Nonnull Profile profile, @Nonnull String code) {
         return categoryRepository.findByProfileAndCode(profile, code);
     }
 
-    @NonNull
-    public List<Category> categoriesOfProfile(@NonNull Profile profile) {
+    @Nonnull
+    public List<Category> categoriesOfProfile(@Nonnull Profile profile) {
         return categoryRepository.findAllByProfile(profile);
     }
 
-    @Nullable
-    public List<Long> idsOfCodes(@NonNull Profile profile, @Nullable List<String> codes) {
+    public List<Long> idsOfCodes(@Nonnull Profile profile, List<String> codes) {
         if (codes != null && !codes.isEmpty()) {
             return categoryRepository.findAllByProfileAndCodeIn(profile, codes)
                 .stream()

@@ -1,11 +1,11 @@
 package com.zp1ke.flo.api.dto;
 
+import jakarta.annotation.Nonnull;
 import java.util.List;
 import java.util.function.Function;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
 import org.springframework.data.domain.Page;
-import org.springframework.lang.NonNull;
 
 @Getter
 @SuperBuilder
@@ -20,9 +20,9 @@ public class PageDto<T> {
 
     private final List<T> list;
 
-    @NonNull
-    public static <T, R> PageDto<R> of(@NonNull Page<T> page,
-                                       @NonNull Function<T, R> mapper) {
+    @Nonnull
+    public static <T, R> PageDto<R> of(@Nonnull Page<T> page,
+                                       @Nonnull Function<T, R> mapper) {
         var list = page.getContent().stream().map(mapper).toList();
         return PageDto.<R>builder()
             .page(page.getNumber())

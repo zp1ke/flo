@@ -5,10 +5,9 @@ import com.zp1ke.flo.data.domain.Transaction;
 import java.time.OffsetDateTime;
 import java.util.List;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.lang.Nullable;
 
 public class TransactionSpec {
-    public static Specification<Transaction> withProfile(@Nullable Profile profile) {
+    public static Specification<Transaction> withProfile(Profile profile) {
         return (root, query, builder)
             -> {
             if (profile == null) {
@@ -18,8 +17,8 @@ public class TransactionSpec {
         };
     }
 
-    public static Specification<Transaction> datetimeBetween(@Nullable OffsetDateTime from,
-                                                             @Nullable OffsetDateTime to) {
+    public static Specification<Transaction> datetimeBetween(OffsetDateTime from,
+                                                             OffsetDateTime to) {
         return (root, query, builder)
             -> {
             if (from == null && to == null) {
@@ -35,7 +34,7 @@ public class TransactionSpec {
         };
     }
 
-    public static Specification<Transaction> withCategories(@Nullable List<Long> categoriesIds) {
+    public static Specification<Transaction> withCategories(List<Long> categoriesIds) {
         return (root, query, builder) -> {
             if (categoriesIds == null || categoriesIds.isEmpty()) {
                 return builder.conjunction();
@@ -44,7 +43,7 @@ public class TransactionSpec {
         };
     }
 
-    public static Specification<Transaction> withWallets(@Nullable List<Long> walletsIds) {
+    public static Specification<Transaction> withWallets(List<Long> walletsIds) {
         return (root, query, builder) -> {
             if (walletsIds == null || walletsIds.isEmpty()) {
                 return builder.conjunction();

@@ -4,12 +4,12 @@ import com.zp1ke.flo.data.domain.Profile;
 import com.zp1ke.flo.data.domain.User;
 import com.zp1ke.flo.data.repository.UserRepository;
 import com.zp1ke.flo.data.repository.UserTokenRepository;
+import jakarta.annotation.Nonnull;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
-import org.springframework.lang.NonNull;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -24,8 +24,8 @@ class UserServiceTests {
         }
     }
 
-    @NonNull
-    private static Profile profileFromUser(@NonNull User user) {
+    @Nonnull
+    private static Profile profileFromUser(@Nonnull User user) {
         return Profile.builder()
             .user(user)
             .name(user.getUsername())

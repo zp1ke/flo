@@ -7,10 +7,22 @@ import com.zp1ke.flo.tools.handler.impl.NoneEmailSender;
 import com.zp1ke.flo.tools.model.EmailConfig;
 import com.zp1ke.flo.tools.model.EmailHandler;
 import com.zp1ke.flo.tools.model.EmailNotification;
+import jakarta.annotation.Nonnull;
 
+/**
+ * Email sender interface for sending email notifications.
+ */
 public interface EmailSender {
 
-    static EmailSender create(EmailHandler handler, EmailConfig config) {
+    /**
+     * Creates an instance of {@link EmailSender} based on the provided handler and configuration.
+     *
+     * @param handler the email handler type
+     * @param config  the email configuration
+     * @return an instance of {@link EmailSender}
+     */
+    @Nonnull
+    static EmailSender create(@Nonnull EmailHandler handler, @Nonnull EmailConfig config) {
         if (handler == null || config == null || config.isNotValid()) {
             return new NoneEmailSender();
         }
@@ -22,5 +34,11 @@ public interface EmailSender {
         };
     }
 
-    void sendEmail(EmailNotification notification) throws EmailException;
+    /**
+     * Sends an email notification.
+     *
+     * @param notification the email notification to send
+     * @throws EmailException if an error occurs while sending the email
+     */
+    void sendEmail(@Nonnull EmailNotification notification) throws EmailException;
 }

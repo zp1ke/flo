@@ -9,6 +9,7 @@ import com.zp1ke.flo.data.repository.TransactionSpec;
 import com.zp1ke.flo.data.util.DomainUtils;
 import com.zp1ke.flo.utils.DateTimeUtils;
 import com.zp1ke.flo.utils.StringUtils;
+import jakarta.annotation.Nonnull;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
 import java.time.LocalDate;
@@ -19,8 +20,6 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -39,8 +38,8 @@ public class TransactionService {
 
     private final SettingService settingService;
 
-    @NonNull
-    public Transaction save(@NonNull Transaction transaction) {
+    @Nonnull
+    public Transaction save(@Nonnull Transaction transaction) {
         if (StringUtils.isBlank(transaction.getCode())) {
             transaction.setCode(DomainUtils
                 .generateRandomCode((code) -> transactionRepository.existsByProfileAndCode(transaction.getProfile(), code)));
@@ -64,21 +63,21 @@ public class TransactionService {
         return transactionRepository.save(transaction);
     }
 
-    @NonNull
-    public Page<Transaction> transactionsOfProfile(@NonNull Profile profile,
-                                                   @NonNull Pageable pageable,
-                                                   @Nullable OffsetDateTime from,
-                                                   @Nullable OffsetDateTime to) {
+    @Nonnull
+    public Page<Transaction> transactionsOfProfile(@Nonnull Profile profile,
+                                                   @Nonnull Pageable pageable,
+                                                   OffsetDateTime from,
+                                                   OffsetDateTime to) {
         return transactionsOfProfile(profile, pageable, from, to, null, null);
     }
 
-    @NonNull
-    public Page<Transaction> transactionsOfProfile(@NonNull Profile profile,
-                                                   @NonNull Pageable pageable,
-                                                   @Nullable OffsetDateTime from,
-                                                   @Nullable OffsetDateTime to,
-                                                   @Nullable List<String> categoriesCodes,
-                                                   @Nullable List<String> walletsCodes) {
+    @Nonnull
+    public Page<Transaction> transactionsOfProfile(@Nonnull Profile profile,
+                                                   @Nonnull Pageable pageable,
+                                                   OffsetDateTime from,
+                                                   OffsetDateTime to,
+                                                   List<String> categoriesCodes,
+                                                   List<String> walletsCodes) {
         var categoriesIds = categoryService.idsOfCodes(profile, categoriesCodes);
         var walletsIds = walletService.idsOfCodes(profile, walletsCodes);
         var specification = TransactionSpec.withProfile(profile)
@@ -88,19 +87,19 @@ public class TransactionService {
         return transactionRepository.findAll(specification, pageable);
     }
 
-    @NonNull
-    public TransactionsStats getStats(@NonNull Profile profile,
-                                      @NonNull OffsetDateTime from,
-                                      @NonNull OffsetDateTime to) {
+    @Nonnull
+    public TransactionsStats getStats(@Nonnull Profile profile,
+                                      @Nonnull OffsetDateTime from,
+                                      @Nonnull OffsetDateTime to) {
         return getStats(profile, from, to, null, null);
     }
 
-    @NonNull
-    public TransactionsStats getStats(@NonNull Profile profile,
-                                      @NonNull OffsetDateTime from,
-                                      @NonNull OffsetDateTime to,
-                                      @Nullable List<String> categoriesCodes,
-                                      @Nullable List<String> walletsCodes) {
+    @Nonnull
+    public TransactionsStats getStats(@Nonnull Profile profile,
+                                      @Nonnull OffsetDateTime from,
+                                      @Nonnull OffsetDateTime to,
+                                      List<String> categoriesCodes,
+                                      List<String> walletsCodes) {
         var categoriesIds = categoryService.idsOfCodes(profile, categoriesCodes);
         var walletsIds = walletService.idsOfCodes(profile, walletsCodes);
         var specification = TransactionSpec.withProfile(profile)
@@ -111,8 +110,8 @@ public class TransactionService {
         return TransactionsStats.build(from, to, transactions);
     }
 
-    public Optional<Transaction> transactionOfProfileByCode(@NonNull Profile profile,
-                                                            @NonNull String code) {
+    public Optional<Transaction> transactionOfProfileByCode(@Nonnull Profile profile,
+                                                            @Nonnull String code) {
         return transactionRepository.findByProfileAndCode(profile, code);
     }
 }

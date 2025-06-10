@@ -8,6 +8,7 @@ import com.zp1ke.flo.data.domain.User;
 import com.zp1ke.flo.data.service.ProfileService;
 import com.zp1ke.flo.data.service.UserService;
 import com.zp1ke.flo.utils.StringUtils;
+import jakarta.annotation.Nonnull;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,8 +18,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -37,13 +36,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final ProfileService profileService;
 
-    public static boolean pathRequiresProfile(@NonNull String path) {
+    public static boolean pathRequiresProfile(@Nonnull String path) {
         var matcher = PROFILE_CODE_PATTERN.matcher(path);
         return matcher.matches();
     }
 
-    @Nullable
-    public static String profileCodeOf(@NonNull String path) {
+    public static String profileCodeOf(@Nonnull String path) {
         var matcher = PROFILE_CODE_PATTERN.matcher(path);
         if (matcher.matches()) {
             return matcher.group(1);
@@ -52,9 +50,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected void doFilterInternal(@NonNull HttpServletRequest request,
-                                    @NonNull HttpServletResponse response,
-                                    @NonNull FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(@Nonnull HttpServletRequest request,
+                                    @Nonnull HttpServletResponse response,
+                                    @Nonnull FilterChain filterChain) throws ServletException, IOException {
         var token = resolveToken(request);
         if (token != null && jwtTokenProvider.validateToken(token)) {
             var username = jwtTokenProvider.parseUsername(token);
@@ -65,9 +63,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    private void generateAuthentication(@NonNull String username,
-                                        @NonNull String token,
-                                        @NonNull HttpServletRequest request) {
+    private void generateAuthentication(@Nonnull String username,
+                                        @Nonnull String token,
+                                        @Nonnull HttpServletRequest request) {
         var remoteAddress = RequestUtils.remoteAddress(request);
         var user = userService.findByUsernameAndValidToken(username, token, remoteAddress);
         var path = request.getRequestURI();
@@ -81,8 +79,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
     }
 
-    @Nullable
-    private String resolveToken(@NonNull HttpServletRequest request) {
+    private String resolveToken(@Nonnull HttpServletRequest request) {
         String token = request.getHeader("Authorization");
         if (token != null) {
             String prefix = "Bearer ";
@@ -94,8 +91,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         return null;
     }
 
-    @Nullable
-    private Profile profileOf(@NonNull User user, @NonNull String path) {
+    private Profile profileOf(@Nonnull User user, @Nonnull String path) {
         var profileCode = profileCodeOf(path);
         if (StringUtils.isNotBlank(profileCode)) {
             return profileService.profileOfUserByCode(user, profileCode).orElse(null);
@@ -103,8 +99,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         return null;
     }
 
-    @NonNull
-    private Collection<? extends GrantedAuthority> authoritiesOf(@NonNull User user) {
+    @Nonnull
+    private Collection<? extends GrantedAuthority> authoritiesOf(@Nonnull User user) {
         var authorities = new ArrayList<GrantedAuthority>();
         if (user.isVerified()) {
             authorities.add(new UserGrantedAuthority(UserAuthority.VERIFIED));

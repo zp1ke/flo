@@ -4,13 +4,13 @@ import com.zp1ke.flo.data.domain.Profile;
 import com.zp1ke.flo.data.domain.Transaction;
 import com.zp1ke.flo.data.service.CategoryService;
 import com.zp1ke.flo.data.service.WalletService;
+import jakarta.annotation.Nonnull;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import lombok.Builder;
 import lombok.Getter;
-import org.springframework.lang.NonNull;
 
 @Getter
 @Builder
@@ -32,8 +32,8 @@ public class TransactionDto {
     @NotNull(message = "transaction.wallet-required")
     private String walletCode;
 
-    @NonNull
-    public static TransactionDto fromTransaction(@NonNull Transaction transaction) {
+    @Nonnull
+    public static TransactionDto fromTransaction(@Nonnull Transaction transaction) {
         return TransactionDto.builder()
             .code(transaction.getCode())
             .description(transaction.getDescription())
@@ -44,10 +44,10 @@ public class TransactionDto {
             .build();
     }
 
-    @NonNull
-    public Transaction toTransaction(@NonNull Profile profile,
-                                     @NonNull CategoryService categoryService,
-                                     @NonNull WalletService walletService) {
+    @Nonnull
+    public Transaction toTransaction(@Nonnull Profile profile,
+                                     @Nonnull CategoryService categoryService,
+                                     @Nonnull WalletService walletService) {
         return Transaction.builder()
             .code(code)
             .description(description)

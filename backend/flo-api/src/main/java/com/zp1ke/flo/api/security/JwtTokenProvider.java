@@ -5,12 +5,11 @@ import com.zp1ke.flo.utils.StringUtils;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.Nonnull;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import javax.crypto.SecretKey;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 /**
@@ -54,8 +53,8 @@ public class JwtTokenProvider {
      * @return object with a signed JWT token string that can be used for authentication and expiration date
      * @throws NullPointerException if the provided username is null
      */
-    @NonNull
-    public JwtToken generateToken(@NonNull String username) {
+    @Nonnull
+    public JwtToken generateToken(@Nonnull String username) {
         var timeMillis = System.currentTimeMillis();
         var expirationTimeMillis = expirationTimeInHours * 60 * 60 * 1000L;
         var expirationDate = new Date(timeMillis + expirationTimeMillis);
@@ -83,7 +82,7 @@ public class JwtTokenProvider {
      * @param token the JWT token string to validate, may be null
      * @return true if the token is valid and not expired, false otherwise
      */
-    public boolean validateToken(@Nullable String token) {
+    public boolean validateToken(String token) {
         var userCode = parseUsername(token);
         return StringUtils.isNotBlank(userCode);
     }
@@ -99,8 +98,8 @@ public class JwtTokenProvider {
      * @param token the JWT token from which to extract the user code, may be null
      * @return the user code extracted from the token, or null if the token is invalid or null
      */
-    @Nullable
-    public String parseUsername(@Nullable String token) {
+
+    public String parseUsername(String token) {
         try {
             var payload = Jwts.parser()
                 .verifyWith(jwtKey())
@@ -125,7 +124,7 @@ public class JwtTokenProvider {
      *
      * @return a SecretKey instance for JWT operations
      */
-    @NonNull
+    @Nonnull
     private SecretKey jwtKey() {
         return Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
     }

@@ -6,6 +6,7 @@ import com.zp1ke.flo.tools.model.Contact;
 import com.zp1ke.flo.tools.model.EmailConfig;
 import com.zp1ke.flo.tools.model.EmailNotification;
 import com.zp1ke.flo.utils.StringUtils;
+import jakarta.annotation.Nonnull;
 import jakarta.mail.*;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeBodyPart;
@@ -14,6 +15,10 @@ import jakarta.mail.internet.MimeMultipart;
 import java.io.UnsupportedEncodingException;
 import java.util.Properties;
 
+/**
+ * Implementation of {@link EmailSender} that uses the Angus Mail API to send emails.
+ * This class is responsible for configuring the mail session and sending email notifications.
+ */
 public class AngusEmailSender implements EmailSender {
 
     private final Properties properties;
@@ -24,7 +29,7 @@ public class AngusEmailSender implements EmailSender {
 
     private final Contact sender;
 
-    public AngusEmailSender(EmailConfig config) {
+    public AngusEmailSender(@Nonnull EmailConfig config) {
         properties = new Properties();
         properties.put("mail.smtp.starttls.enable", String.valueOf(config.isUseTLS()));
         properties.put("mail.smtp.host", config.getHost());
@@ -41,7 +46,7 @@ public class AngusEmailSender implements EmailSender {
     }
 
     @Override
-    public void sendEmail(EmailNotification notification) throws EmailException {
+    public void sendEmail(@Nonnull EmailNotification notification) throws EmailException {
         try {
             var message = new MimeMessage(createSession());
             message.setFrom(toInternetAddress(sender));
@@ -62,10 +67,12 @@ public class AngusEmailSender implements EmailSender {
         }
     }
 
-    private InternetAddress toInternetAddress(Contact contact) throws UnsupportedEncodingException {
+    @Nonnull
+    private InternetAddress toInternetAddress(@Nonnull Contact contact) throws UnsupportedEncodingException {
         return new InternetAddress(contact.getEmail(), contact.getName());
     }
 
+    @Nonnull
     private Session createSession() {
         Authenticator authenticator = null;
         if (StringUtils.isNotBlank(username) && StringUtils.isNotBlank(password)) {

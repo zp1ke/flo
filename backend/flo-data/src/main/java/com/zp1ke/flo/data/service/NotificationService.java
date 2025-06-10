@@ -7,6 +7,7 @@ import com.zp1ke.flo.tools.error.EmailException;
 import com.zp1ke.flo.tools.handler.EmailSender;
 import com.zp1ke.flo.tools.model.Contact;
 import com.zp1ke.flo.tools.model.EmailNotification;
+import jakarta.annotation.Nonnull;
 import java.util.Locale;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +15,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.jobrunr.jobs.annotations.Job;
 import org.jobrunr.scheduling.JobScheduler;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -31,16 +31,16 @@ public class NotificationService {
     @Value("${web.baseUrl:}")
     private String webBaseUrl;
 
-    public void sendVerificationEmail(@NonNull User user, @NonNull Profile profile) {
+    public void sendVerificationEmail(@Nonnull User user, @Nonnull Profile profile) {
         jobScheduler.enqueue(() -> doSendVerificationEmail(user, profile));
     }
 
-    public void sendRecoveryEmail(@NonNull User user, @NonNull Profile profile) {
+    public void sendRecoveryEmail(@Nonnull User user, @Nonnull Profile profile) {
         jobScheduler.enqueue(() -> doSendRecoveryEmail(user, profile));
     }
 
     @Job
-    public void doSendVerificationEmail(@NonNull User user, @NonNull Profile profile) throws EmailException {
+    public void doSendVerificationEmail(@Nonnull User user, @Nonnull Profile profile) throws EmailException {
         try {
             var templateCode = "user-verification-email";
             var actionLinkKey = "verify";
@@ -51,7 +51,7 @@ public class NotificationService {
     }
 
     @Job
-    public void doSendRecoveryEmail(@NonNull User user, @NonNull Profile profile) throws EmailException {
+    public void doSendRecoveryEmail(@Nonnull User user, @Nonnull Profile profile) throws EmailException {
         try {
             var templateCode = "user-recovery-email";
             var actionLinkKey = "recovery";
@@ -61,10 +61,10 @@ public class NotificationService {
         }
     }
 
-    private void sendUserActionEmail(@NonNull User user,
-                                     @NonNull Profile profile,
-                                     @NonNull String templateCode,
-                                     @NonNull String actionLinkKey) throws EmailException, TemplateException {
+    private void sendUserActionEmail(@Nonnull User user,
+                                     @Nonnull Profile profile,
+                                     @Nonnull String templateCode,
+                                     @Nonnull String actionLinkKey) throws EmailException, TemplateException {
         var locale = profile.getLocale();
         var subject = messageService
             .message(templateCode + "-subject", new String[] {profile.getName()}, locale);
@@ -80,11 +80,11 @@ public class NotificationService {
         sendEmail(templateCode, locale, subject, recipient, data);
     }
 
-    private void sendEmail(@NonNull String template,
-                           @NonNull Locale locale,
-                           @NonNull String subject,
-                           @NonNull Contact recipient,
-                           @NonNull Map<String, Object> data) throws EmailException, TemplateException {
+    private void sendEmail(@Nonnull String template,
+                           @Nonnull Locale locale,
+                           @Nonnull String subject,
+                           @Nonnull Contact recipient,
+                           @Nonnull Map<String, Object> data) throws EmailException, TemplateException {
         var body = messageService
             .template(template + ".ftl", data, locale);
         var notification = EmailNotification.builder()

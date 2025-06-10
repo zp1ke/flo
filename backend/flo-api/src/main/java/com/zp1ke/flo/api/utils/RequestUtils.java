@@ -2,10 +2,9 @@ package com.zp1ke.flo.api.utils;
 
 import com.opencsv.bean.function.AccessorInvoker;
 import com.zp1ke.flo.utils.StringUtils;
+import jakarta.annotation.Nonnull;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
 
 public class RequestUtils {
 
@@ -19,8 +18,8 @@ public class RequestUtils {
      * @param httpRequest the HTTP request, may be null
      * @return the remote IP address as a string, or "unknown" if not available
      */
-    @NonNull
-    public static String remoteAddress(@Nullable HttpServletRequest httpRequest) {
+    @Nonnull
+    public static String remoteAddress(HttpServletRequest httpRequest) {
         var unknown = "unknown";
         AccessorInvoker<String, Boolean> isValid = (value) -> StringUtils.isNotBlank(value) && !unknown.equalsIgnoreCase(value.trim());
         try {

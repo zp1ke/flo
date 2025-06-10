@@ -1,5 +1,6 @@
 [versions]
 angus = "2.0.3"
+jakarta-annotation = "3.0.0"
 jjwt = "0.12.6"
 jobrunr = "7.5.1"
 junit = "5.12.2"
@@ -10,6 +11,7 @@ preliquibase = "1.6.1"
 
 [libraries]
 angus = { module = "org.eclipse.angus:angus-mail", version.ref = "angus" }
+jakarta-annotation = { module = "jakarta.annotation:jakarta.annotation-api", version.ref = "jakarta-annotation" }
 jjwt-api = { module = "io.jsonwebtoken:jjwt-api", version.ref = "jjwt" }
 jjwt-impl = { module = "io.jsonwebtoken:jjwt-impl", version.ref = "jjwt" }
 jjwt-jackson = { module = "io.jsonwebtoken:jjwt-jackson", version.ref = "jjwt" }

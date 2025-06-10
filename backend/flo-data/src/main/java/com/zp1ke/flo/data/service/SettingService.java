@@ -4,10 +4,9 @@ import com.zp1ke.flo.data.domain.Setting;
 import com.zp1ke.flo.data.domain.User;
 import com.zp1ke.flo.data.model.SettingCode;
 import com.zp1ke.flo.data.repository.SettingRepository;
+import jakarta.annotation.Nonnull;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -24,7 +23,7 @@ public class SettingService {
 
     private final SettingRepository settingRepository;
 
-    public void saveDefaultSettings(@NonNull User user) {
+    public void saveDefaultSettings(@Nonnull User user) {
         var defaultSettings = Map.of(
             SettingCode.USER_MAX_PROFILES, DEFAULT_USER_MAX_PROFILES,
             SettingCode.USER_MAX_CATEGORIES, DEFAULT_USER_MAX_CATEGORIES,
@@ -43,8 +42,7 @@ public class SettingService {
         });
     }
 
-    @Nullable
-    public Integer getIntegerValue(@NonNull User user, @NonNull SettingCode code) {
+    public Integer getIntegerValue(@Nonnull User user, @Nonnull SettingCode code) {
         var setting = settingRepository.findByCodeAndUser(code, user);
         return setting
             .map(value -> Integer.valueOf(value.getValue()))

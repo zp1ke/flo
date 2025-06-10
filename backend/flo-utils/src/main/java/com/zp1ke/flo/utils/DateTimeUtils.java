@@ -6,6 +6,11 @@ import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 
+/**
+ * Utility class for converting various date and time types to OffsetDateTime.
+ * This class provides methods to convert LocalDate, Date, and LocalDateTime
+ * to OffsetDateTime using the system default time zone.
+ */
 public class DateTimeUtils {
 
     /**
