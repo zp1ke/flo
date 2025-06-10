@@ -1,10 +1,10 @@
 package com.zp1ke.flo.api.config;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.lang.NonNull;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -17,7 +17,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebConfig implements WebMvcConfigurer {
 
     @Override
-    public void addCorsMappings(@Nonnull CorsRegistry registry) {
+    public void addCorsMappings(@NonNull CorsRegistry registry) {
         registry
             .addMapping("/**")
             .allowedOrigins("*")
