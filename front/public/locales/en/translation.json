@@ -13,6 +13,26 @@
     "title": "Flo APP",
     "welcome": "Welcome to Flo App!"
   },
+  "categories": {
+    "add": "Add Category",
+    "cancel": "Cancel",
+    "code": "Code",
+    "confirm": "Confirm",
+    "confirmDelete": "Are you sure you want to delete the category?",
+    "confirmDeleteMessage": "Confirm you want to delete category \"{{name}}.\"",
+    "delete": "Delete Category",
+    "deleting": "Deleting...",
+    "edit": "Edit Category",
+    "editDescription": "Click save when you're done.",
+    "fetchError": "Could not fetch categories.",
+    "name": "Name",
+    "namePlaceholder": "Category name",
+    "nameSize": "Name must be at least 3 characters long and max 255 characters long.",
+    "processing": "Processing...",
+    "save": "Save",
+    "subtitle": "Manage your categories",
+    "title": "Categories"
+  },
   "error": {
     "details": "An unexpected error occurred.",
     "message": "Oops!",
@@ -24,10 +44,12 @@
     "en": "English"
   },
   "nav": {
+    "categories": "Categories",
     "dashboard": "Dashboard",
     "profiles": "Profiles",
     "settings": "Settings",
-    "transactions": "Transactions"
+    "transactions": "Transactions",
+    "wallets": "Wallets"
   },
   "profiles": {
     "add": "Add Profile",

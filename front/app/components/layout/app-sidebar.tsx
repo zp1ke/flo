@@ -1,8 +1,10 @@
 import {
+  BoxIcon,
   CircleDollarSignIcon,
   LayoutDashboardIcon,
   Settings2Icon,
   UsersRoundIcon,
+  WalletIcon,
 } from 'lucide-react';
 import type { ComponentProps } from 'react';
 import { NavMain } from '~/components/layout/nav-main';
@@ -34,6 +36,16 @@ const data = {
       title: 'transactions',
       url: '/transactions',
       icon: CircleDollarSignIcon,
+    },
+    {
+      title: 'categories',
+      url: '/categories',
+      icon: BoxIcon,
+    },
+    {
+      title: 'wallets',
+      url: '/wallets',
+      icon: WalletIcon,
     },
     {
       title: 'settings',
