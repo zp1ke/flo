@@ -199,5 +199,25 @@
     "verified": "Your account has been verified.",
     "verifiedDescription": "Now you can sign in with your account.",
     "verifyError": "Could not verify your account."
+  },
+  "wallets": {
+    "add": "Add Wallet",
+    "cancel": "Cancel",
+    "code": "Code",
+    "confirm": "Confirm",
+    "confirmDelete": "Are you sure you want to delete the wallet?",
+    "confirmDeleteMessage": "Confirm you want to delete wallet \"{{name}}.\"",
+    "delete": "Delete Wallet",
+    "deleting": "Deleting...",
+    "edit": "Edit Wallet",
+    "editDescription": "Click save when you're done.",
+    "fetchError": "Could not fetch wallets.",
+    "name": "Name",
+    "namePlaceholder": "Wallet name",
+    "nameSize": "Name must be at least 3 characters long and max 255 characters long.",
+    "processing": "Processing...",
+    "save": "Save",
+    "subtitle": "Manage your wallets",
+    "title": "Wallets"
   }
 }
