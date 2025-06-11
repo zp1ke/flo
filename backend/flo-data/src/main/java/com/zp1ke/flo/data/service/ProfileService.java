@@ -81,6 +81,7 @@ public class ProfileService {
         if (profileRepository.countByUser(profile.getUser()) == 1) {
             throw new IllegalArgumentException("profile.one-profile-required");
         }
+        // TODO: Check if profile is used by any other entities (e.g., categories, wallets)
         profileRepository.delete(profile);
     }
 

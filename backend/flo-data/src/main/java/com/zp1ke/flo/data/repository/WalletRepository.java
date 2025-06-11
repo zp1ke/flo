@@ -6,8 +6,9 @@ import jakarta.annotation.Nonnull;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
-public interface WalletRepository extends JpaRepository<Wallet, Long> {
+public interface WalletRepository extends JpaRepository<Wallet, Long>, JpaSpecificationExecutor<Wallet> {
 
     boolean existsByProfileAndName(@Nonnull Profile profile, @Nonnull String name);
 

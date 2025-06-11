@@ -4,6 +4,7 @@ import com.zp1ke.flo.data.domain.Category;
 import com.zp1ke.flo.data.domain.Profile;
 import com.zp1ke.flo.data.model.SettingCode;
 import com.zp1ke.flo.data.repository.CategoryRepository;
+import com.zp1ke.flo.data.repository.CategorySpec;
 import com.zp1ke.flo.data.util.DomainUtils;
 import com.zp1ke.flo.utils.StringUtils;
 import jakarta.annotation.Nonnull;
@@ -12,6 +13,8 @@ import jakarta.validation.Validator;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -64,8 +67,12 @@ public class CategoryService {
     }
 
     @Nonnull
-    public List<Category> categoriesOfProfile(@Nonnull Profile profile) {
-        return categoryRepository.findAllByProfile(profile);
+    public Page<Category> categoriesOfProfile(@Nonnull Profile profile,
+                                              String nameFilter,
+                                              @Nonnull Pageable pageable) {
+        var specification = CategorySpec.withProfile(profile)
+            .and(CategorySpec.nameLike(nameFilter));
+        return categoryRepository.findAll(specification, pageable);
     }
 
     public List<Long> idsOfCodes(@Nonnull Profile profile, List<String> codes) {
@@ -76,5 +83,10 @@ public class CategoryService {
                 .toList();
         }
         return null;
+    }
+
+    public void delete(@Nonnull Category category) {
+        // TODO: verify if category is not used in any transactions
+        categoryRepository.delete(category);
     }
 }

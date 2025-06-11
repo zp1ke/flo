@@ -6,8 +6,9 @@ import jakarta.annotation.Nonnull;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
-public interface CategoryRepository extends JpaRepository<Category, Long> {
+public interface CategoryRepository extends JpaRepository<Category, Long>, JpaSpecificationExecutor<Category> {
 
     boolean existsByProfileAndName(@Nonnull Profile profile, @Nonnull String name);
 
@@ -18,8 +19,6 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     boolean existsByProfileAndCode(@Nonnull Profile profile, @Nonnull String code);
 
     Optional<Category> findByProfileAndCode(@Nonnull Profile profile, @Nonnull String code);
-
-    List<Category> findAllByProfile(@Nonnull Profile profile);
 
     List<Category> findAllByProfileAndCodeIn(@Nonnull Profile profile, @Nonnull List<String> codes);
 }

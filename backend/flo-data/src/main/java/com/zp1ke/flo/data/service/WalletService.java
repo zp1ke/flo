@@ -4,6 +4,7 @@ import com.zp1ke.flo.data.domain.Profile;
 import com.zp1ke.flo.data.domain.Wallet;
 import com.zp1ke.flo.data.model.SettingCode;
 import com.zp1ke.flo.data.repository.WalletRepository;
+import com.zp1ke.flo.data.repository.WalletSpec;
 import com.zp1ke.flo.data.util.DomainUtils;
 import com.zp1ke.flo.utils.StringUtils;
 import jakarta.annotation.Nonnull;
@@ -12,6 +13,8 @@ import jakarta.validation.Validator;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -66,8 +69,12 @@ public class WalletService {
     }
 
     @Nonnull
-    public List<Wallet> walletsOfProfile(@Nonnull Profile profile) {
-        return walletRepository.findAllByProfile(profile);
+    public Page<Wallet> walletsOfProfile(@Nonnull Profile profile,
+                                         String nameFilter,
+                                         @Nonnull Pageable pageable) {
+        var specification = WalletSpec.withProfile(profile)
+            .and(WalletSpec.nameLike(nameFilter));
+        return walletRepository.findAll(specification, pageable);
     }
 
     public List<Long> idsOfCodes(@Nonnull Profile profile, List<String> codes) {
@@ -78,5 +85,10 @@ public class WalletService {
                 .toList();
         }
         return null;
+    }
+
+    public void delete(@Nonnull Wallet wallet) {
+        // TODO: Verify if the wallet can be deleted (e.g., no transactions associated)
+        walletRepository.delete(wallet);
     }
 }
