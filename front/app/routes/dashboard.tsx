@@ -1,6 +1,6 @@
-import { Overview } from '~/components/dashboard/overview';
-import { RecentSales } from '~/components/dashboard/recent-sales';
-import { SectionCards } from '~/components/dashboard/section-cards';
+import { Overview } from '~/routes/dashboard/overview';
+import { RecentSales } from '~/routes/dashboard/recent-sales';
+import { SectionCards } from '~/routes/dashboard/section-cards';
 import PageContent from '~/components/layout/page-content';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '~/components/ui/card';
 

@@ -12,15 +12,17 @@ import {
 } from '~/components/ui/dialog';
 import { cn } from '~/lib/utils';
 import { EditCategoryForm } from './edit-category-form';
+import type { Category } from '~/types/category';
 
-export default function AddCategoryButton() {
+export default function AddCategoryButton({ onAdded }: { onAdded: (category: Category) => void }) {
   const { t } = useTranslation();
 
   const [addOpen, setAddOpen] = useState(false);
   const [processing, setProcessing] = useState(false);
 
-  const onAddedCategory = async () => {
+  const onAddedCategory = async (category: Category) => {
     setAddOpen(false);
+    onAdded(category);
   };
 
   return (

@@ -1,8 +1,8 @@
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import PageContent from '~/components/layout/page-content';
-import AddProfileButton from '~/components/profiles/add-profile-button';
-import { tableColumns } from '~/components/profiles/table-columns';
+import AddProfileButton from '~/routes/profiles/add-profile-button';
+import { tableColumns } from '~/routes/profiles/table-columns';
 import { DataTable } from '~/components/ui/table/data-table';
 import useAuth from '~/contexts/auth/use-auth';
 import { fetchProfiles } from '~/api/profiles';

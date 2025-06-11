@@ -4,10 +4,10 @@ import { toast } from 'sonner';
 import Loading from '~/components/ui/loading';
 import { verifyUser } from '~/api/auth';
 import type { ApiError } from '~/api/client';
-import type { Route } from './+types/verify';
 import { Link } from 'react-router';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '~/components/ui/card';
 import AnonContainer from '~/components/layout/anon-container';
+import type { Route } from './+types/verify';
 
 export default function Verify({ params }: Route.LoaderArgs) {
   const { t } = useTranslation();

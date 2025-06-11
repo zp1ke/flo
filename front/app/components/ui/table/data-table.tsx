@@ -41,6 +41,7 @@ interface DataTableProps<TData, TValue> extends HTMLAttributes<HTMLDivElement> {
   dataFetcher: (pageFilters: PageFilters) => Promise<DataPage<TData>>;
   facetedFilters?: DataTableSelectFilter[];
   textFilters?: DataTableFilter[];
+  listenerManager?: ListenerManager<TData>;
 }
 
 const pageKey = 'page';
@@ -51,6 +52,7 @@ export function DataTable<TData, TValue>({
   dataFetcher,
   facetedFilters,
   textFilters,
+  listenerManager,
 }: DataTableProps<TData, TValue>) {
   const { t } = useTranslation();
   const location = useLocation();
@@ -68,6 +70,10 @@ export function DataTable<TData, TValue>({
   const [pagination, setPagination] = useState<PaginationState>(initialPagination);
   const [sorting, setSorting] = useState<SortingState>(sortingFrom(searchParams, columns));
   const [rowSelection, setRowSelection] = useState({});
+
+  listenerManager?.addListener('data-table', (event) => {
+    setFetchState(FetchState.Loading);
+  });
 
   useEffect(() => {
     if (fetchState === FetchState.Loading) {
