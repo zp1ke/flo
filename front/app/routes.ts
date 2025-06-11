@@ -13,5 +13,6 @@ export default [
     route('dashboard', 'routes/dashboard.tsx'),
     route('profiles', 'routes/profiles.tsx'),
     route('categories', 'routes/categories.tsx'),
+    route('wallets', 'routes/wallets.tsx'),
   ]),
 ] satisfies RouteConfig;
