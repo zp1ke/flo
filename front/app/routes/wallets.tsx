@@ -7,6 +7,7 @@ import useAuth from '~/contexts/auth/use-auth';
 import { fetchWallets } from '~/api/wallets';
 import AddWalletButton from '~/routes/wallets/add-wallet-button';
 import type { Wallet } from '~/types/wallet';
+import { ListenerManager } from '~/types/listener';
 
 export default function Wallets() {
   const { user } = useAuth();

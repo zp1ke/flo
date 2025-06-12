@@ -35,6 +35,7 @@ import { SortDirection, sortPrefix } from '~/types/sort';
 
 import { DataTablePagination } from './data-table-pagination';
 import { DataTableToolbar } from './data-table-toolbar';
+import type { ListenerManager } from '~/types/listener';
 
 interface DataTableProps<TData, TValue> extends HTMLAttributes<HTMLDivElement> {
   columns: ColumnDef<TData, TValue>[];
@@ -71,7 +72,7 @@ export function DataTable<TData, TValue>({
   const [sorting, setSorting] = useState<SortingState>(sortingFrom(searchParams, columns));
   const [rowSelection, setRowSelection] = useState({});
 
-  listenerManager?.addListener('data-table', (event) => {
+  listenerManager?.addListener('data-table', () => {
     setFetchState(FetchState.Loading);
   });
 
@@ -221,7 +222,7 @@ export function DataTable<TData, TValue>({
                       <span>{t('table.loading')}</span>
                     </div>
                   ) : (
-                    <span>{t('table.noResults')}</span>
+                    <span>{t(columnFilters.length ? 'table.noResults' : 'table.noData')}</span>
                   )}
                 </TableCell>
               </TableRow>

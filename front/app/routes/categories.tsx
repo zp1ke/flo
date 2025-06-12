@@ -7,6 +7,7 @@ import useAuth from '~/contexts/auth/use-auth';
 import { fetchCategories } from '~/api/categories';
 import AddCategoryButton from '~/routes/categories/add-category-button';
 import type { Category } from '~/types/category';
+import { ListenerManager } from '~/types/listener';
 
 export default function Categories() {
   const { user } = useAuth();

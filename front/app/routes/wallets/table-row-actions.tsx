@@ -47,6 +47,8 @@ export function DataTableRowActions<TData>({ row, table }: DataTableRowActionsPr
   }, [user]);
 
   const onSavedWallet = async () => {
+    table.options.meta?.onRefresh();
+
     setEditOpen(false);
     setEditing(false);
   };
@@ -55,6 +57,7 @@ export function DataTableRowActions<TData>({ row, table }: DataTableRowActionsPr
     setDeleting(true);
 
     await deleteWallet(user?.activeProfile.code ?? '-', wallet);
+    table.options.meta?.onRefresh();
 
     setDeleteOpen(false);
     setDeleting(false);

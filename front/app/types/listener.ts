@@ -8,7 +8,7 @@ type Listener<T> = {
   handler: (event: ListenerEvent<T>) => void;
 };
 
-class ListenerManager<T> {
+export class ListenerManager<T> {
   private listeners: Map<string, Listener<T>> = new Map();
 
   addListener(id: string, handler: (event: ListenerEvent<T>) => void): void {
