@@ -1,4 +1,5 @@
 import {
+  BadgeInfoIcon,
   BoxIcon,
   CircleDollarSignIcon,
   LayoutDashboardIcon,
@@ -51,6 +52,11 @@ const data = {
       title: 'settings',
       url: '/settings',
       icon: Settings2Icon,
+    },
+    {
+      title: 'about',
+      url: '/about',
+      icon: BadgeInfoIcon,
     },
   ],
 };
