@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Loader2 } from 'lucide-react';
-import { useState } from 'react';
+import { Loader2, RefreshCwIcon } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
@@ -9,13 +9,14 @@ import { Button } from '~/components/ui/button';
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from '~/components/ui/form';
 import { Input } from '~/components/ui/input';
-import type { ApiError } from '~/api/client';
+import { type ApiError } from '~/api/client';
 import useAuth from '~/contexts/auth/use-auth';
 import {
   transactionDescriptionIsValid,
@@ -24,6 +25,18 @@ import {
 } from '~/types/transaction';
 import { addTransaction, updateTransaction } from '~/api/transactions';
 import { DateTimePicker } from '~/components/ui/datetime-picker';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '~/components/ui/select';
+import { Link } from 'react-router';
+import type { Category } from '~/types/category';
+import type { Wallet } from '~/types/wallet';
+import { fetchWallets } from '~/api/wallets';
+import { fetchCategories } from '~/api/categories';
 
 export function EditTransactionForm({
   disableCancel,
@@ -42,6 +55,37 @@ export function EditTransactionForm({
   const { user } = useAuth();
 
   const [processing, setProcessing] = useState(false);
+  const [fetchingCategories, setFetchingCategories] = useState(false);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [fetchingWallets, setFetchingWallets] = useState(false);
+  const [wallets, setWallets] = useState<Wallet[]>([]);
+
+  const getCategories = async () => {
+    const profileCode = user?.activeProfile.code ?? '';
+    if (!profileCode) {
+      return;
+    }
+    setFetchingCategories(true);
+    const fetchedCategories = await fetchCategories(profileCode, { page: 0, size: 100 });
+    setCategories(fetchedCategories.data);
+    setFetchingCategories(false);
+  };
+
+  const getWallets = async () => {
+    const profileCode = user?.activeProfile.code ?? '';
+    if (!profileCode) {
+      return;
+    }
+    setFetchingWallets(true);
+    const fetchedWallets = await fetchWallets(profileCode, { page: 0, size: 100 });
+    setWallets(fetchedWallets.data);
+    setFetchingWallets(false);
+  };
+
+  useEffect(() => {
+    getCategories();
+    getWallets();
+  }, [user?.activeProfile.code]);
 
   const formSchema = z.object({
     description: transactionSchema.shape.description.refine(
@@ -76,9 +120,9 @@ export function EditTransactionForm({
     try {
       const saved = transaction
         ? await updateTransaction(user?.activeProfile.code ?? '-', {
-            code: transaction?.code,
-            ...data,
-          } satisfies Transaction)
+          code: transaction?.code,
+          ...data,
+        } satisfies Transaction)
         : await addTransaction(user?.activeProfile.code ?? '-', data satisfies Transaction);
       await onSaved(saved);
       form.reset();
@@ -156,17 +200,34 @@ export function EditTransactionForm({
             control={form.control}
             name="categoryCode"
             render={({ field }) => (
-              <FormItem className="grid gap-2">
+              <FormItem>
                 <FormLabel htmlFor="categoryCode">{t('transactions.category')}</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder={t('transactions.categoryPlaceholder')}
-                    type="text"
-                    required
-                    disabled={processing}
-                    {...field}
-                  />
-                </FormControl>
+                <div className="form-item flex justify-between gap-2 items-center">
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                    disabled={processing || !categories.length}>
+                    <FormControl className='w-full'>
+                      <SelectTrigger>
+                        <SelectValue placeholder={t('transactions.categoryPlaceholder')} />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {categories.map((category) => (
+                        <SelectItem key={category.code} value={category.code!}>
+                          {category.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <Button variant="secondary" size="icon" disabled={processing || fetchingCategories} onClick={getCategories}>
+                    <RefreshCwIcon />
+                  </Button>
+                </div>
+                <FormDescription>
+                  {t('transactions.categoriesManageDescription')}{' '}
+                  <Link to="/categories" className="underline underline-offset-4" target='_blank'>{t('transactions.categoriesManageLink')}</Link>.
+                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -175,17 +236,34 @@ export function EditTransactionForm({
             control={form.control}
             name="walletCode"
             render={({ field }) => (
-              <FormItem className="grid gap-2">
+              <FormItem>
                 <FormLabel htmlFor="walletCode">{t('transactions.wallet')}</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder={t('transactions.walletPlaceholder')}
-                    type="text"
-                    required
-                    disabled={processing}
-                    {...field}
-                  />
-                </FormControl>
+                <div className="form-item flex justify-between gap-2 items-center">
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                    disabled={processing || !wallets.length}>
+                    <FormControl className='w-full'>
+                      <SelectTrigger>
+                        <SelectValue placeholder={t('transactions.walletPlaceholder')} />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {wallets.map((wallet) => (
+                        <SelectItem key={wallet.code} value={wallet.code!}>
+                          {wallet.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <Button variant="secondary" size="icon" disabled={processing || fetchingWallets} onClick={getWallets}>
+                    <RefreshCwIcon />
+                  </Button>
+                </div>
+                <FormDescription>
+                  {t('transactions.walletsManageDescription')}{' '}
+                  <Link to="/wallets" className="underline underline-offset-4" target='_blank'>{t('transactions.walletsManageLink')}</Link>.
+                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}

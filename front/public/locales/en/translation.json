@@ -201,6 +201,8 @@
     "cancel": "Cancel",
     "category": "Category",
     "categoryPlaceholder": "Select a category",
+    "categoriesManageDescription": "You can manage your categories in your",
+    "categoriesManageLink": "categories page",
     "code": "Code",
     "description": "Description",
     "descriptionPlaceholder": "Transaction description",
@@ -217,7 +219,9 @@
     "save": "Save Transaction",
     "processing": "Processing...",
     "wallet": "Wallet",
-    "walletPlaceholder": "Select a wallet"
+    "walletPlaceholder": "Select a wallet",
+    "walletsManageDescription": "You can manage your wallets in your",
+    "walletsManageLink": "wallets page"
   },
   "verify": {
     "goSignIn": "Go to Sign In",
