@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import PageContent from '~/components/layout/page-content';
 import { tableColumns } from '~/routes/categories/table-columns';
-import { DataTable } from '~/components/ui/table/data-table';
+import { DataTable } from '~/components/table/data-table';
 import useAuth from '~/contexts/auth/use-auth';
 import { fetchCategories } from '~/api/categories';
 import AddCategoryButton from '~/routes/categories/add-category-button';

@@ -1,5 +1,5 @@
 import type { ColumnDef } from '@tanstack/react-table';
-import { DataTableColumnHeader } from '~/components/ui/table/data-table-column-header';
+import { DataTableColumnHeader } from '~/components/table/data-table-column-header';
 
 import { DataTableRowActions } from './table-row-actions';
 import type { Transaction } from '~/types/transaction';

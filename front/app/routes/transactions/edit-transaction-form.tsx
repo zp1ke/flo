@@ -25,18 +25,12 @@ import {
 } from '~/types/transaction';
 import { addTransaction, updateTransaction } from '~/api/transactions';
 import { DateTimePicker } from '~/components/ui/datetime-picker';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '~/components/ui/select';
 import { Link } from 'react-router';
-import type { Category } from '~/types/category';
-import type { Wallet } from '~/types/wallet';
+import { categorySchema, type Category } from '~/types/category';
+import { walletSchema, type Wallet } from '~/types/wallet';
 import { fetchWallets } from '~/api/wallets';
 import { fetchCategories } from '~/api/categories';
+import { SearchableSelect, type ValueManager } from '~/components/ui/searchable-select';
 
 export function EditTransactionForm({
   disableCancel,
@@ -60,6 +54,26 @@ export function EditTransactionForm({
   const [fetchingWallets, setFetchingWallets] = useState(false);
   const [wallets, setWallets] = useState<Wallet[]>([]);
 
+  const formSchema = z.object({
+    description: transactionSchema.shape.description.refine(
+      transactionDescriptionIsValid,
+      t('transactions.descriptionSize')
+    ),
+    datetime: transactionSchema.shape.datetime,
+    amount: transactionSchema.shape.amount,
+    category: categorySchema,
+    wallet: walletSchema,
+  });
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      description: transaction?.description || '',
+      datetime: transaction?.datetime || new Date(),
+      amount: transaction?.amount || 0,
+    },
+  });
+
   const getCategories = async () => {
     const profileCode = user?.activeProfile.code ?? '';
     if (!profileCode) {
@@ -67,7 +81,12 @@ export function EditTransactionForm({
     }
     setFetchingCategories(true);
     const fetchedCategories = await fetchCategories(profileCode, { page: 0, size: 100 });
-    setCategories(fetchedCategories.data);
+    if (transaction) {
+      const category = fetchedCategories.data.find((c) => c.code === transaction.categoryCode);
+      if (category) {
+        form.setValue('category', category);
+      }
+    }
     setFetchingCategories(false);
   };
 
@@ -78,6 +97,12 @@ export function EditTransactionForm({
     }
     setFetchingWallets(true);
     const fetchedWallets = await fetchWallets(profileCode, { page: 0, size: 100 });
+    if (transaction) {
+      const wallet = fetchedWallets.data.find((c) => c.code === transaction.walletCode);
+      if (wallet) {
+        form.setValue('wallet', wallet);
+      }
+    }
     setWallets(fetchedWallets.data);
     setFetchingWallets(false);
   };
@@ -87,28 +112,6 @@ export function EditTransactionForm({
     getWallets();
   }, [user?.activeProfile.code]);
 
-  const formSchema = z.object({
-    description: transactionSchema.shape.description.refine(
-      transactionDescriptionIsValid,
-      t('transactions.descriptionSize')
-    ),
-    datetime: transactionSchema.shape.datetime,
-    amount: transactionSchema.shape.amount,
-    categoryCode: transactionSchema.shape.categoryCode,
-    walletCode: transactionSchema.shape.walletCode,
-  });
-
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      description: transaction?.description || '',
-      datetime: transaction?.datetime || new Date(),
-      amount: transaction?.amount || 0,
-      categoryCode: transaction?.categoryCode || '',
-      walletCode: transaction?.walletCode || '',
-    },
-  });
-
   const toggleProcessing = (value: boolean) => {
     setProcessing(value);
     onProcessing(value);
@@ -117,13 +120,20 @@ export function EditTransactionForm({
   const onSave = async (data: z.infer<typeof formSchema>) => {
     toggleProcessing(true);
 
+    const { description, datetime, amount, category, wallet } = data;
+
     try {
+      const transactionData: Transaction = {
+        code: transaction?.code,
+        description,
+        datetime,
+        amount,
+        categoryCode: category.code!,
+        walletCode: wallet.code!,
+      };
       const saved = transaction
-        ? await updateTransaction(user?.activeProfile.code ?? '-', {
-          code: transaction?.code,
-          ...data,
-        } satisfies Transaction)
-        : await addTransaction(user?.activeProfile.code ?? '-', data satisfies Transaction);
+        ? await updateTransaction(user?.activeProfile.code ?? '-', transactionData)
+        : await addTransaction(user?.activeProfile.code ?? '-', transactionData);
       await onSaved(saved);
       form.reset();
     } catch (e) {
@@ -198,35 +208,30 @@ export function EditTransactionForm({
           />
           <FormField
             control={form.control}
-            name="categoryCode"
+            name="category"
             render={({ field }) => (
               <FormItem>
                 <FormLabel htmlFor="categoryCode">{t('transactions.category')}</FormLabel>
-                <div className="form-item flex justify-between gap-2 items-center">
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                    disabled={processing || !categories.length}>
-                    <FormControl className='w-full'>
-                      <SelectTrigger>
-                        <SelectValue placeholder={t('transactions.categoryPlaceholder')} />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {categories.map((category) => (
-                        <SelectItem key={category.code} value={category.code!}>
-                          {category.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <Button variant="secondary" size="icon" disabled={processing || fetchingCategories} onClick={getCategories}>
-                    <RefreshCwIcon />
-                  </Button>
-                </div>
+                <SearchableSelect
+                  value={field.value}
+                  options={categories}
+                  placeholder={t('transactions.categoryPlaceholder')}
+                  searchTitle={t('transactions.categorySearchTitle')}
+                  searchNotMatchMessage={t('transactions.categorySearchNotMatch')}
+                  disabled={processing || !categories.length || fetchingCategories}
+                  converter={(category: Category): ValueManager<Category> => ({
+                    value: category,
+                    key: () => category.code!,
+                    label: () => category.name,
+                  })}
+                  onValueChange={field.onChange}
+                  onRefresh={getCategories}
+                />
                 <FormDescription>
                   {t('transactions.categoriesManageDescription')}{' '}
-                  <Link to="/categories" className="underline underline-offset-4" target='_blank'>{t('transactions.categoriesManageLink')}</Link>.
+                  <Link to="/categories" className="underline underline-offset-4" target="_blank">
+                    {t('transactions.categoriesManageLink')}
+                  </Link>
                 </FormDescription>
                 <FormMessage />
               </FormItem>
@@ -234,35 +239,30 @@ export function EditTransactionForm({
           />
           <FormField
             control={form.control}
-            name="walletCode"
+            name="wallet"
             render={({ field }) => (
               <FormItem>
                 <FormLabel htmlFor="walletCode">{t('transactions.wallet')}</FormLabel>
-                <div className="form-item flex justify-between gap-2 items-center">
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                    disabled={processing || !wallets.length}>
-                    <FormControl className='w-full'>
-                      <SelectTrigger>
-                        <SelectValue placeholder={t('transactions.walletPlaceholder')} />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {wallets.map((wallet) => (
-                        <SelectItem key={wallet.code} value={wallet.code!}>
-                          {wallet.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <Button variant="secondary" size="icon" disabled={processing || fetchingWallets} onClick={getWallets}>
-                    <RefreshCwIcon />
-                  </Button>
-                </div>
+                <SearchableSelect
+                  value={field.value}
+                  options={wallets}
+                  placeholder={t('transactions.walletPlaceholder')}
+                  searchTitle={t('transactions.walletSearchTitle')}
+                  searchNotMatchMessage={t('transactions.walletSearchNotMatch')}
+                  disabled={processing || !wallets.length || fetchingWallets}
+                  converter={(wallet: Wallet): ValueManager<Wallet> => ({
+                    value: wallet,
+                    key: () => wallet.code!,
+                    label: () => wallet.name,
+                  })}
+                  onValueChange={field.onChange}
+                  onRefresh={getWallets}
+                />
                 <FormDescription>
                   {t('transactions.walletsManageDescription')}{' '}
-                  <Link to="/wallets" className="underline underline-offset-4" target='_blank'>{t('transactions.walletsManageLink')}</Link>.
+                  <Link to="/wallets" className="underline underline-offset-4" target="_blank">
+                    {t('transactions.walletsManageLink')}
+                  </Link>
                 </FormDescription>
                 <FormMessage />
               </FormItem>
