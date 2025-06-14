@@ -70,7 +70,7 @@ export function EditWalletForm({
       await onSaved(saved);
       form.reset();
     } catch (e) {
-      toast.error(t('wallets.fetchError'), {
+      toast.error(t('wallets.saveError'), {
         description: t((e as ApiError).message),
         closeButton: true,
       });

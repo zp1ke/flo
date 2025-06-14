@@ -70,7 +70,7 @@ export function EditCategoryForm({
       await onSaved(saved);
       form.reset();
     } catch (e) {
-      toast.error(t('categories.fetchError'), {
+      toast.error(t('categories.saveError'), {
         description: t((e as ApiError).message),
         closeButton: true,
       });

@@ -74,7 +74,7 @@ export function EditProfileForm({
       await onSaved(saved, setAsDefault);
       form.reset();
     } catch (e) {
-      toast.error(t('profiles.fetchError'), {
+      toast.error(t('profiles.saveError'), {
         description: t((e as ApiError).message),
         closeButton: true,
       });

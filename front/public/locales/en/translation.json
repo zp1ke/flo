@@ -30,6 +30,7 @@
     "nameSize": "Name must be at least 3 characters long and max 255 characters long.",
     "processing": "Processing...",
     "save": "Save",
+    "saveError": "Could not save category.",
     "subtitle": "Manage your categories",
     "title": "Categories"
   },
@@ -70,6 +71,7 @@
     "nameSize": "Name must be at least 3 characters long and max 255 characters long.",
     "processing": "Processing...",
     "save": "Save",
+    "saveError": "Could not save profile.",
     "subtitle": "Manage your profiles",
     "title": "Profiles"
   },
@@ -252,6 +254,7 @@
     "nameSize": "Name must be at least 3 characters long and max 255 characters long.",
     "processing": "Processing...",
     "save": "Save",
+    "saveError": "Could not save wallet.",
     "subtitle": "Manage your wallets",
     "title": "Wallets"
   }

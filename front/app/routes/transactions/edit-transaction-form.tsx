@@ -138,7 +138,7 @@ export function EditTransactionForm({
       await onSaved(saved);
       form.reset();
     } catch (e) {
-      toast.error(t('transactions.fetchError'), {
+      toast.error(t('transactions.saveError'), {
         description: t((e as ApiError).message),
         closeButton: true,
       });
