@@ -20,8 +20,9 @@ export default function Profiles() {
       </div>
       <DataTable
         columns={columns}
-        dataFetcher={(pageFilters) => fetchProfiles(pageFilters)}
+        dataFetcher={(_profileCode, pageFilters) => fetchProfiles(pageFilters)}
         textFilters={[{ title: t('profiles.name'), column: 'name' }]}
+        fetchErrorMessage={t('profiles.fetchError')}
       />
     </PageContent>
   );

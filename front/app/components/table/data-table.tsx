@@ -36,13 +36,15 @@ import { SortDirection, sortPrefix } from '~/types/sort';
 import { DataTablePagination } from './data-table-pagination';
 import { DataTableToolbar } from './data-table-toolbar';
 import type { ListenerManager } from '~/types/listener';
+import useAuth from '~/contexts/auth/use-auth';
 
 interface DataTableProps<TData, TValue> extends HTMLAttributes<HTMLDivElement> {
   columns: ColumnDef<TData, TValue>[];
-  dataFetcher: (pageFilters: PageFilters) => Promise<DataPage<TData>>;
+  dataFetcher: (profileCode: string, pageFilters: PageFilters) => Promise<DataPage<TData>>;
   facetedFilters?: DataTableSelectFilter[];
   textFilters?: DataTableFilter[];
   listenerManager?: ListenerManager<TData>;
+  fetchErrorMessage?: string;
 }
 
 const pageKey = 'page';
@@ -54,7 +56,9 @@ export function DataTable<TData, TValue>({
   facetedFilters,
   textFilters,
   listenerManager,
+  fetchErrorMessage,
 }: DataTableProps<TData, TValue>) {
+  const { user } = useAuth();
   const { t } = useTranslation();
   const location = useLocation();
   const [searchParams] = useSearchParams();
@@ -77,8 +81,8 @@ export function DataTable<TData, TValue>({
   });
 
   useEffect(() => {
-    if (fetchState === FetchState.Loading) {
-      dataFetcher(pageFilters())
+    if (fetchState === FetchState.Loading && user?.activeProfile.code) {
+      dataFetcher(user.activeProfile.code, pageFilters())
         .then((data) => {
           setData(data);
           updateUrlParams();
@@ -87,13 +91,13 @@ export function DataTable<TData, TValue>({
         .catch((e) => {
           setData({ data: [], total: 0 });
           setFetchState(FetchState.Error);
-          toast.error(t('profiles.fetchError'), {
+          toast.error(fetchErrorMessage ?? t('table.fetchError'), {
             description: t((e as ApiError).message),
             closeButton: true,
           });
         });
     }
-  }, [fetchState]);
+  }, [fetchState, user]);
 
   const pageFilters = (): PageFilters => {
     const sort: Record<string, SortDirection> = {};
@@ -216,7 +220,7 @@ export function DataTable<TData, TValue>({
             ) : (
               <TableRow>
                 <TableCell colSpan={columns.length} className="h-24 text-center">
-                  {fetchState === FetchState.Loading ? (
+                  {fetchState === FetchState.Loading || !user?.activeProfile.code ? (
                     <div className="flex items-center justify-center space-x-2">
                       <Loader2 className="h-4 w-4 animate-spin" />
                       <span>{t('table.loading')}</span>

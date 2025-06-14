@@ -164,6 +164,7 @@
   },
   "table": {
     "clearFilters": "Clear filters",
+    "fetchError": "Could not fetch data.",
     "filter": "Filter",
     "filterSelected_zero": "Nothing selected.",
     "filterSelected_one": "{{count}} selected.",

@@ -25,11 +25,10 @@ export default function Transactions() {
       </div>
       <DataTable
         columns={columns}
-        dataFetcher={(pageFilters) =>
-          fetchTransactions(user?.activeProfile.code ?? '-', pageFilters)
-        }
+        dataFetcher={(profileCode, pageFilters) => fetchTransactions(profileCode, pageFilters)}
         textFilters={[]}
         listenerManager={listenerManager}
+        fetchErrorMessage={t('transactions.fetchError')}
       />
     </PageContent>
   );

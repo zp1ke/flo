@@ -1,5 +1,5 @@
 type ListenerEvent<T> = {
-  type: 'added' | 'updated' | 'deleted';
+  type: 'fetched' | 'added' | 'updated' | 'deleted';
   data: T;
 };
 

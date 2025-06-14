@@ -25,9 +25,10 @@ export default function Wallets() {
       </div>
       <DataTable
         columns={columns}
-        dataFetcher={(pageFilters) => fetchWallets(user?.activeProfile.code ?? '-', pageFilters)}
+        dataFetcher={(profileCode, pageFilters) => fetchWallets(profileCode, pageFilters)}
         textFilters={[{ title: t('wallets.name'), column: 'name' }]}
         listenerManager={listenerManager}
+        fetchErrorMessage={t('wallets.fetchError')}
       />
     </PageContent>
   );

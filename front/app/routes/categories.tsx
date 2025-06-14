@@ -25,9 +25,10 @@ export default function Categories() {
       </div>
       <DataTable
         columns={columns}
-        dataFetcher={(pageFilters) => fetchCategories(user?.activeProfile.code ?? '-', pageFilters)}
+        dataFetcher={(profileCode, pageFilters) => fetchCategories(profileCode, pageFilters)}
         textFilters={[{ title: t('categories.name'), column: 'name' }]}
         listenerManager={listenerManager}
+        fetchErrorMessage={t('categories.fetchError')}
       />
     </PageContent>
   );
