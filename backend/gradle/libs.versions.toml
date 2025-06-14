@@ -3,10 +3,10 @@ angus = "2.0.3"
 jakarta-annotation = "3.0.0"
 jjwt = "0.12.6"
 jobrunr = "7.5.1"
-junit = "5.12.2"
+junit = "5.13.1"
 karate = "1.5.1"
 lombok = "1.18.38"
-openapi = "2.8.8"
+openapi = "2.8.9"
 preliquibase = "1.6.1"
 
 [libraries]
