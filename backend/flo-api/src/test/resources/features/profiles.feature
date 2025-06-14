@@ -41,4 +41,4 @@ Feature: Profiles API testing
     And request { 'name': 'Karate Test 3' }
     When method post
     Then status 400
-    And match response.message == 'profile.max-profiles-reached'
+    And match response.message == 'profile.max_profiles_reached'

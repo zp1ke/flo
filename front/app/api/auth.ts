@@ -107,7 +107,9 @@ export const fetchUser = async (force: boolean): Promise<User | null> => {
     return user;
   } catch (e) {
     console.error('Error fetching user:', e);
-    if ((e as ApiError).status === 401 || (e as ApiError).status === 403) {
+    const apiStatus = (e as ApiError).status;
+    if (apiStatus === 401 || apiStatus === 403) {
+      localStorage.removeItem(TOKEN_KEY);
       localStorage.removeItem(USER_KEY);
       localStorage.removeItem(USER_KEY_TS);
       return null;

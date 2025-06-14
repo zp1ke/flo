@@ -1,6 +1,6 @@
 {
   "api": {
-    "profile.max-profiles-reached": "You have reached the maximum number of profiles allowed.",
+    "profile.max_profiles_reached": "You have reached the maximum number of profiles allowed.",
     "unknownError": "An unknown error occurred.",
     "user.email_already_exists": "Email already exists.",
     "user.invalid": "Invalid data.",
@@ -232,7 +232,7 @@
   },
   "verify": {
     "goSignIn": "Go to Sign In",
-    "user_not_verified": "Your account is not verified.",
+    "userNotVerified": "Your account is not verified.",
     "verified": "Your account has been verified.",
     "verifiedDescription": "Now you can sign in with your account.",
     "verifyError": "Could not verify your account."

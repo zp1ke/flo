@@ -1,7 +1,7 @@
 import {
   BadgeInfoIcon,
   BoxIcon,
-  CircleDollarSignIcon,
+  DollarSignIcon,
   LayoutDashboardIcon,
   Settings2Icon,
   UsersRoundIcon,
@@ -36,7 +36,7 @@ const data = {
     {
       title: 'transactions',
       url: '/transactions',
-      icon: CircleDollarSignIcon,
+      icon: DollarSignIcon,
     },
     {
       title: 'categories',

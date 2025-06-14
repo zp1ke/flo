@@ -47,7 +47,7 @@ public class ProfileService {
 
             var maxProfiles = settingService.getIntegerValue(profile.getUser(), SettingCode.USER_MAX_PROFILES);
             if (maxProfiles != null && profileRepository.countByUser(profile.getUser()) >= maxProfiles) {
-                throw new IllegalArgumentException("profile.max-profiles-reached");
+                throw new IllegalArgumentException("profile.max_profiles_reached");
             }
         } else {
             // Check if a profile with the same name already exists for the user
