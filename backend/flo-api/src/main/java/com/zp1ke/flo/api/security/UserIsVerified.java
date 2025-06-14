@@ -8,6 +8,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 
 @Target({ElementType.METHOD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-@PreAuthorize("hasAuthority(T(com.zp1ke.flo.api.model.UserAuthority).VERIFIED.name())")
+@PreAuthorize("hasAuthority(@securityConfig.getUserVerifiedAuthority())")
 public @interface UserIsVerified {
 }
