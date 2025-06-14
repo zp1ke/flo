@@ -74,15 +74,16 @@ export const fetchUser = async (force: boolean): Promise<User | null> => {
   return new Promise((resolve, reject) => {
     const userTs = localStorage.getItem(USER_KEY_TS);
     let activeProfileCode: string | null = null;
+    let cachedUser: User | null = null;
     if (userTs) {
       const user = localStorage.getItem(USER_KEY);
       if (user) {
+        cachedUser = JSON.parse(user);
         if (!force && Date.now() - parseInt(userTs) < config.refreshUserMilliseconds) {
-          console.debug('Fetching user from CACHE...', Date.now());
-          return resolve(JSON.parse(user));
+          console.debug('Using user from CACHE...', Date.now());
+          return resolve(cachedUser);
         } else {
-          const parsedUser: User = JSON.parse(user);
-          activeProfileCode = parsedUser.activeProfile?.code || null;
+          activeProfileCode = cachedUser?.activeProfile?.code || null;
         }
       }
     }
@@ -112,6 +113,9 @@ export const fetchUser = async (force: boolean): Promise<User | null> => {
         if ((e as ApiError).status === 401 || (e as ApiError).status === 403) {
           localStorage.removeItem(USER_KEY);
           localStorage.removeItem(USER_KEY_TS);
+        } else if (cachedUser) {
+          console.debug('Using cached user due to error:', e);
+          return resolve(cachedUser);
         }
         reject(e);
       });
