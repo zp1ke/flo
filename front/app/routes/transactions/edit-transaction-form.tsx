@@ -59,7 +59,7 @@ export function EditTransactionForm({
       transactionDescriptionIsValid,
       t('transactions.descriptionSize')
     ),
-    datetime: transactionSchema.shape.datetime,
+    datetime: z.date(),
     amount: transactionSchema.shape.amount,
     category: categorySchema,
     wallet: walletSchema,
