@@ -201,8 +201,10 @@
     "cancel": "Cancel",
     "category": "Category",
     "categoryPlaceholder": "Select a category",
+    "categorySearchTitle": "Search Categories",
+    "categorySearchNotMatch": "No categories found matching your search.",
     "categoriesManageDescription": "You can manage your categories in your",
-    "categoriesManageLink": "categories page",
+    "categoriesManageLink": "categories page.",
     "code": "Code",
     "description": "Description",
     "descriptionPlaceholder": "Transaction description",
@@ -220,8 +222,10 @@
     "processing": "Processing...",
     "wallet": "Wallet",
     "walletPlaceholder": "Select a wallet",
+    "walletSearchTitle": "Search Wallets",
+    "walletSearchNotMatch": "No wallets found matching your search.",
     "walletsManageDescription": "You can manage your wallets in your",
-    "walletsManageLink": "wallets page"
+    "walletsManageLink": "wallets page."
   },
   "verify": {
     "goSignIn": "Go to Sign In",

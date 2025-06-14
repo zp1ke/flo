@@ -1,4 +1,4 @@
-import { Check, ChevronsUpDown, RefreshCwIcon } from 'lucide-react';
+import { Check, ChevronsUpDown } from 'lucide-react';
 
 import { cn } from '~/lib/utils';
 import { Button } from '~/components/ui/button';
@@ -10,8 +10,8 @@ import {
   CommandItem,
   CommandList,
 } from '~/components/ui/command';
-import { FormControl } from '~/components/ui/form';
 import { Popover, PopoverContent, PopoverTrigger } from '~/components/ui/popover';
+import { useState } from 'react';
 
 export interface ValueManager<T> {
   value: T;
@@ -28,7 +28,6 @@ interface SearchableSelectProps<T> {
   searchNotMatchMessage: string;
   converter: (value: T) => ValueManager<T>;
   onValueChange: (value: T) => void;
-  onRefresh?: () => void;
 }
 
 export function SearchableSelect<T>({
@@ -40,48 +39,41 @@ export function SearchableSelect<T>({
   searchNotMatchMessage,
   converter,
   onValueChange,
-  onRefresh,
 }: SearchableSelectProps<T>) {
   const theValue = value ? converter(value) : undefined;
 
+  const [open, setOpen] = useState(false);
+
   const renderItem = (i: T) => {
     const item = converter(i);
+    const selected = theValue?.key() === item.key();
     return (
       <CommandItem
-        disabled={item.key() === theValue?.key()}
-        value={item.key()}
+        disabled={selected}
+        value={item.label()}
         key={item.key()}
         onSelect={() => {
           onValueChange(item.value);
+          setOpen(false);
         }}>
         {item.label()}
-        <Check className={cn('ml-auto', item.value === value ? 'opacity-100' : 'opacity-0')} />
+        <Check className={cn('ml-auto', selected ? 'opacity-100' : 'opacity-0')} />
       </CommandItem>
     );
   };
 
   return (
-    <Popover>
-      <div className="flex justify-between gap-2 items-center">
-        <PopoverTrigger asChild disabled={!options.length || disabled}>
-          <FormControl>
-            <Button
-              disabled={!options.length || disabled}
-              variant="outline"
-              role="combobox"
-              className={cn('w-full justify-between', !value && 'text-muted-foreground')}>
-              {theValue?.label() ?? placeholder}
-              <ChevronsUpDown className="opacity-50" />
-            </Button>
-          </FormControl>
-        </PopoverTrigger>
-        {onRefresh && <Button
-          variant="secondary"
-          size="icon"
-          onClick={onRefresh}>
-          <RefreshCwIcon />
-        </Button>}
-      </div>
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild disabled={!options.length || disabled}>
+        <Button
+          disabled={!options.length || disabled}
+          variant="outline"
+          role="combobox"
+          className={cn('w-full justify-between', !value && 'text-muted-foreground')}>
+          {theValue?.label() ?? placeholder}
+          <ChevronsUpDown className="opacity-50" />
+        </Button>
+      </PopoverTrigger>
       <PopoverContent className="p-0">
         <Command>
           <CommandInput placeholder={searchTitle} className="h-9" />

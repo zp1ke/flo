@@ -1,5 +1,6 @@
 package com.zp1ke.flo.api.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.zp1ke.flo.data.model.GroupStats;
 import com.zp1ke.flo.data.model.MoneyStats;
 import com.zp1ke.flo.data.model.TransactionsStats;
@@ -13,8 +14,10 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public class TransactionsStatsDto extends MoneyStats {
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private final OffsetDateTime from;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private final OffsetDateTime to;
 
     private final List<GroupStats> categories;

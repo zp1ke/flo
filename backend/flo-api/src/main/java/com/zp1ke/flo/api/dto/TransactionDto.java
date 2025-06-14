@@ -1,5 +1,6 @@
 package com.zp1ke.flo.api.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.zp1ke.flo.data.domain.Profile;
 import com.zp1ke.flo.data.domain.Transaction;
 import com.zp1ke.flo.data.service.CategoryService;
@@ -21,6 +22,7 @@ public class TransactionDto {
     @Size(max = 255, message = "transaction.description-size")
     private String description;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private OffsetDateTime datetime;
 
     @NotNull(message = "transaction.amount-required")

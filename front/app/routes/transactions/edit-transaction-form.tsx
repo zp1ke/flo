@@ -80,13 +80,14 @@ export function EditTransactionForm({
       return;
     }
     setFetchingCategories(true);
-    const fetchedCategories = await fetchCategories(profileCode, { page: 0, size: 100 });
+    const categories = await fetchCategories(profileCode, { page: 0, size: 100 });
     if (transaction) {
-      const category = fetchedCategories.data.find((c) => c.code === transaction.categoryCode);
+      const category = categories.data.find((c) => c.code === transaction.categoryCode);
       if (category) {
         form.setValue('category', category);
       }
     }
+    setCategories(categories.data);
     setFetchingCategories(false);
   };
 
@@ -96,14 +97,14 @@ export function EditTransactionForm({
       return;
     }
     setFetchingWallets(true);
-    const fetchedWallets = await fetchWallets(profileCode, { page: 0, size: 100 });
+    const wallets = await fetchWallets(profileCode, { page: 0, size: 100 });
     if (transaction) {
-      const wallet = fetchedWallets.data.find((c) => c.code === transaction.walletCode);
+      const wallet = wallets.data.find((c) => c.code === transaction.walletCode);
       if (wallet) {
         form.setValue('wallet', wallet);
       }
     }
-    setWallets(fetchedWallets.data);
+    setWallets(wallets.data);
     setFetchingWallets(false);
   };
 
@@ -121,16 +122,16 @@ export function EditTransactionForm({
     toggleProcessing(true);
 
     const { description, datetime, amount, category, wallet } = data;
+    const transactionData: Transaction = {
+      code: transaction?.code,
+      description,
+      datetime,
+      amount,
+      categoryCode: category.code!,
+      walletCode: wallet.code!,
+    };
 
     try {
-      const transactionData: Transaction = {
-        code: transaction?.code,
-        description,
-        datetime,
-        amount,
-        categoryCode: category.code!,
-        walletCode: wallet.code!,
-      };
       const saved = transaction
         ? await updateTransaction(user?.activeProfile.code ?? '-', transactionData)
         : await addTransaction(user?.activeProfile.code ?? '-', transactionData);
@@ -152,17 +153,22 @@ export function EditTransactionForm({
         <div className="flex flex-col gap-6">
           <FormField
             control={form.control}
-            name="description"
+            name="amount"
             render={({ field }) => (
               <FormItem className="grid gap-2">
-                <FormLabel htmlFor="description">{t('transactions.description')}</FormLabel>
+                <FormLabel htmlFor="amount">{t('transactions.amount')}</FormLabel>
                 <FormControl>
                   <Input
-                    placeholder={t('transactions.descriptionPlaceholder')}
-                    type="text"
+                    {...field}
+                    placeholder={t('transactions.amountPlaceholder')}
+                    type="number"
                     required
                     disabled={processing}
-                    {...field}
+                    value={field.value || ''}
+                    onChange={(e) => {
+                      const value = e.target.value ? parseFloat(e.target.value) : 0;
+                      field.onChange(value);
+                    }}
                   />
                 </FormControl>
                 <FormMessage />
@@ -189,14 +195,14 @@ export function EditTransactionForm({
           />
           <FormField
             control={form.control}
-            name="amount"
+            name="description"
             render={({ field }) => (
               <FormItem className="grid gap-2">
-                <FormLabel htmlFor="amount">{t('transactions.amount')}</FormLabel>
+                <FormLabel htmlFor="description">{t('transactions.description')}</FormLabel>
                 <FormControl>
                   <Input
-                    placeholder={t('transactions.amountPlaceholder')}
-                    type="number"
+                    placeholder={t('transactions.descriptionPlaceholder')}
+                    type="text"
                     required
                     disabled={processing}
                     {...field}
@@ -210,23 +216,33 @@ export function EditTransactionForm({
             control={form.control}
             name="category"
             render={({ field }) => (
-              <FormItem>
-                <FormLabel htmlFor="categoryCode">{t('transactions.category')}</FormLabel>
-                <SearchableSelect
-                  value={field.value}
-                  options={categories}
-                  placeholder={t('transactions.categoryPlaceholder')}
-                  searchTitle={t('transactions.categorySearchTitle')}
-                  searchNotMatchMessage={t('transactions.categorySearchNotMatch')}
-                  disabled={processing || !categories.length || fetchingCategories}
-                  converter={(category: Category): ValueManager<Category> => ({
-                    value: category,
-                    key: () => category.code!,
-                    label: () => category.name,
-                  })}
-                  onValueChange={field.onChange}
-                  onRefresh={getCategories}
-                />
+              <FormItem className="grid gap-2">
+                <FormLabel htmlFor="categoryCode">
+                  {t('transactions.category')}
+                  <Button
+                    variant="secondary"
+                    size="icon"
+                    onClick={getCategories}
+                    disabled={processing || fetchingCategories}>
+                    <RefreshCwIcon />
+                  </Button>
+                </FormLabel>
+                <FormControl>
+                  <SearchableSelect
+                    value={field.value}
+                    options={categories}
+                    placeholder={t('transactions.categoryPlaceholder')}
+                    searchTitle={t('transactions.categorySearchTitle')}
+                    searchNotMatchMessage={t('transactions.categorySearchNotMatch')}
+                    disabled={processing || !categories.length || fetchingCategories}
+                    converter={(category: Category): ValueManager<Category> => ({
+                      value: category,
+                      key: () => category.code!,
+                      label: () => category.name,
+                    })}
+                    onValueChange={field.onChange}
+                  />
+                </FormControl>
                 <FormDescription>
                   {t('transactions.categoriesManageDescription')}{' '}
                   <Link to="/categories" className="underline underline-offset-4" target="_blank">
@@ -241,23 +257,33 @@ export function EditTransactionForm({
             control={form.control}
             name="wallet"
             render={({ field }) => (
-              <FormItem>
-                <FormLabel htmlFor="walletCode">{t('transactions.wallet')}</FormLabel>
-                <SearchableSelect
-                  value={field.value}
-                  options={wallets}
-                  placeholder={t('transactions.walletPlaceholder')}
-                  searchTitle={t('transactions.walletSearchTitle')}
-                  searchNotMatchMessage={t('transactions.walletSearchNotMatch')}
-                  disabled={processing || !wallets.length || fetchingWallets}
-                  converter={(wallet: Wallet): ValueManager<Wallet> => ({
-                    value: wallet,
-                    key: () => wallet.code!,
-                    label: () => wallet.name,
-                  })}
-                  onValueChange={field.onChange}
-                  onRefresh={getWallets}
-                />
+              <FormItem className="grid gap-2">
+                <FormLabel htmlFor="walletCode">
+                  {t('transactions.wallet')}
+                  <Button
+                    variant="secondary"
+                    size="icon"
+                    onClick={getWallets}
+                    disabled={processing || fetchingWallets}>
+                    <RefreshCwIcon />
+                  </Button>
+                </FormLabel>
+                <FormControl>
+                  <SearchableSelect
+                    value={field.value}
+                    options={wallets}
+                    placeholder={t('transactions.walletPlaceholder')}
+                    searchTitle={t('transactions.walletSearchTitle')}
+                    searchNotMatchMessage={t('transactions.walletSearchNotMatch')}
+                    disabled={processing || !wallets.length || fetchingWallets}
+                    converter={(wallet: Wallet): ValueManager<Wallet> => ({
+                      value: wallet,
+                      key: () => wallet.code!,
+                      label: () => wallet.name,
+                    })}
+                    onValueChange={field.onChange}
+                  />
+                </FormControl>
                 <FormDescription>
                   {t('transactions.walletsManageDescription')}{' '}
                   <Link to="/wallets" className="underline underline-offset-4" target="_blank">

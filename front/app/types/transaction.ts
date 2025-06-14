@@ -9,7 +9,15 @@ export const transactionDescriptionIsValid = (description?: string) => {
 export const transactionSchema = z.object({
   code: z.string().optional(),
   description: z.string().max(descriptionMaxLength).optional(),
-  datetime: z.date(),
+  datetime: z.preprocess((val) => {
+    if (typeof val === 'string') {
+      return new Date(Date.parse(val));
+    }
+    if (typeof val === 'number') {
+      return new Date(val);
+    }
+    return val;
+  }, z.date()),
   amount: z.number(),
   categoryCode: z.string(),
   walletCode: z.string(),

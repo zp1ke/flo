@@ -11,9 +11,9 @@ import { ListenerManager } from '~/types/listener';
 
 export default function Transactions() {
   const { user } = useAuth();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
-  const columns = useMemo(() => tableColumns({ t }), [t]);
+  const columns = useMemo(() => tableColumns({ t, language: i18n.language }), [t, i18n]);
   const listenerManager = useMemo(() => new ListenerManager<Transaction>(), []);
 
   return (
