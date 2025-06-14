@@ -71,55 +71,52 @@ export const fetchUser = async (force: boolean): Promise<User | null> => {
     return Promise.resolve(null);
   }
 
-  return new Promise((resolve, reject) => {
-    const userTs = localStorage.getItem(USER_KEY_TS);
-    let activeProfileCode: string | null = null;
-    let cachedUser: User | null = null;
-    if (userTs) {
-      const user = localStorage.getItem(USER_KEY);
-      if (user) {
-        cachedUser = JSON.parse(user);
-        if (!force && Date.now() - parseInt(userTs) < config.refreshUserMilliseconds) {
-          console.debug('Using user from CACHE...', Date.now());
-          return resolve(cachedUser);
-        } else {
-          activeProfileCode = cachedUser?.activeProfile?.code || null;
+  const userTs = localStorage.getItem(USER_KEY_TS);
+  let activeProfileCode: string | null = null;
+  let cachedUser: User | null = null;
+  if (userTs) {
+    const user = localStorage.getItem(USER_KEY);
+    if (user) {
+      cachedUser = JSON.parse(user);
+      if (!force && Date.now() - parseInt(userTs) < config.refreshUserMilliseconds) {
+        console.debug('Using user from CACHE...', Date.now());
+        return Promise.resolve(cachedUser);
+      } else {
+        activeProfileCode = cachedUser?.activeProfile?.code || null;
+      }
+    }
+  }
+
+  console.debug('Fetching user from API...', Date.now());
+  try {
+    const userProfiles = await apiClient.getJson<UserProfiles>(`${userPath}/me`);
+    const user = userProfiles.user;
+    user.profiles = userProfiles.profiles;
+    if (!user.activeProfile) {
+      user.activeProfile = user.profiles[0];
+      if (activeProfileCode) {
+        const activeProfile = user.profiles.find((p) => p.code === activeProfileCode);
+        if (activeProfile) {
+          user.activeProfile = activeProfile;
         }
       }
     }
 
-    console.debug('Fetching user from API...', Date.now());
-    apiClient
-      .getJson<UserProfiles>(`${userPath}/me`)
-      .then((userProfiles) => {
-        const user = userProfiles.user;
-        user.profiles = userProfiles.profiles;
-        if (!user.activeProfile) {
-          user.activeProfile = user.profiles[0];
-          if (activeProfileCode) {
-            const activeProfile = user.profiles.find((p) => p.code === activeProfileCode);
-            if (activeProfile) {
-              user.activeProfile = activeProfile;
-            }
-          }
-        }
-
-        localStorage.setItem(USER_KEY_TS, Date.now().toString());
-        localStorage.setItem(USER_KEY, JSON.stringify(user));
-        resolve(user);
-      })
-      .catch((e) => {
-        console.error('Error fetching user:', e);
-        if ((e as ApiError).status === 401 || (e as ApiError).status === 403) {
-          localStorage.removeItem(USER_KEY);
-          localStorage.removeItem(USER_KEY_TS);
-        } else if (cachedUser) {
-          console.debug('Using cached user due to error:', e);
-          return resolve(cachedUser);
-        }
-        reject(e);
-      });
-  });
+    localStorage.setItem(USER_KEY_TS, Date.now().toString());
+    localStorage.setItem(USER_KEY, JSON.stringify(user));
+    return user;
+  } catch (e) {
+    console.error('Error fetching user:', e);
+    if ((e as ApiError).status === 401 || (e as ApiError).status === 403) {
+      localStorage.removeItem(USER_KEY);
+      localStorage.removeItem(USER_KEY_TS);
+      return null;
+    }
+    if (cachedUser) {
+      return cachedUser;
+    }
+    throw e;
+  }
 };
 
 export const saveUserProfile = async (
