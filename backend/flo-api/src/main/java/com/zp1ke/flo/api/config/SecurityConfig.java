@@ -1,5 +1,7 @@
 package com.zp1ke.flo.api.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.zp1ke.flo.api.controller.ApiExceptionHandler;
 import com.zp1ke.flo.api.model.UserAuthority;
 import com.zp1ke.flo.api.security.JwtAuthenticationFilter;
 import jakarta.validation.Validation;
@@ -7,6 +9,8 @@ import jakarta.validation.Validator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -25,8 +29,10 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http,
-                                                   JwtAuthenticationFilter jwtAuthenticationFilter) throws Exception {
+                                                   JwtAuthenticationFilter jwtAuthenticationFilter,
+                                                   ObjectMapper objectMapper) throws Exception {
         http
+            .cors(Customizer.withDefaults())
             .csrf(AbstractHttpConfigurer::disable)
             .sessionManagement(c -> c.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .anonymous(AbstractHttpConfigurer::disable)
@@ -37,7 +43,14 @@ public class SecurityConfig {
                     .requestMatchers("/api/v1/docs/**").permitAll()
                     .requestMatchers("/api/v1/auth/**").permitAll()
                     .anyRequest().authenticated()
-            ).addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+            ).addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+            .exceptionHandling(customizer -> customizer.authenticationEntryPoint(
+                (request, response, authException) -> {
+                    response.setStatus(HttpStatus.UNAUTHORIZED.value());
+                    var body = objectMapper.writeValueAsString(ApiExceptionHandler.errorMap("user.unauthenticated"));
+                    response.getWriter().write(body);
+                }
+            ));
         return http.build();
     }
 

@@ -80,7 +80,7 @@ public class ApiExceptionHandler {
             .body(errorMap);
     }
 
-    private Map<String, Object> errorMap(String message) {
+    public static Map<String, Object> errorMap(String message) {
         return Map.of(
             "message", message
         );
