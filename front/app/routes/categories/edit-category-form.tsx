@@ -19,6 +19,12 @@ import type { ApiError } from '~/api/client';
 import { type Category, categoryNameIsValid, categorySchema } from '~/types/category';
 import { addCategory, updateCategory } from '~/api/categories';
 import useUserStore from '~/store/user-store';
+import type { EditItemFormProps } from '~/components/table/add-item-button';
+
+type EditCategoryFormProps = EditItemFormProps<Category> & {
+  disableCancel?: boolean;
+  category?: Category;
+};
 
 export function EditCategoryForm({
   disableCancel,
@@ -26,13 +32,7 @@ export function EditCategoryForm({
   onProcessing,
   onSaved,
   category,
-}: {
-  disableCancel?: boolean;
-  onCancel: () => void;
-  onProcessing: (processing: boolean) => void;
-  onSaved: (category: Category) => Promise<void>;
-  category?: Category;
-}) {
+}: EditCategoryFormProps) {
   const profile = useUserStore((state) => state.profile);
 
   const { t } = useTranslation();

@@ -31,6 +31,12 @@ import { fetchWallets } from '~/api/wallets';
 import { fetchCategories } from '~/api/categories';
 import { SearchableSelect, type ValueManager } from '~/components/ui/searchable-select';
 import useUserStore from '~/store/user-store';
+import type { EditItemFormProps } from '~/components/table/add-item-button';
+
+type EditTransactionFormProps = EditItemFormProps<Transaction> & {
+  disableCancel?: boolean;
+  transaction?: Transaction;
+};
 
 export function EditTransactionForm({
   disableCancel,
@@ -38,13 +44,7 @@ export function EditTransactionForm({
   onProcessing,
   onSaved,
   transaction,
-}: {
-  disableCancel?: boolean;
-  onCancel: () => void;
-  onProcessing: (processing: boolean) => void;
-  onSaved: (transaction: Transaction) => Promise<void>;
-  transaction?: Transaction;
-}) {
+}: EditTransactionFormProps) {
   const profile = useUserStore((state) => state.profile);
 
   const { t } = useTranslation();

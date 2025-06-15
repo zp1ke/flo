@@ -139,7 +139,7 @@ const parseError = (error: unknown): ApiError => {
   if (axios.isAxiosError(error) && error.response?.data) {
     const status = error.response.status || 0;
     if (status === 401) {
-      useUserStore.getState().signOut();
+      useUserStore.getState().clean();
     }
 
     return {

@@ -13,6 +13,7 @@ interface UserStore {
   signUp: (request: SignUpRequest) => Promise<void>;
   signIn: (request: SignInRequest) => Promise<void>;
   signOut: () => Promise<void>;
+  clean: () => void;
 
   profile: Profile | null;
   setProfile: (profile: Profile) => void;
@@ -35,9 +36,10 @@ const useUserStore = create<UserStore>()(
         set({ token: authResponse.token, user: authResponse.user });
       },
       signOut: async () => {
-        set({ token: null, user: null, profile: null, profiles: [] });
         await signOut();
+        get().clean();
       },
+      clean: () => set({ token: null, user: null, profile: null, profiles: [] }),
 
       profile: null as Profile | null,
       setProfile: (profile: Profile) => set({ profile }),

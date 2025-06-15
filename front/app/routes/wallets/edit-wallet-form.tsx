@@ -19,6 +19,12 @@ import type { ApiError } from '~/api/client';
 import { walletNameIsValid, walletSchema, type Wallet } from '~/types/wallet';
 import { addWallet, updateWallet } from '~/api/wallets';
 import useUserStore from '~/store/user-store';
+import type { EditItemFormProps } from '~/components/table/add-item-button';
+
+type EditWalletFormProps = EditItemFormProps<Wallet> & {
+  disableCancel?: boolean;
+  wallet?: Wallet;
+};
 
 export function EditWalletForm({
   disableCancel,
@@ -26,13 +32,7 @@ export function EditWalletForm({
   onProcessing,
   onSaved,
   wallet,
-}: {
-  disableCancel?: boolean;
-  onCancel: () => void;
-  onProcessing: (processing: boolean) => void;
-  onSaved: (wallet: Wallet) => Promise<void>;
-  wallet?: Wallet;
-}) {
+}: EditWalletFormProps) {
   const profile = useUserStore((state) => state.profile);
 
   const { t } = useTranslation();

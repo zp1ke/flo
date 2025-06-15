@@ -1,6 +1,5 @@
 import { PlusIcon } from 'lucide-react';
 import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import { Button } from '~/components/ui/button';
 import {
   Dialog,
@@ -11,22 +10,36 @@ import {
   DialogTrigger,
 } from '~/components/ui/dialog';
 import { cn } from '~/lib/utils';
-import { EditTransactionForm } from './edit-transaction-form';
-import type { Transaction } from '~/types/transaction';
 
-export default function AddTransactionButton({
+export type EditItemFormProps<T> = {
+  onSaved: (item: T) => Promise<void>;
+  onProcessing: (processing: boolean) => void;
+  onCancel: () => void;
+};
+
+export const EditItemForm = <T,>({}: EditItemFormProps<T>) => {
+  return <></>;
+};
+
+interface AddItemButtonProps<T> {
+  title: string;
+  description: string;
+  form: typeof EditItemForm<T>;
+  onAdded: (item: T) => void;
+}
+
+export default function AddItemButton<T>({
+  title,
+  description,
+  form,
   onAdded,
-}: {
-  onAdded: (transaction: Transaction) => void;
-}) {
-  const { t } = useTranslation();
-
+}: AddItemButtonProps<T>) {
   const [addOpen, setAddOpen] = useState(false);
   const [processing, setProcessing] = useState(false);
 
-  const onAddedTransaction = async (transaction: Transaction) => {
+  const onAddedItem = async (item: T) => {
     setAddOpen(false);
-    onAdded(transaction);
+    onAdded(item);
   };
 
   return (
@@ -34,7 +47,7 @@ export default function AddTransactionButton({
       <DialogTrigger asChild>
         <Button variant="outline">
           <PlusIcon className="h-4 w-4" />
-          {t('transactions.add')}
+          {title}
         </Button>
       </DialogTrigger>
       <DialogContent
@@ -45,14 +58,14 @@ export default function AddTransactionButton({
           }
         }}>
         <DialogHeader>
-          <DialogTitle>{t('transactions.add')}</DialogTitle>
-          <DialogDescription>{t('transactions.editDescription')}</DialogDescription>
+          <DialogTitle>{title}</DialogTitle>
+          <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
-        <EditTransactionForm
-          onSaved={onAddedTransaction}
-          onProcessing={setProcessing}
-          onCancel={() => setAddOpen(false)}
-        />
+        {form({
+          onSaved: onAddedItem,
+          onProcessing: setProcessing,
+          onCancel: () => setAddOpen(false),
+        })}
       </DialogContent>
     </Dialog>
   );

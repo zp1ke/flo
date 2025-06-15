@@ -37,6 +37,7 @@ import { DataTablePagination } from './data-table-pagination';
 import { DataTableToolbar } from './data-table-toolbar';
 import type { ListenerManager } from '~/types/listener';
 import useUserStore from '~/store/user-store';
+import AddItemButton, { EditItemForm } from './add-item-button';
 
 interface DataTableProps<TData, TValue> extends HTMLAttributes<HTMLDivElement> {
   columns: ColumnDef<TData, TValue>[];
@@ -45,6 +46,9 @@ interface DataTableProps<TData, TValue> extends HTMLAttributes<HTMLDivElement> {
   textFilters?: DataTableFilter[];
   listenerManager?: ListenerManager<TData>;
   fetchErrorMessage?: string;
+  editForm: typeof EditItemForm<TData>;
+  addTitle: string;
+  addDescription: string;
 }
 
 const pageKey = 'page';
@@ -57,6 +61,9 @@ export function DataTable<TData, TValue>({
   textFilters,
   listenerManager,
   fetchErrorMessage,
+  editForm,
+  addTitle,
+  addDescription,
 }: DataTableProps<TData, TValue>) {
   const profile = useUserStore((state) => state.profile);
 
@@ -184,6 +191,14 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="space-y-4">
+      <div className="flex items-center">
+        <AddItemButton
+          title={addTitle}
+          description={addDescription}
+          form={editForm}
+          onAdded={() => setFetchState(FetchState.Loading)}
+        />
+      </div>
       <DataTableToolbar
         facetedFilters={facetedFilters}
         fetchState={fetchState}

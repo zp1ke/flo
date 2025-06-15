@@ -4,10 +4,10 @@ import PageContent from '~/components/layout/page-content';
 import { tableColumns } from '~/routes/categories/table-columns';
 import { DataTable } from '~/components/table/data-table';
 import { fetchCategories } from '~/api/categories';
-import AddCategoryButton from '~/routes/categories/add-category-button';
 import type { Category } from '~/types/category';
 import { ListenerManager } from '~/types/listener';
 import useUserStore from '~/store/user-store';
+import { EditCategoryForm } from './categories/edit-category-form';
 
 export default function Categories() {
   const profile = useUserStore((state) => state.profile);
@@ -19,17 +19,15 @@ export default function Categories() {
 
   return (
     <PageContent title={t('categories.title')} subtitle={t('categories.subtitle')}>
-      <div className="flex items-center">
-        <AddCategoryButton
-          onAdded={(category) => listenerManager.notify({ type: 'added', data: category })}
-        />
-      </div>
       <DataTable
         columns={columns}
         dataFetcher={(pageFilters) => fetchCategories(profile?.code ?? '', pageFilters)}
         textFilters={[{ title: t('categories.name'), column: 'name' }]}
         listenerManager={listenerManager}
         fetchErrorMessage={t('categories.fetchError')}
+        addTitle={t('categories.add')}
+        addDescription={t('categories.editDescription')}
+        editForm={EditCategoryForm}
       />
     </PageContent>
   );
