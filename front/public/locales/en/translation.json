@@ -6,6 +6,7 @@
     "user.invalid": "Invalid data.",
     "user.invalid_credentials": "Invalid credentials.",
     "user.not_verified": "Your account is not verified.",
+    "user.unauthenticated": "You are not authenticated.",
     "user.verify_code_not_found": "Verification code not found."
   },
   "app": {

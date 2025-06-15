@@ -18,7 +18,7 @@ interface UserStore {
   setProfile: (profile: Profile) => void;
 
   profiles: Profile[];
-  loadProfiles: () => Promise<void>;
+  loadProfiles: (throwOnError?: boolean) => Promise<void>;
 }
 
 const useUserStore = create<UserStore>()(
@@ -35,15 +35,15 @@ const useUserStore = create<UserStore>()(
         set({ token: authResponse.token, user: authResponse.user });
       },
       signOut: async () => {
+        set({ token: null, user: null, profile: null, profiles: [] });
         await signOut();
-        set({ token: null, user: null });
       },
 
       profile: null as Profile | null,
       setProfile: (profile: Profile) => set({ profile }),
 
       profiles: [] as Profile[],
-      loadProfiles: async () => {
+      loadProfiles: async (throwOnError?: boolean) => {
         const { user } = get();
         if (user) {
           console.debug('Loading profiles from API...');
@@ -55,6 +55,9 @@ const useUserStore = create<UserStore>()(
             }));
           } catch (error) {
             console.error('Failed to load profiles:', error);
+            if (throwOnError) {
+              throw error;
+            }
           }
         }
       },

@@ -1,4 +1,4 @@
-import { Outlet, redirect } from 'react-router';
+import { Outlet, redirect, useNavigate } from 'react-router';
 import { AppSidebar } from '~/components/layout/app-sidebar';
 import { LanguageSelector } from '~/components/layout/language-selector';
 import { ThemeModeSelector } from '~/components/layout/theme-mode-selector';
@@ -6,6 +6,7 @@ import { Separator } from '~/components/ui/separator';
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '~/components/ui/sidebar';
 import GeneralBanner from './general-banner';
 import useUserStore from '~/store/user-store';
+import { useEffect } from 'react';
 
 export async function clientLoader() {
   const user = useUserStore.getState().user;
@@ -16,6 +17,16 @@ export async function clientLoader() {
 }
 
 export default function AuthLayout() {
+  const user = useUserStore((state) => state.user);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!user) {
+      navigate('/');
+    }
+  }, [user]);
+
   return (
     <SidebarProvider>
       <AppSidebar />

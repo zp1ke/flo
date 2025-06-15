@@ -18,7 +18,7 @@ import {
 import { Input } from '~/components/ui/input';
 import type { ApiError } from '~/api/client';
 import { type Profile, profileNameIsValid, profileSchema } from '~/types/profile';
-import { addProfile } from '~/api/profiles';
+import { addProfile, updateProfile } from '~/api/profiles';
 import useUserStore from '~/store/user-store';
 
 export function EditProfileForm({
@@ -35,6 +35,7 @@ export function EditProfileForm({
   profile?: Profile;
 }) {
   const setProfile = useUserStore((state) => state.setProfile);
+  const loadProfiles = useUserStore((state) => state.loadProfiles);
 
   const { t } = useTranslation();
 
@@ -65,10 +66,11 @@ export function EditProfileForm({
 
     const profileData: Profile = { code: profile?.code, name };
     try {
-      const saved = profile ? await addProfile(profileData) : await addProfile(profileData);
+      const saved = profile ? await updateProfile(profileData) : await addProfile(profileData);
       if (setDefault) {
         setProfile(saved);
       }
+      await loadProfiles();
       await onSaved(saved);
       form.reset();
     } catch (e) {

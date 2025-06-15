@@ -137,10 +137,15 @@ const parseParams = (params?: Record<string, any>): Record<string, any> => {
 
 const parseError = (error: unknown): ApiError => {
   if (axios.isAxiosError(error) && error.response?.data) {
+    const status = error.response.status || 0;
+    if (status === 401) {
+      useUserStore.getState().signOut();
+    }
+
     return {
       ...error.response.data,
       message: 'api.' + (error.response.data.message || 'unknownError'),
-      status: error.response.status || 0,
+      status,
     } satisfies ApiError;
   }
   if (error instanceof Error) {

@@ -1,4 +1,10 @@
-import { ChevronsUpDown, GalleryVerticalEnd, GalleryVerticalIcon, Plus } from 'lucide-react';
+import {
+  ChevronsUpDown,
+  GalleryVerticalEnd,
+  GalleryVerticalIcon,
+  Plus,
+  RefreshCwIcon,
+} from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -27,11 +33,15 @@ import {
 import { cn } from '~/lib/utils';
 import { EditProfileForm } from './edit-profile-form';
 import useUserStore from '~/store/user-store';
+import { Button } from '~/components/ui/button';
+import { toast } from 'sonner';
+import type { ApiError } from '~/api/client';
 
 export function ProfileSwitcher() {
   const profile = useUserStore((state) => state.profile);
   const profiles = useUserStore((state) => state.profiles);
   const setProfile = useUserStore((state) => state.setProfile);
+  const loadProfiles = useUserStore((state) => state.loadProfiles);
 
   const { t } = useTranslation();
   const { isMobile } = useSidebar();
@@ -41,6 +51,20 @@ export function ProfileSwitcher() {
 
   const onAddedProfile = async () => {
     setAddOpen(false);
+  };
+
+  const refreshProfiles = async () => {
+    try {
+      setProcessing(true);
+      await loadProfiles(true);
+    } catch (error) {
+      toast.error(t('profiles.fetchError'), {
+        description: t((error as ApiError).message),
+        closeButton: true,
+      });
+    } finally {
+      setProcessing(false);
+    }
   };
 
   return (
@@ -67,8 +91,15 @@ export function ProfileSwitcher() {
               align="start"
               side={isMobile ? 'bottom' : 'right'}
               sideOffset={4}>
-              <DropdownMenuLabel className="text-xs text-muted-foreground">
+              <DropdownMenuLabel className="text-xs text-muted-foreground flex justify-between items-center">
                 {t('profiles.title')}
+                <Button
+                  variant="secondary"
+                  size="icon"
+                  onClick={refreshProfiles}
+                  disabled={processing}>
+                  <RefreshCwIcon />
+                </Button>
               </DropdownMenuLabel>
               {profiles.map((item, index) => (
                 <DropdownMenuItem
