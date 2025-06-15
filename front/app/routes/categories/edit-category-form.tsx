@@ -17,8 +17,8 @@ import {
 import { Input } from '~/components/ui/input';
 import type { ApiError } from '~/api/client';
 import { type Category, categoryNameIsValid, categorySchema } from '~/types/category';
-import useAuth from '~/contexts/auth/use-auth';
 import { addCategory, updateCategory } from '~/api/categories';
+import useUserStore from '~/store/user-store';
 
 export function EditCategoryForm({
   disableCancel,
@@ -33,8 +33,9 @@ export function EditCategoryForm({
   onSaved: (category: Category) => Promise<void>;
   category?: Category;
 }) {
+  const profile = useUserStore((state) => state.profile);
+
   const { t } = useTranslation();
-  const { user } = useAuth();
 
   const [processing, setProcessing] = useState(false);
 
@@ -60,13 +61,14 @@ export function EditCategoryForm({
 
     const { name } = data;
 
+    const categoryData: Category = {
+      code: category?.code,
+      name,
+    };
     try {
       const saved = category
-        ? await updateCategory(user?.activeProfile.code ?? '-', {
-            code: category?.code,
-            name,
-          } satisfies Category)
-        : await addCategory(user?.activeProfile.code ?? '-', { name } satisfies Category);
+        ? await updateCategory(profile?.code ?? '-', categoryData)
+        : await addCategory(profile?.code ?? '-', categoryData);
       await onSaved(saved);
       form.reset();
     } catch (e) {

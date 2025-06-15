@@ -3,14 +3,15 @@ import { useTranslation } from 'react-i18next';
 import PageContent from '~/components/layout/page-content';
 import { tableColumns } from '~/routes/wallets/table-columns';
 import { DataTable } from '~/components/table/data-table';
-import useAuth from '~/contexts/auth/use-auth';
 import { fetchWallets } from '~/api/wallets';
 import AddWalletButton from '~/routes/wallets/add-wallet-button';
 import type { Wallet } from '~/types/wallet';
 import { ListenerManager } from '~/types/listener';
+import useUserStore from '~/store/user-store';
 
 export default function Wallets() {
-  const { user } = useAuth();
+  const profile = useUserStore((state) => state.profile);
+
   const { t } = useTranslation();
 
   const columns = useMemo(() => tableColumns({ t }), [t]);
@@ -25,7 +26,7 @@ export default function Wallets() {
       </div>
       <DataTable
         columns={columns}
-        dataFetcher={(profileCode, pageFilters) => fetchWallets(profileCode, pageFilters)}
+        dataFetcher={(pageFilters) => fetchWallets(profile?.code ?? '', pageFilters)}
         textFilters={[{ title: t('wallets.name'), column: 'name' }]}
         listenerManager={listenerManager}
         fetchErrorMessage={t('wallets.fetchError')}

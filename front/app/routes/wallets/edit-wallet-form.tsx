@@ -16,9 +16,9 @@ import {
 } from '~/components/ui/form';
 import { Input } from '~/components/ui/input';
 import type { ApiError } from '~/api/client';
-import useAuth from '~/contexts/auth/use-auth';
 import { walletNameIsValid, walletSchema, type Wallet } from '~/types/wallet';
 import { addWallet, updateWallet } from '~/api/wallets';
+import useUserStore from '~/store/user-store';
 
 export function EditWalletForm({
   disableCancel,
@@ -33,8 +33,9 @@ export function EditWalletForm({
   onSaved: (wallet: Wallet) => Promise<void>;
   wallet?: Wallet;
 }) {
+  const profile = useUserStore((state) => state.profile);
+
   const { t } = useTranslation();
-  const { user } = useAuth();
 
   const [processing, setProcessing] = useState(false);
 
@@ -60,13 +61,14 @@ export function EditWalletForm({
 
     const { name } = data;
 
+    const walletData: Wallet = {
+      code: wallet?.code,
+      name,
+    };
     try {
       const saved = wallet
-        ? await updateWallet(user?.activeProfile.code ?? '-', {
-            code: wallet?.code,
-            name,
-          } satisfies Wallet)
-        : await addWallet(user?.activeProfile.code ?? '-', { name } satisfies Wallet);
+        ? await updateWallet(profile?.code ?? '-', walletData)
+        : await addWallet(profile?.code ?? '-', walletData);
       await onSaved(saved);
       form.reset();
     } catch (e) {

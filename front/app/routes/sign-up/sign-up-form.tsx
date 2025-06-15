@@ -17,10 +17,12 @@ import {
   FormMessage,
 } from '~/components/ui/form';
 import { Input } from '~/components/ui/input';
-import { signUp } from '~/api/auth';
 import type { ApiError } from '~/api/client';
+import useUserStore from '~/store/user-store';
 
 export default function SignUpForm() {
+  const signUp = useUserStore((state) => state.signUp);
+
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [processing, setProcessing] = useState(false);

@@ -3,14 +3,15 @@ import { useTranslation } from 'react-i18next';
 import PageContent from '~/components/layout/page-content';
 import { tableColumns } from '~/routes/categories/table-columns';
 import { DataTable } from '~/components/table/data-table';
-import useAuth from '~/contexts/auth/use-auth';
 import { fetchCategories } from '~/api/categories';
 import AddCategoryButton from '~/routes/categories/add-category-button';
 import type { Category } from '~/types/category';
 import { ListenerManager } from '~/types/listener';
+import useUserStore from '~/store/user-store';
 
 export default function Categories() {
-  const { user } = useAuth();
+  const profile = useUserStore((state) => state.profile);
+
   const { t } = useTranslation();
 
   const columns = useMemo(() => tableColumns({ t }), [t]);
@@ -25,7 +26,7 @@ export default function Categories() {
       </div>
       <DataTable
         columns={columns}
-        dataFetcher={(profileCode, pageFilters) => fetchCategories(profileCode, pageFilters)}
+        dataFetcher={(pageFilters) => fetchCategories(profile?.code ?? '', pageFilters)}
         textFilters={[{ title: t('categories.name'), column: 'name' }]}
         listenerManager={listenerManager}
         fetchErrorMessage={t('categories.fetchError')}

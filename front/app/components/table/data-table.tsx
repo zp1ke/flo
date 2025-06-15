@@ -36,11 +36,11 @@ import { SortDirection, sortPrefix } from '~/types/sort';
 import { DataTablePagination } from './data-table-pagination';
 import { DataTableToolbar } from './data-table-toolbar';
 import type { ListenerManager } from '~/types/listener';
-import useAuth from '~/contexts/auth/use-auth';
+import useUserStore from '~/store/user-store';
 
 interface DataTableProps<TData, TValue> extends HTMLAttributes<HTMLDivElement> {
   columns: ColumnDef<TData, TValue>[];
-  dataFetcher: (profileCode: string, pageFilters: PageFilters) => Promise<DataPage<TData>>;
+  dataFetcher: (pageFilters: PageFilters) => Promise<DataPage<TData>>;
   facetedFilters?: DataTableSelectFilter[];
   textFilters?: DataTableFilter[];
   listenerManager?: ListenerManager<TData>;
@@ -58,7 +58,8 @@ export function DataTable<TData, TValue>({
   listenerManager,
   fetchErrorMessage,
 }: DataTableProps<TData, TValue>) {
-  const { user } = useAuth();
+  const profile = useUserStore((state) => state.profile);
+
   const { t } = useTranslation();
   const location = useLocation();
   const [searchParams] = useSearchParams();
@@ -81,8 +82,8 @@ export function DataTable<TData, TValue>({
   });
 
   useEffect(() => {
-    if (fetchState === FetchState.Loading && user?.activeProfile.code) {
-      dataFetcher(user.activeProfile.code, pageFilters())
+    if (fetchState === FetchState.Loading) {
+      dataFetcher(pageFilters())
         .then((data) => {
           setData(data);
           updateUrlParams();
@@ -97,7 +98,7 @@ export function DataTable<TData, TValue>({
           });
         });
     }
-  }, [fetchState, user]);
+  }, [fetchState, profile]);
 
   const pageFilters = (): PageFilters => {
     const sort: Record<string, SortDirection> = {};
@@ -220,7 +221,7 @@ export function DataTable<TData, TValue>({
             ) : (
               <TableRow>
                 <TableCell colSpan={columns.length} className="h-24 text-center">
-                  {fetchState === FetchState.Loading || !user?.activeProfile.code ? (
+                  {fetchState === FetchState.Loading ? (
                     <div className="flex items-center justify-center space-x-2">
                       <Loader2 className="h-4 w-4 animate-spin" />
                       <span>{t('table.loading')}</span>

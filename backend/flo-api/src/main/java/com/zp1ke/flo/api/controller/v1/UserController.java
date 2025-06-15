@@ -1,12 +1,9 @@
 package com.zp1ke.flo.api.controller.v1;
 
-import com.zp1ke.flo.api.dto.ProfileDto;
 import com.zp1ke.flo.api.dto.UserDto;
-import com.zp1ke.flo.api.dto.UserWithProfilesDto;
 import com.zp1ke.flo.api.model.AuthResponse;
 import com.zp1ke.flo.api.utils.RequestUtils;
 import com.zp1ke.flo.data.domain.User;
-import com.zp1ke.flo.data.service.ProfileService;
 import com.zp1ke.flo.data.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -29,19 +26,13 @@ public class UserController {
 
     private final UserService userService;
 
-    private final ProfileService profileService;
-
     @Autowired(required = false)
     private HttpServletRequest httpRequest;
 
     @GetMapping("/me")
-    @Operation(summary = "Get current user with profiles")
-    public ResponseEntity<UserWithProfilesDto> me(@AuthenticationPrincipal User user) {
-        var profiles = profileService.profilesOfUser(user);
-        var dto = UserWithProfilesDto.builder()
-            .user(UserDto.fromUser(user))
-            .profiles(profiles.stream().map(ProfileDto::fromProfile).toList())
-            .build();
+    @Operation(summary = "Get current user")
+    public ResponseEntity<UserDto> me(@AuthenticationPrincipal User user) {
+        var dto = UserDto.fromUser(user);
         return ResponseEntity.ok(dto);
     }
 

@@ -27,17 +27,18 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from '~/components/ui/sidebar';
-import { signOut } from '~/api/auth';
-import type { User } from '~/types/user';
-
 import { Button } from '../ui/button';
 import { cn } from '~/lib/utils';
+import useUserStore from '~/store/user-store';
 
-export function NavUser({ user }: { user: User }) {
+export function NavUser() {
+  const user = useUserStore((state) => state.user);
+  const profile = useUserStore((state) => state.profile);
+  const signOut = useUserStore((state) => state.signOut);
+
   const { t } = useTranslation();
   const { isMobile } = useSidebar();
   const navigate = useNavigate();
-  const profile = user.activeProfile;
 
   const [signingOut, setSigningOut] = useState(false);
 
@@ -55,8 +56,8 @@ export function NavUser({ user }: { user: User }) {
                   <UserCircleIcon className="h-8 w-8" />
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">{profile.name}</span>
-                  <span className="truncate text-xs">{user.email}</span>
+                  <span className="truncate font-semibold">{profile?.name}</span>
+                  <span className="truncate text-xs">{user?.email}</span>
                 </div>
                 <ChevronsUpDown className="ml-auto size-4" />
               </SidebarMenuButton>
@@ -72,8 +73,8 @@ export function NavUser({ user }: { user: User }) {
                     <UserCircleIcon className="h-8 w-8" />
                   </Avatar>
                   <div className="grid flex-1 text-left text-sm leading-tight">
-                    <span className="truncate font-semibold">{profile.name}</span>
-                    <span className="truncate text-xs">{user.email}</span>
+                    <span className="truncate font-semibold">{profile?.name}</span>
+                    <span className="truncate text-xs">{user?.email}</span>
                   </div>
                 </div>
               </DropdownMenuLabel>

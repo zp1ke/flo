@@ -3,8 +3,8 @@ import config from '~/config';
 import type { DataPage } from '~/types/page';
 import { SortDirection, sortPrefix } from '~/types/sort';
 
-import { getAuthToken } from './auth';
 import { getLanguage } from '~/lib/i18n';
+import useUserStore from '~/store/user-store';
 
 export interface ApiError {
   message: string;
@@ -95,7 +95,7 @@ class ApiClient {
 }
 
 const headers = (): Record<string, string> => {
-  const authToken = getAuthToken();
+  const authToken = useUserStore.getState().token;
   return {
     'Content-Type': 'application/json',
     'Accept-Language': getLanguage(),

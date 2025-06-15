@@ -19,11 +19,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '~/components/ui/dropdown-menu';
-import useAuth from '~/contexts/auth/use-auth';
 
 import { cn } from '~/lib/utils';
 import { transactionSchema } from '~/types/transaction';
 import { EditTransactionForm } from './edit-transaction-form';
+import useUserStore from '~/store/user-store';
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -31,7 +31,8 @@ interface DataTableRowActionsProps<TData> {
 }
 
 export function DataTableRowActions<TData>({ row, table }: DataTableRowActionsProps<TData>) {
-  const { user } = useAuth();
+  const profile = useUserStore((state) => state.profile);
+
   const { t } = useTranslation();
 
   const transaction = transactionSchema.parse(row.original);
@@ -44,7 +45,7 @@ export function DataTableRowActions<TData>({ row, table }: DataTableRowActionsPr
 
   useEffect(() => {
     table.options.meta?.onRefresh();
-  }, [user]);
+  }, [profile]);
 
   const onSavedWallet = async () => {
     table.options.meta?.onRefresh();
@@ -56,7 +57,7 @@ export function DataTableRowActions<TData>({ row, table }: DataTableRowActionsPr
   const onDelete = async () => {
     setDeleting(true);
 
-    await deleteTransaction(user?.activeProfile.code ?? '-', transaction);
+    await deleteTransaction(profile?.code ?? '-', transaction);
     table.options.meta?.onRefresh();
 
     setDeleteOpen(false);

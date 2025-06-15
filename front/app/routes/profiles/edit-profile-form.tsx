@@ -16,9 +16,10 @@ import {
   FormMessage,
 } from '~/components/ui/form';
 import { Input } from '~/components/ui/input';
-import useAuth from '~/contexts/auth/use-auth';
 import type { ApiError } from '~/api/client';
 import { type Profile, profileNameIsValid, profileSchema } from '~/types/profile';
+import { addProfile } from '~/api/profiles';
+import useUserStore from '~/store/user-store';
 
 export function EditProfileForm({
   disableCancel,
@@ -30,11 +31,12 @@ export function EditProfileForm({
   disableCancel?: boolean;
   onCancel: () => void;
   onProcessing: (processing: boolean) => void;
-  onSaved: (profile: Profile, setDefault: boolean) => Promise<void>;
+  onSaved: (profile: Profile) => Promise<void>;
   profile?: Profile;
 }) {
+  const setProfile = useUserStore((state) => state.setProfile);
+
   const { t } = useTranslation();
-  const { activateProfile, refreshUser, saveProfile } = useAuth();
 
   const [processing, setProcessing] = useState(false);
 
@@ -60,18 +62,14 @@ export function EditProfileForm({
     toggleProcessing(true);
 
     const { name, setDefault } = data;
-    const setAsDefault = setDefault ?? false;
 
+    const profileData: Profile = { code: profile?.code, name };
     try {
-      const saved = await saveProfile(
-        { code: profile?.code, name } satisfies Profile,
-        setAsDefault
-      );
-      await refreshUser();
-      if (setAsDefault) {
-        await activateProfile(saved);
+      const saved = profile ? await addProfile(profileData) : await addProfile(profileData);
+      if (setDefault) {
+        setProfile(saved);
       }
-      await onSaved(saved, setAsDefault);
+      await onSaved(saved);
       form.reset();
     } catch (e) {
       toast.error(t('profiles.saveError'), {

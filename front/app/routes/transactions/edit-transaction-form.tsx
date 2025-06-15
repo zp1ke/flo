@@ -17,7 +17,6 @@ import {
 } from '~/components/ui/form';
 import { Input } from '~/components/ui/input';
 import { type ApiError } from '~/api/client';
-import useAuth from '~/contexts/auth/use-auth';
 import {
   transactionDescriptionIsValid,
   transactionSchema,
@@ -31,6 +30,7 @@ import { walletSchema, type Wallet } from '~/types/wallet';
 import { fetchWallets } from '~/api/wallets';
 import { fetchCategories } from '~/api/categories';
 import { SearchableSelect, type ValueManager } from '~/components/ui/searchable-select';
+import useUserStore from '~/store/user-store';
 
 export function EditTransactionForm({
   disableCancel,
@@ -45,8 +45,9 @@ export function EditTransactionForm({
   onSaved: (transaction: Transaction) => Promise<void>;
   transaction?: Transaction;
 }) {
+  const profile = useUserStore((state) => state.profile);
+
   const { t } = useTranslation();
-  const { user } = useAuth();
 
   const [processing, setProcessing] = useState(false);
   const [fetchingCategories, setFetchingCategories] = useState(false);
@@ -75,7 +76,7 @@ export function EditTransactionForm({
   });
 
   const getCategories = async () => {
-    const profileCode = user?.activeProfile.code ?? '';
+    const profileCode = profile?.code ?? '';
     if (!profileCode) {
       return;
     }
@@ -92,7 +93,7 @@ export function EditTransactionForm({
   };
 
   const getWallets = async () => {
-    const profileCode = user?.activeProfile.code ?? '';
+    const profileCode = profile?.code ?? '';
     if (!profileCode) {
       return;
     }
@@ -111,7 +112,7 @@ export function EditTransactionForm({
   useEffect(() => {
     getCategories();
     getWallets();
-  }, [user?.activeProfile.code]);
+  }, [profile?.code]);
 
   const toggleProcessing = (value: boolean) => {
     setProcessing(value);
@@ -133,8 +134,8 @@ export function EditTransactionForm({
 
     try {
       const saved = transaction
-        ? await updateTransaction(user?.activeProfile.code ?? '-', transactionData)
-        : await addTransaction(user?.activeProfile.code ?? '-', transactionData);
+        ? await updateTransaction(profile?.code ?? '-', transactionData)
+        : await addTransaction(profile?.code ?? '-', transactionData);
       await onSaved(saved);
       form.reset();
     } catch (e) {

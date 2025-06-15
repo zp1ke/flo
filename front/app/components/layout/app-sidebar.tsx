@@ -11,7 +11,6 @@ import type { ComponentProps } from 'react';
 import { NavMain } from '~/components/layout/nav-main';
 import { NavUser } from '~/components/layout/nav-user';
 import { ProfileSwitcher } from '~/routes/profiles/profile-switcher';
-import Loading from '~/components/ui/loading';
 import {
   Sidebar,
   SidebarContent,
@@ -19,8 +18,6 @@ import {
   SidebarHeader,
   SidebarRail,
 } from '~/components/ui/sidebar';
-import useAuth from '~/contexts/auth/use-auth';
-
 const data = {
   navMain: [
     {
@@ -62,11 +59,6 @@ const data = {
 };
 
 export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
-  const { user } = useAuth();
-  if (!user) {
-    return <Loading />;
-  }
-
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
@@ -76,7 +68,7 @@ export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
         <NavMain items={data.navMain} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={user} />
+        <NavUser />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

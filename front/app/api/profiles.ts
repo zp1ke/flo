@@ -4,8 +4,11 @@ import type { Profile } from '~/types/profile';
 import apiClient, { type PageFilters } from './client';
 const basePath = '/profiles';
 
-export const fetchProfiles = async (pageFilters: PageFilters): Promise<DataPage<Profile>> => {
-  console.debug('Fetching profiles with filters:', pageFilters);
+export const fetchProfiles = async (): Promise<DataPage<Profile>> => {
+  const pageFilters: PageFilters = {
+    page: 0,
+    size: 100,
+  };
   const data = await apiClient.getPage<Profile>(basePath, pageFilters);
   return data;
 };

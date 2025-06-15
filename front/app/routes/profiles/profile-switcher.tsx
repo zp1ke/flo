@@ -24,25 +24,20 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from '~/components/ui/sidebar';
-import useAuth from '~/contexts/auth/use-auth';
 import { cn } from '~/lib/utils';
-import type { Profile } from '~/types/profile';
-
 import { EditProfileForm } from './edit-profile-form';
+import useUserStore from '~/store/user-store';
 
 export function ProfileSwitcher() {
+  const profile = useUserStore((state) => state.profile);
+  const profiles = useUserStore((state) => state.profiles);
+  const setProfile = useUserStore((state) => state.setProfile);
+
   const { t } = useTranslation();
   const { isMobile } = useSidebar();
-  const { activateProfile, user } = useAuth();
 
   const [addOpen, setAddOpen] = useState(false);
   const [processing, setProcessing] = useState(false);
-
-  const setProfile = async (profile: Profile) => {
-    setProcessing(true);
-    await activateProfile(profile);
-    setProcessing(false);
-  };
 
   const onAddedProfile = async () => {
     setAddOpen(false);
@@ -61,8 +56,8 @@ export function ProfileSwitcher() {
                   <GalleryVerticalEnd className="size-4" />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">{user?.activeProfile.name}</span>
-                  <span className="truncate text-xs">{user?.activeProfile.code}</span>
+                  <span className="truncate font-semibold">{profile?.name}</span>
+                  <span className="truncate text-xs">{profile?.code}</span>
                 </div>
                 <ChevronsUpDown className="ml-auto" />
               </SidebarMenuButton>
@@ -75,16 +70,16 @@ export function ProfileSwitcher() {
               <DropdownMenuLabel className="text-xs text-muted-foreground">
                 {t('profiles.title')}
               </DropdownMenuLabel>
-              {user?.profiles.map((profile, index) => (
+              {profiles.map((item, index) => (
                 <DropdownMenuItem
-                  key={profile.code}
-                  onClick={() => setProfile(profile)}
+                  key={item.code}
+                  onClick={() => setProfile(item)}
                   className="gap-2 p-2"
-                  disabled={processing || profile.code === user?.activeProfile.code}>
+                  disabled={item.code === profile?.code}>
                   <div className="flex size-6 items-center justify-center rounded-sm border">
                     <GalleryVerticalIcon className="size-4 shrink-0" />
                   </div>
-                  {profile.name}
+                  {item.name}
                   <DropdownMenuShortcut>⌘{index + 1}</DropdownMenuShortcut>
                 </DropdownMenuItem>
               ))}
