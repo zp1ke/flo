@@ -20,6 +20,7 @@ import { type HTMLAttributes, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useSearchParams } from 'react-router';
 import { toast } from 'sonner';
+import type { ApiError, PageFilters } from '~/api/client';
 import {
   Table,
   TableBody,
@@ -28,16 +29,15 @@ import {
   TableHeader,
   TableRow,
 } from '~/components/ui/table';
-import type { PageFilters, ApiError } from '~/api/client';
 import { FetchState } from '~/types/fetch-state';
 import type { DataPage } from '~/types/page';
 import { SortDirection, sortPrefix } from '~/types/sort';
 
+import useUserStore from '~/store/user-store';
+import type { ListenerManager } from '~/types/listener';
+import AddItemButton, { type EditItemForm } from './add-item-button';
 import { DataTablePagination } from './data-table-pagination';
 import { DataTableToolbar } from './data-table-toolbar';
-import type { ListenerManager } from '~/types/listener';
-import useUserStore from '~/store/user-store';
-import AddItemButton, { EditItemForm } from './add-item-button';
 
 interface DataTableProps<TData, TValue> extends HTMLAttributes<HTMLDivElement> {
   columns: ColumnDef<TData, TValue>[];
@@ -76,7 +76,7 @@ export function DataTable<TData, TValue>({
 
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>(
-    filtersFrom(searchParams, columns)
+    filtersFrom(searchParams, columns),
   );
   const [data, setData] = useState<DataPage<TData>>({ data: [], total: 0 });
   const [fetchState, setFetchState] = useState(FetchState.Loading);
@@ -105,19 +105,19 @@ export function DataTable<TData, TValue>({
           });
         });
     }
-  }, [fetchState, profile]);
+  }, [fetchState, dataFetcher, fetchErrorMessage, t]);
 
   const pageFilters = (): PageFilters => {
     const sort: Record<string, SortDirection> = {};
-    sorting.forEach((columnSort) => {
+    for (const columnSort of sorting) {
       sort[columnSort.id] = columnSort.desc ? SortDirection.Desc : SortDirection.Asc;
-    });
+    }
     const filters: Record<string, string> = {};
-    columnFilters.forEach((columnFilter) => {
+    for (const columnFilter of columnFilters) {
       if (columnFilter.value) {
         filters[columnFilter.id] = columnFilter.value.toString();
       }
-    });
+    }
 
     return {
       page: pagination.pageIndex,
@@ -132,19 +132,19 @@ export function DataTable<TData, TValue>({
       page: String(pagination.pageIndex + 1),
       pageSize: String(pagination.pageSize),
     };
-    sorting.forEach((columnSort) => {
+    for (const columnSort of sorting) {
       params[sortPrefix + columnSort.id] = columnSort.desc ? SortDirection.Desc : SortDirection.Asc;
-    });
-    columnFilters.forEach((columnFilter) => {
+    }
+    for (const columnFilter of columnFilters) {
       if (columnFilter.value) {
         params[columnFilter.id] = columnFilter.value.toString();
       }
-    });
+    }
 
     const url = new URL(location.pathname, window.location.origin);
-    Object.entries(params).forEach(([key, value]) => {
+    for (const [key, value] of Object.entries(params)) {
       url.searchParams.set(key, value);
-    });
+    }
     history.pushState({}, '', url);
   };
 
@@ -265,9 +265,9 @@ const paginationFrom = (searchParams: URLSearchParams): PaginationState => {
   return { pageIndex, pageSize };
 };
 
-const sortingFrom = (
+const sortingFrom = <TData, TValue>(
   searchParams: URLSearchParams,
-  columns: ColumnDef<any, any>[]
+  columns: ColumnDef<TData, TValue>[],
 ): SortingState => {
   const sorting: SortingState = [];
   searchParams.forEach((value, key) => {
@@ -288,9 +288,9 @@ const sortingFrom = (
   return sorting;
 };
 
-const filtersFrom = (
+const filtersFrom = <TData, TValue>(
   searchParams: URLSearchParams,
-  columns: ColumnDef<any, any>[]
+  columns: ColumnDef<TData, TValue>[],
 ): ColumnFiltersState => {
   const filters: ColumnFilter[] = [];
   searchParams.forEach((value, key) => {

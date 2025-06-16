@@ -1,6 +1,6 @@
 import type { Column, Table } from '@tanstack/react-table';
 import { ArrowDown, ArrowUp, ChevronsUpDown, EyeOff } from 'lucide-react';
-import { type HTMLAttributes } from 'react';
+import type { HTMLAttributes } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '~/components/ui/button';
 import {
@@ -40,7 +40,8 @@ export function DataTableColumnHeader<TData, TValue>({
             variant="ghost"
             size="sm"
             className="-ml-3 h-8 data-[state=open]:bg-accent"
-            disabled={disabled}>
+            disabled={disabled}
+          >
             <span>{title}</span>
             {column.getIsSorted() === 'desc' ? (
               <ArrowDown />

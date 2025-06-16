@@ -27,9 +27,9 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from '~/components/ui/sidebar';
-import { Button } from '../ui/button';
 import { cn } from '~/lib/utils';
 import useUserStore from '~/store/user-store';
+import { Button } from '../ui/button';
 
 export function NavUser() {
   const user = useUserStore((state) => state.user);
@@ -51,7 +51,8 @@ export function NavUser() {
               <SidebarMenuButton
                 id="sign-out-menu"
                 size="lg"
-                className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground">
+                className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+              >
                 <Avatar className="h-8 w-8">
                   <UserCircleIcon className="h-8 w-8" />
                 </Avatar>
@@ -66,7 +67,8 @@ export function NavUser() {
               className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
               side={isMobile ? 'bottom' : 'right'}
               align="end"
-              sideOffset={4}>
+              sideOffset={4}
+            >
               <DropdownMenuLabel className="p-0 font-normal">
                 <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                   <Avatar className="h-8 w-8">
@@ -93,7 +95,8 @@ export function NavUser() {
               if (signingOut) {
                 e.preventDefault();
               }
-            }}>
+            }}
+          >
             <DialogHeader>
               <DialogTitle>{t('signOut.confirmTitle')}</DialogTitle>
               <DialogDescription>{t('signOut.confirmMessage')}</DialogDescription>
@@ -114,7 +117,8 @@ export function NavUser() {
                   signOut().then(() => {
                     navigate('/');
                   });
-                }}>
+                }}
+              >
                 {signingOut && <Loader2 className="animate-spin" />}
                 {signingOut && t('signOut.processing')}
                 {!signingOut && t('signOut.confirm')}

@@ -1,0 +1,21 @@
+{
+  "formatter": {
+    "enabled": true,
+    "useEditorconfig": true
+  },
+  "javascript": {
+    "formatter": {
+      "enabled": true,
+      "quoteStyle": "single"
+    }
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true
+    }
+  },
+  "organizeImports": {
+    "enabled": true
+  }
+}

@@ -1,7 +1,7 @@
 import axios, { type AxiosInstance } from 'axios';
 import config from '~/config';
 import type { DataPage } from '~/types/page';
-import { SortDirection, sortPrefix } from '~/types/sort';
+import { type SortDirection, sortPrefix } from '~/types/sort';
 
 import { getLanguage } from '~/lib/i18n';
 import useUserStore from '~/store/user-store';
@@ -15,7 +15,7 @@ export interface PageFilters {
   page: number;
   size: number;
   sort?: Record<string, SortDirection>;
-  filters?: Record<string, any>;
+  filters?: Record<string, unknown>;
 }
 
 type ApiPage<T> = {
@@ -51,7 +51,7 @@ class ApiClient {
     }
   }
 
-  async getJson<T>(url: string, params?: Record<string, any>): Promise<T> {
+  async getJson<T>(url: string, params?: Record<string, unknown>): Promise<T> {
     try {
       const response = await this.axios.get<T>(url, {
         params: parseParams(params),
@@ -63,7 +63,7 @@ class ApiClient {
     }
   }
 
-  async postJson<T>(url: string, data?: Record<string, any>): Promise<T> {
+  async postJson<T>(url: string, data?: Record<string, unknown>): Promise<T> {
     try {
       const response = await this.axios.post<T>(url, data, { headers: headers() });
       return response.data;
@@ -72,7 +72,7 @@ class ApiClient {
     }
   }
 
-  async putJson<T>(url: string, data: Record<string, any>): Promise<T> {
+  async putJson<T>(url: string, data: Record<string, unknown>): Promise<T> {
     try {
       const response = await this.axios.put<T>(url, data, { headers: headers() });
       return response.data;
@@ -81,7 +81,7 @@ class ApiClient {
     }
   }
 
-  async delete(url: string, params?: Record<string, any>): Promise<void> {
+  async delete(url: string, params?: Record<string, unknown>): Promise<void> {
     try {
       const response = await this.axios.delete(url, {
         params: parseParams(params),
@@ -110,28 +110,29 @@ const paramsFrom = (pageFilters?: PageFilters): URLSearchParams => {
     params.set('page', pageFilters.page.toString());
     params.set('size', pageFilters.size.toString());
     if (pageFilters.sort) {
-      Object.entries(pageFilters.sort).forEach(([key, value]) => {
+      for (const [key, value] of Object.entries(pageFilters.sort)) {
         const theKey = key.startsWith(sortPrefix) ? key.substring(sortPrefix.length) : key;
         params.append('sort', `${theKey},${value}`);
-      });
+      }
     }
     if (pageFilters.filters) {
-      Object.entries(pageFilters.filters).forEach(([key, value]) => {
-        params.set(key, value);
-      });
+      for (const [key, value] of Object.entries(pageFilters.filters)) {
+        params.set(key, String(value));
+      }
     }
   }
   return params;
 };
 
-const parseParams = (params?: Record<string, any>): Record<string, any> => {
-  if (!params) return {};
+const parseParams = (params?: Record<string, unknown>): URLSearchParams => {
   const parsedParams = new URLSearchParams();
-  Object.entries(params || {}).forEach(([key, value]) => {
-    if (value !== undefined && value !== null) {
-      parsedParams.set(key, String(value));
+  if (params) {
+    for (const [key, value] of Object.entries(params || {})) {
+      if (value !== undefined && value !== null) {
+        parsedParams.set(key, String(value));
+      }
     }
-  });
+  }
   return parsedParams;
 };
 
@@ -144,7 +145,7 @@ const parseError = (error: unknown): ApiError => {
 
     return {
       ...error.response.data,
-      message: 'api.' + (error.response.data.message || 'unknownError'),
+      message: `api.${error.response.data.message || 'unknownError'}`,
       status,
     } satisfies ApiError;
   }

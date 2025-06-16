@@ -10,7 +10,7 @@
     "cy:open": "cypress open -c baseUrl=http://localhost -e apiBaseUrl=http://localhost:8080/api/v1",
     "dev": "react-router dev",
     "e2e:firefox": "cypress run -b firefox -c baseUrl=http://localhost -e apiBaseUrl=http://localhost:8080/api/v1",
-    "format": "prettier --write ./app ./cypress",
+    "format": "npx @biomejs/biome check --write ./app ./cypress",
     "typecheck": "react-router typegen && tsc"
   },
   "dependencies": {
@@ -54,15 +54,13 @@
     "zustand": "^5.0.5"
   },
   "devDependencies": {
+    "@biomejs/biome": "1.9.4",
     "@react-router/dev": "^7.6.2",
     "@tailwindcss/vite": "^4.1.10",
-    "@trivago/prettier-plugin-sort-imports": "^5.2.2",
     "@types/node": "^24",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
     "cypress": "^14.4.1",
-    "prettier": "^3.5.3",
-    "prettier-plugin-unused-imports-configurable": "^1.15.0",
     "tailwindcss": "^4.1.10",
     "tw-animate-css": "^1.3.4",
     "typescript": "^5.8.3",

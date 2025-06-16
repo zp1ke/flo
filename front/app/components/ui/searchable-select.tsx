@@ -1,6 +1,6 @@
 import { Check, ChevronsUpDown } from 'lucide-react';
 
-import { cn } from '~/lib/utils';
+import { useState } from 'react';
 import { Button } from '~/components/ui/button';
 import {
   Command,
@@ -11,7 +11,7 @@ import {
   CommandList,
 } from '~/components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from '~/components/ui/popover';
-import { useState } from 'react';
+import { cn } from '~/lib/utils';
 
 export interface ValueManager<T> {
   value: T;
@@ -55,7 +55,8 @@ export function SearchableSelect<T>({
         onSelect={() => {
           onValueChange(item.value);
           setOpen(false);
-        }}>
+        }}
+      >
         {item.label()}
         <Check className={cn('ml-auto', selected ? 'opacity-100' : 'opacity-0')} />
       </CommandItem>
@@ -68,8 +69,8 @@ export function SearchableSelect<T>({
         <Button
           disabled={!options.length || disabled}
           variant="outline"
-          role="combobox"
-          className={cn('w-full justify-between', !value && 'text-muted-foreground')}>
+          className={cn('w-full justify-between', !value && 'text-muted-foreground')}
+        >
           {theValue?.label() ?? placeholder}
           <ChevronsUpDown className="opacity-50" />
         </Button>

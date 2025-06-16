@@ -1,8 +1,8 @@
 {
-    "recommendations": [
-        "bradlc.vscode-tailwindcss",
-        "editorconfig.editorconfig",
-        "esbenp.prettier-vscode",
-        "ms-vscode.vscode-typescript-next"
-    ]
+  "recommendations": [
+    "biomejs.biome",
+    "bradlc.vscode-tailwindcss",
+    "editorconfig.editorconfig",
+    "ms-vscode.vscode-typescript-next"
+  ]
 }

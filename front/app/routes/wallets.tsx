@@ -1,12 +1,12 @@
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import PageContent from '~/components/layout/page-content';
-import { tableColumns } from '~/routes/wallets/table-columns';
-import { DataTable } from '~/components/table/data-table';
 import { fetchWallets } from '~/api/wallets';
-import type { Wallet } from '~/types/wallet';
-import { ListenerManager } from '~/types/listener';
+import PageContent from '~/components/layout/page-content';
+import { DataTable } from '~/components/table/data-table';
+import { tableColumns } from '~/routes/wallets/table-columns';
 import useUserStore from '~/store/user-store';
+import { ListenerManager } from '~/types/listener';
+import type { Wallet } from '~/types/wallet';
 import { EditWalletForm } from './wallets/edit-wallet-form';
 
 export default function Wallets() {

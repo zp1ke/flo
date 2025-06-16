@@ -1,11 +1,18 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2, RefreshCwIcon } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router';
 import { toast } from 'sonner';
 import { z } from 'zod';
+import { fetchCategories } from '~/api/categories';
+import type { ApiError } from '~/api/client';
+import { addTransaction, updateTransaction } from '~/api/transactions';
+import { fetchWallets } from '~/api/wallets';
+import type { EditItemFormProps } from '~/components/table/add-item-button';
 import { Button } from '~/components/ui/button';
+import { DateTimePicker } from '~/components/ui/datetime-picker';
 import {
   Form,
   FormControl,
@@ -16,22 +23,15 @@ import {
   FormMessage,
 } from '~/components/ui/form';
 import { Input } from '~/components/ui/input';
-import { type ApiError } from '~/api/client';
-import {
-  transactionDescriptionIsValid,
-  transactionSchema,
-  type Transaction,
-} from '~/types/transaction';
-import { addTransaction, updateTransaction } from '~/api/transactions';
-import { DateTimePicker } from '~/components/ui/datetime-picker';
-import { Link } from 'react-router';
-import { categorySchema, type Category } from '~/types/category';
-import { walletSchema, type Wallet } from '~/types/wallet';
-import { fetchWallets } from '~/api/wallets';
-import { fetchCategories } from '~/api/categories';
 import { SearchableSelect, type ValueManager } from '~/components/ui/searchable-select';
 import useUserStore from '~/store/user-store';
-import type { EditItemFormProps } from '~/components/table/add-item-button';
+import { type Category, categorySchema } from '~/types/category';
+import {
+  type Transaction,
+  transactionDescriptionIsValid,
+  transactionSchema,
+} from '~/types/transaction';
+import { type Wallet, walletSchema } from '~/types/wallet';
 
 type EditTransactionFormProps = EditItemFormProps<Transaction> & {
   disableCancel?: boolean;
@@ -58,7 +58,7 @@ export function EditTransactionForm({
   const formSchema = z.object({
     description: transactionSchema.shape.description.refine(
       transactionDescriptionIsValid,
-      t('transactions.descriptionSize')
+      t('transactions.descriptionSize'),
     ),
     datetime: z.date(),
     amount: transactionSchema.shape.amount,
@@ -75,44 +75,52 @@ export function EditTransactionForm({
     },
   });
 
-  const getCategories = async () => {
-    const profileCode = profile?.code ?? '';
-    if (!profileCode) {
-      return;
-    }
-    setFetchingCategories(true);
-    const categories = await fetchCategories(profileCode, { page: 0, size: 100 });
-    if (transaction) {
-      const category = categories.data.find((c) => c.code === transaction.categoryCode);
-      if (category) {
-        form.setValue('category', category);
+  const getCategories = useMemo(
+    () => async () => {
+      const profileCode = profile?.code ?? '';
+      if (!profileCode) {
+        return;
       }
-    }
-    setCategories(categories.data);
-    setFetchingCategories(false);
-  };
+      setFetchingCategories(true);
+      const categories = await fetchCategories(profileCode, { page: 0, size: 100 });
+      if (transaction) {
+        const category = categories.data.find((c) => c.code === transaction.categoryCode);
+        if (category) {
+          form.setValue('category', category);
+        }
+      }
+      setCategories(categories.data);
+      setFetchingCategories(false);
+    },
+    [profile, transaction, form],
+  );
 
-  const getWallets = async () => {
-    const profileCode = profile?.code ?? '';
-    if (!profileCode) {
-      return;
-    }
-    setFetchingWallets(true);
-    const wallets = await fetchWallets(profileCode, { page: 0, size: 100 });
-    if (transaction) {
-      const wallet = wallets.data.find((c) => c.code === transaction.walletCode);
-      if (wallet) {
-        form.setValue('wallet', wallet);
+  const getWallets = useMemo(
+    () => async () => {
+      const profileCode = profile?.code ?? '';
+      if (!profileCode) {
+        return;
       }
-    }
-    setWallets(wallets.data);
-    setFetchingWallets(false);
-  };
+      setFetchingWallets(true);
+      const wallets = await fetchWallets(profileCode, { page: 0, size: 100 });
+      if (transaction) {
+        const wallet = wallets.data.find((c) => c.code === transaction.walletCode);
+        if (wallet) {
+          form.setValue('wallet', wallet);
+        }
+      }
+      setWallets(wallets.data);
+      setFetchingWallets(false);
+    },
+    [profile, transaction, form],
+  );
 
   useEffect(() => {
-    getCategories();
-    getWallets();
-  }, [profile?.code]);
+    if (profile?.code) {
+      getCategories();
+      getWallets();
+    }
+  }, [profile, getCategories, getWallets]);
 
   const toggleProcessing = (value: boolean) => {
     setProcessing(value);
@@ -128,8 +136,8 @@ export function EditTransactionForm({
       description,
       datetime,
       amount,
-      categoryCode: category.code!,
-      walletCode: wallet.code!,
+      categoryCode: category.code ?? '',
+      walletCode: wallet.code ?? '',
     };
 
     try {
@@ -167,7 +175,7 @@ export function EditTransactionForm({
                     disabled={processing}
                     value={field.value || ''}
                     onChange={(e) => {
-                      const value = e.target.value ? parseFloat(e.target.value) : 0;
+                      const value = e.target.value ? Number.parseFloat(e.target.value) : 0;
                       field.onChange(value);
                     }}
                   />
@@ -224,7 +232,8 @@ export function EditTransactionForm({
                     variant="secondary"
                     size="icon"
                     onClick={getCategories}
-                    disabled={processing || fetchingCategories}>
+                    disabled={processing || fetchingCategories}
+                  >
                     <RefreshCwIcon />
                   </Button>
                 </FormLabel>
@@ -238,7 +247,7 @@ export function EditTransactionForm({
                     disabled={processing || !categories.length || fetchingCategories}
                     converter={(category: Category): ValueManager<Category> => ({
                       value: category,
-                      key: () => category.code!,
+                      key: () => category.code ?? '',
                       label: () => category.name,
                     })}
                     onValueChange={field.onChange}
@@ -265,7 +274,8 @@ export function EditTransactionForm({
                     variant="secondary"
                     size="icon"
                     onClick={getWallets}
-                    disabled={processing || fetchingWallets}>
+                    disabled={processing || fetchingWallets}
+                  >
                     <RefreshCwIcon />
                   </Button>
                 </FormLabel>
@@ -279,7 +289,7 @@ export function EditTransactionForm({
                     disabled={processing || !wallets.length || fetchingWallets}
                     converter={(wallet: Wallet): ValueManager<Wallet> => ({
                       value: wallet,
-                      key: () => wallet.code!,
+                      key: () => wallet.code ?? '',
                       label: () => wallet.name,
                     })}
                     onValueChange={field.onChange}
@@ -303,7 +313,8 @@ export function EditTransactionForm({
               variant="secondary"
               disabled={processing}
               className="flex"
-              onClick={onCancel}>
+              onClick={onCancel}
+            >
               {t('transactions.cancel')}
             </Button>
           )}

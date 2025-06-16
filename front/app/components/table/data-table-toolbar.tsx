@@ -10,7 +10,7 @@ import { FetchState } from '~/types/fetch-state';
 import { DataTableFacetedFilter } from './data-table-faceted-filter';
 import { DataTableViewOptions } from './data-table-view-options';
 
-interface DataTableViewOptions<TData> {
+interface DataTableProps<TData> {
   facetedFilters?: DataTableSelectFilter[];
   fetchState?: FetchState;
   table: Table<TData>;
@@ -22,11 +22,11 @@ export function DataTableToolbar<TData>({
   fetchState,
   table,
   textFilters,
-}: DataTableViewOptions<TData>) {
+}: DataTableProps<TData>) {
   const { t } = useTranslation();
 
   const [filters, setFilters] = useState<Record<string, string>>(
-    parseFilters(table.getState().columnFilters)
+    parseFilters(table.getState().columnFilters),
   );
   const debouncedFilters = useDebounce<Record<string, string>>(filters, 1000);
 
@@ -35,7 +35,7 @@ export function DataTableToolbar<TData>({
       table.getColumn(column)?.setFilterValue(value ? value.trim() : undefined);
     }
     table.options?.meta?.onRefresh?.();
-  }, [debouncedFilters]);
+  }, [debouncedFilters, table.options?.meta?.onRefresh, table]);
 
   return (
     <div className="flex items-center justify-between">
@@ -44,7 +44,8 @@ export function DataTableToolbar<TData>({
           variant="outline"
           size="icon"
           disabled={fetchState === FetchState.Loading}
-          onClick={() => table.options.meta?.onRefresh()}>
+          onClick={() => table.options.meta?.onRefresh()}
+        >
           {fetchState === FetchState.Loading && <Loader2 className="h-4 w-4 animate-spin" />}
           {fetchState !== FetchState.Loading && <RefreshCwIcon className="h-4 w-4" />}
         </Button>
@@ -77,7 +78,8 @@ export function DataTableToolbar<TData>({
             onClick={() => {
               table.resetColumnFilters();
               table.options?.meta?.onRefresh?.();
-            }}>
+            }}
+          >
             {t('table.reset')}
             <X />
           </Button>
@@ -96,6 +98,6 @@ const parseFilters = (filters: ColumnFilter[]): Record<string, string> => {
       }
       return acc;
     },
-    {} as Record<string, string>
+    {} as Record<string, string>,
   );
 };

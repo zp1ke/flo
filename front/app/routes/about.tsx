@@ -1,52 +1,56 @@
-import { SiDribbble, SiFacebook, SiGithub, SiInstagram, SiX, SiYoutube } from 'react-icons/si';
 import { Rocket } from 'lucide-react';
+import { SiDribbble, SiFacebook, SiGithub, SiInstagram, SiX, SiYoutube } from 'react-icons/si';
 import { Link } from 'react-router';
 
 const sections = [
   {
+    key: 'services',
     title: 'Services',
     links: [
-      { name: '1on1 Coaching', href: '#' },
-      { name: 'Company Review', href: '#' },
-      { name: 'Accounts Review', href: '#' },
-      { name: 'HR Consulting', href: '#' },
-      { name: 'SEO Optimisation', href: '#' },
+      { key: '1on1-coaching', name: '1on1 Coaching', href: '#' },
+      { key: 'company-review', name: 'Company Review', href: '#' },
+      { key: 'accounts-review', name: 'Accounts Review', href: '#' },
+      { key: 'hr-consulting', name: 'HR Consulting', href: '#' },
+      { key: 'seo-optimisation', name: 'SEO Optimisation', href: '#' },
     ],
   },
   {
+    key: 'company',
     title: 'Company',
     links: [
-      { name: 'About', href: '#' },
-      { name: 'Meet the Team', href: '#' },
-      { name: 'Accounts Review', href: '#' },
+      { key: 'about', name: 'About', href: '#' },
+      { key: 'meet-the-team', name: 'Meet the Team', href: '#' },
+      { key: 'accounts-review', name: 'Accounts Review', href: '#' },
     ],
   },
   {
+    key: 'helpful-links',
     title: 'Helpful Links',
     links: [
-      { name: 'Contact', href: '#' },
-      { name: 'FAQs', href: '#' },
-      { name: 'Live Chat', href: '#' },
+      { key: 'contact', name: 'Contact', href: '#' },
+      { key: 'faqs', name: 'FAQs', href: '#' },
+      { key: 'live-chat', name: 'Live Chat', href: '#' },
     ],
   },
   {
+    key: 'legal',
     title: 'Legal',
     links: [
-      { name: 'Accessibility', href: '#' },
-      { name: 'Returns Policy', href: '#' },
-      { name: 'Refund Policy', href: '#' },
-      { name: 'Hiring Statistics', href: '#' },
+      { key: 'accessibility', name: 'Accessibility', href: '#' },
+      { key: 'returns-policy', name: 'Returns Policy', href: '#' },
+      { key: 'refund-policy', name: 'Refund Policy', href: '#' },
+      { key: 'hiring-statistics', name: 'Hiring Statistics', href: '#' },
     ],
   },
 ];
 
 const socialLinks = [
-  { icon: SiX, name: 'Twitter', href: '#' },
-  { icon: SiInstagram, name: 'Instagram', href: '#' },
-  { icon: SiYoutube, name: 'YouTube', href: '#' },
-  { icon: SiFacebook, name: 'Facebook', href: '#' },
-  { icon: SiGithub, name: 'GitHub', href: '#' },
-  { icon: SiDribbble, name: 'Dribbble', href: '#' },
+  { key: 'twitter', icon: SiX, name: 'Twitter', href: '#' },
+  { key: 'instagram', icon: SiInstagram, name: 'Instagram', href: '#' },
+  { key: 'youtube', icon: SiYoutube, name: 'YouTube', href: '#' },
+  { key: 'facebook', icon: SiFacebook, name: 'Facebook', href: '#' },
+  { key: 'github', icon: SiGithub, name: 'GitHub', href: '#' },
+  { key: 'dribbble', icon: SiDribbble, name: 'Dribbble', href: '#' },
 ];
 
 export default function About() {
@@ -67,14 +71,15 @@ export default function About() {
 
             {/* Social Links */}
             <ul className="mt-8 flex gap-6">
-              {socialLinks.map(({ icon: Icon, name, href }, idx) => (
-                <li key={idx}>
+              {socialLinks.map(({ key, icon: Icon, name, href }) => (
+                <li key={key}>
                   <a
                     href={href}
                     target="_blank"
                     rel="noreferrer"
                     aria-label={name}
-                    className="text-muted-foreground transition hover:text-primary">
+                    className="text-muted-foreground transition hover:text-primary"
+                  >
                     <Icon className="w-6 h-6" />
                   </a>
                 </li>
@@ -84,15 +89,16 @@ export default function About() {
 
           {/* Footer Sections */}
           <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:col-span-2 lg:grid-cols-4">
-            {sections.map((section, idx) => (
-              <div key={idx}>
+            {sections.map((section) => (
+              <div key={section.key}>
                 <p className="font-medium text-foreground">{section.title}</p>
                 <ul className="mt-6 space-y-4 text-sm">
-                  {section.links.map((link, linkIdx) => (
-                    <li key={linkIdx}>
+                  {section.links.map((link) => (
+                    <li key={link.key}>
                       <a
                         href={link.href}
-                        className="text-muted-foreground transition hover:text-primary">
+                        className="text-muted-foreground transition hover:text-primary"
+                      >
                         {link.name}
                       </a>
                     </li>

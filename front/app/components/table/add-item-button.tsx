@@ -17,6 +17,7 @@ export type EditItemFormProps<T> = {
   onCancel: () => void;
 };
 
+// biome-ignore lint/correctness/noEmptyPattern: <explanation>
 export const EditItemForm = <T,>({}: EditItemFormProps<T>) => {
   return <></>;
 };
@@ -56,7 +57,8 @@ export default function AddItemButton<T>({
           if (processing) {
             e.preventDefault();
           }
-        }}>
+        }}
+      >
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>{description}</DialogDescription>

@@ -39,7 +39,8 @@ export function DataTablePagination<TData>({
             value={`${table.getState().pagination.pageSize}`}
             onValueChange={(value) => {
               table.setPageSize(Number(value));
-            }}>
+            }}
+          >
             <SelectTrigger className="h-8 w-[70px]" disabled={disabled}>
               <SelectValue placeholder={table.getState().pagination.pageSize} />
             </SelectTrigger>
@@ -63,7 +64,8 @@ export function DataTablePagination<TData>({
             variant="outline"
             className="hidden h-8 w-8 p-0 lg:flex"
             onClick={() => table.setPageIndex(0)}
-            disabled={disabled || !table.getCanPreviousPage()}>
+            disabled={disabled || !table.getCanPreviousPage()}
+          >
             <span className="sr-only">{t('table.goToFirstPage')}</span>
             <ChevronsLeft />
           </Button>
@@ -71,7 +73,8 @@ export function DataTablePagination<TData>({
             variant="outline"
             className="h-8 w-8 p-0"
             onClick={() => table.previousPage()}
-            disabled={disabled || !table.getCanPreviousPage()}>
+            disabled={disabled || !table.getCanPreviousPage()}
+          >
             <span className="sr-only">{t('table.goToPreviousPage')}</span>
             <ChevronLeft />
           </Button>
@@ -79,7 +82,8 @@ export function DataTablePagination<TData>({
             variant="outline"
             className="h-8 w-8 p-0"
             onClick={() => table.nextPage()}
-            disabled={disabled || !table.getCanNextPage()}>
+            disabled={disabled || !table.getCanNextPage()}
+          >
             <span className="sr-only">{t('table.goToNextPage')}</span>
             <ChevronRight />
           </Button>
@@ -87,7 +91,8 @@ export function DataTablePagination<TData>({
             variant="outline"
             className="hidden h-8 w-8 p-0 lg:flex"
             onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-            disabled={disabled || !table.getCanNextPage()}>
+            disabled={disabled || !table.getCanNextPage()}
+          >
             <span className="sr-only">{t('table.goToLastPage')}</span>
             <ChevronsRight />
           </Button>

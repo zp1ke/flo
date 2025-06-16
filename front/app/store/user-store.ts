@@ -66,8 +66,8 @@ const useUserStore = create<UserStore>()(
     }),
     {
       name: 'user-store',
-    }
-  )
+    },
+  ),
 );
 
 export default useUserStore;

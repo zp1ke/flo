@@ -6,6 +6,8 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
 import { toast } from 'sonner';
 import { z } from 'zod';
+import { sendEmailRecover } from '~/api/auth';
+import type { ApiError } from '~/api/client';
 import { Button } from '~/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '~/components/ui/card';
 import {
@@ -17,8 +19,6 @@ import {
   FormMessage,
 } from '~/components/ui/form';
 import { Input } from '~/components/ui/input';
-import { sendEmailRecover } from '~/api/auth';
-import type { ApiError } from '~/api/client';
 
 export default function RecoverForm() {
   const { t } = useTranslation();

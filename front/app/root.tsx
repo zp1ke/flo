@@ -16,6 +16,7 @@ import { Toaster } from './components/ui/sonner';
 import './lib/i18n';
 import type { ApiError } from './api/client';
 
+// biome-ignore lint/correctness/noEmptyPattern: <explanation>
 export function meta({}: Route.MetaArgs) {
   return [{ title: 'Flo APP' }, { name: 'description', content: 'Welcome to Flo APP' }];
 }
@@ -83,7 +84,7 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
     details = error.status === 404 ? 'Page not found.' : error.statusText || details;
   } else if (error as ApiError) {
     const ApiError = error as ApiError;
-    details += ' ' + ApiError.message;
+    details += ` ${ApiError.message}`;
   } else if (import.meta.env.DEV && error && error instanceof Error) {
     details = error.message;
     stack = error.stack;

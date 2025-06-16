@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router';
 import { toast } from 'sonner';
-import Loading from '~/components/ui/loading';
 import { verifyUser } from '~/api/auth';
 import type { ApiError } from '~/api/client';
-import { Link } from 'react-router';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '~/components/ui/card';
 import AnonContainer from '~/components/layout/anon-container';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '~/components/ui/card';
+import Loading from '~/components/ui/loading';
 import type { Route } from './+types/verify';
 
 export default function Verify({ params }: Route.LoaderArgs) {
@@ -27,7 +27,7 @@ export default function Verify({ params }: Route.LoaderArgs) {
           setLoading(false);
         });
     }
-  }, [loading]);
+  }, [loading, params.code, t]);
 
   return <AnonContainer placeholderPosition="right">{content(loading, error)}</AnonContainer>;
 }

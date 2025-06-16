@@ -5,6 +5,9 @@ import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { z } from 'zod';
+import { addCategory, updateCategory } from '~/api/categories';
+import type { ApiError } from '~/api/client';
+import type { EditItemFormProps } from '~/components/table/add-item-button';
 import { Button } from '~/components/ui/button';
 import {
   Form,
@@ -15,11 +18,8 @@ import {
   FormMessage,
 } from '~/components/ui/form';
 import { Input } from '~/components/ui/input';
-import type { ApiError } from '~/api/client';
-import { type Category, categoryNameIsValid, categorySchema } from '~/types/category';
-import { addCategory, updateCategory } from '~/api/categories';
 import useUserStore from '~/store/user-store';
-import type { EditItemFormProps } from '~/components/table/add-item-button';
+import { type Category, categoryNameIsValid, categorySchema } from '~/types/category';
 
 type EditCategoryFormProps = EditItemFormProps<Category> & {
   disableCancel?: boolean;
@@ -112,7 +112,8 @@ export function EditCategoryForm({
               variant="secondary"
               disabled={processing}
               className="flex"
-              onClick={onCancel}>
+              onClick={onCancel}
+            >
               {t('categories.cancel')}
             </Button>
           )}

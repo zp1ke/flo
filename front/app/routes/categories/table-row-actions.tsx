@@ -21,9 +21,9 @@ import {
 } from '~/components/ui/dropdown-menu';
 
 import { cn } from '~/lib/utils';
+import useUserStore from '~/store/user-store';
 import { categorySchema } from '~/types/category';
 import { EditCategoryForm } from './edit-category-form';
-import useUserStore from '~/store/user-store';
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -44,8 +44,10 @@ export function DataTableRowActions<TData>({ row, table }: DataTableRowActionsPr
   const [deleting, setDeleting] = useState<boolean>(false);
 
   useEffect(() => {
-    table.options.meta?.onRefresh();
-  }, [profile]);
+    if (profile?.code) {
+      table.options.meta?.onRefresh();
+    }
+  }, [profile, table.options.meta?.onRefresh]);
 
   const onSavedCategory = async () => {
     table.options.meta?.onRefresh();
@@ -70,7 +72,8 @@ export function DataTableRowActions<TData>({ row, table }: DataTableRowActionsPr
       onOpenChange={(open) => {
         setEditOpen(open);
         setDeleteOpen(open);
-      }}>
+      }}
+    >
       <DropdownMenu>
         <DropdownMenuTrigger asChild disabled={disabled}>
           <Button variant="ghost" className="flex h-8 w-8 p-0 data-[state=open]:bg-muted">
@@ -85,7 +88,8 @@ export function DataTableRowActions<TData>({ row, table }: DataTableRowActionsPr
           <DropdownMenuItem
             disabled={disabled}
             className="text-destructive"
-            onClick={() => setDeleteOpen(true)}>
+            onClick={() => setDeleteOpen(true)}
+          >
             {t('categories.delete')}
           </DropdownMenuItem>
         </DropdownMenuContent>
@@ -96,7 +100,8 @@ export function DataTableRowActions<TData>({ row, table }: DataTableRowActionsPr
           if (editing || deleting) {
             e.preventDefault();
           }
-        }}>
+        }}
+      >
         <DialogHeader>
           <DialogTitle>{t(editOpen ? 'categories.edit' : 'categories.confirmDelete')}</DialogTitle>
           <DialogDescription>
@@ -124,7 +129,8 @@ export function DataTableRowActions<TData>({ row, table }: DataTableRowActionsPr
               className="ml-auto flex"
               variant="destructive"
               disabled={deleting}
-              onClick={onDelete}>
+              onClick={onDelete}
+            >
               {deleting && <Loader2 className="animate-spin" />}
               {deleting && t('categories.deleting')}
               {!deleting && t('categories.confirm')}

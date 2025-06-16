@@ -28,7 +28,7 @@ export function LanguageSelector() {
 
   useEffect(() => {
     document.body.dir = i18n.dir();
-  }, [i18n, i18n.language]);
+  }, [i18n]);
 
   return (
     <DropdownMenu>
@@ -43,8 +43,9 @@ export function LanguageSelector() {
           <DropdownMenuItem
             onClick={() => handleLanguage(lang)}
             disabled={language === lang}
-            key={lang}>
-            {t('language.' + lang)}
+            key={lang}
+          >
+            {t(`language.${lang}`)}
           </DropdownMenuItem>
         ))}
       </DropdownMenuContent>

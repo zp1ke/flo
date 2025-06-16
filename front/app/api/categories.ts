@@ -1,13 +1,13 @@
 import type { DataPage } from '~/types/page';
 
-import apiClient, { type PageFilters } from './client';
 import type { Category } from '~/types/category';
+import apiClient, { type PageFilters } from './client';
 
 const basePath = (profileCode: string) => `/profiles/${profileCode}/categories`;
 
 export const fetchCategories = async (
   profileCode: string,
-  pageFilters: PageFilters
+  pageFilters: PageFilters,
 ): Promise<DataPage<Category>> => {
   console.debug('Fetching categories with filters:', pageFilters);
   const data = await apiClient.getPage<Category>(basePath(profileCode), pageFilters);
@@ -22,12 +22,12 @@ export const addCategory = async (profileCode: string, category: Category): Prom
 
 export const updateCategory = async (
   profileCode: string,
-  category: Category
+  category: Category,
 ): Promise<Category> => {
   console.debug('Updating category:', category);
   const saved = await apiClient.putJson<Category>(
     `${basePath(profileCode)}/${category.code}`,
-    category
+    category,
   );
   return saved;
 };

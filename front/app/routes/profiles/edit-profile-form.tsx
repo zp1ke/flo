@@ -5,6 +5,8 @@ import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { z } from 'zod';
+import type { ApiError } from '~/api/client';
+import { addProfile, updateProfile } from '~/api/profiles';
 import { Button } from '~/components/ui/button';
 import { Checkbox } from '~/components/ui/checkbox';
 import {
@@ -16,10 +18,8 @@ import {
   FormMessage,
 } from '~/components/ui/form';
 import { Input } from '~/components/ui/input';
-import type { ApiError } from '~/api/client';
-import { type Profile, profileNameIsValid, profileSchema } from '~/types/profile';
-import { addProfile, updateProfile } from '~/api/profiles';
 import useUserStore from '~/store/user-store';
+import { type Profile, profileNameIsValid, profileSchema } from '~/types/profile';
 
 export function EditProfileForm({
   disableCancel,
@@ -134,7 +134,8 @@ export function EditProfileForm({
               variant="secondary"
               disabled={processing}
               className="flex"
-              onClick={onCancel}>
+              onClick={onCancel}
+            >
               {t('profiles.cancel')}
             </Button>
           )}

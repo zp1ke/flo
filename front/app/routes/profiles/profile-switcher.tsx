@@ -7,6 +7,9 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
+import type { ApiError } from '~/api/client';
+import { Button } from '~/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -31,11 +34,8 @@ import {
   useSidebar,
 } from '~/components/ui/sidebar';
 import { cn } from '~/lib/utils';
-import { EditProfileForm } from './edit-profile-form';
 import useUserStore from '~/store/user-store';
-import { Button } from '~/components/ui/button';
-import { toast } from 'sonner';
-import type { ApiError } from '~/api/client';
+import { EditProfileForm } from './edit-profile-form';
 
 export function ProfileSwitcher() {
   const profile = useUserStore((state) => state.profile);
@@ -75,7 +75,8 @@ export function ProfileSwitcher() {
             <DropdownMenuTrigger asChild>
               <SidebarMenuButton
                 size="lg"
-                className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground">
+                className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+              >
                 <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
                   <GalleryVerticalEnd className="size-4" />
                 </div>
@@ -90,14 +91,16 @@ export function ProfileSwitcher() {
               className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
               align="start"
               side={isMobile ? 'bottom' : 'right'}
-              sideOffset={4}>
+              sideOffset={4}
+            >
               <DropdownMenuLabel className="text-xs text-muted-foreground flex justify-between items-center">
                 {t('profiles.title')}
                 <Button
                   variant="secondary"
                   size="icon"
                   onClick={refreshProfiles}
-                  disabled={processing}>
+                  disabled={processing}
+                >
                   <RefreshCwIcon />
                 </Button>
               </DropdownMenuLabel>
@@ -106,7 +109,8 @@ export function ProfileSwitcher() {
                   key={item.code}
                   onClick={() => setProfile(item)}
                   className="gap-2 p-2"
-                  disabled={item.code === profile?.code}>
+                  disabled={item.code === profile?.code}
+                >
                   <div className="flex size-6 items-center justify-center rounded-sm border">
                     <GalleryVerticalIcon className="size-4 shrink-0" />
                   </div>
@@ -131,7 +135,8 @@ export function ProfileSwitcher() {
               if (processing) {
                 e.preventDefault();
               }
-            }}>
+            }}
+          >
             <DialogHeader>
               <DialogTitle>{t('profiles.add')}</DialogTitle>
               <DialogDescription>{t('profiles.editDescription')}</DialogDescription>

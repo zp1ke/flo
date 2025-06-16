@@ -41,16 +41,18 @@ export function NavMain({
               key={item.title}
               asChild
               defaultOpen={isActive}
-              className="group/collapsible">
+              className="group/collapsible"
+            >
               <SidebarMenuItem>
                 <CollapsibleTrigger asChild>
                   <SidebarMenuButton
-                    tooltip={t('nav.' + item.title)}
+                    tooltip={t(`nav.${item.title}`)}
                     variant={isActive ? 'outline' : 'default'}
-                    asChild>
+                    asChild
+                  >
                     <Link to={item.url} style={{ pointerEvents: isActive ? 'none' : 'auto' }}>
                       {item.icon && <item.icon />}
-                      <span>{t('nav.' + item.title)}</span>
+                      <span>{t(`nav.${item.title}`)}</span>
                       {item.items && (
                         <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
                       )}
@@ -64,7 +66,7 @@ export function NavMain({
                         <SidebarMenuSubItem key={subItem.title}>
                           <SidebarMenuSubButton asChild>
                             <Link to={subItem.url}>
-                              <span>{t('nav.' + subItem.title)}</span>
+                              <span>{t(`nav.${subItem.title}`)}</span>
                             </Link>
                           </SidebarMenuSubButton>
                         </SidebarMenuSubItem>

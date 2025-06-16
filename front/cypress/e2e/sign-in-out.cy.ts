@@ -5,7 +5,7 @@ describe('Sign In & Out Test', () => {
     const userPassword = 'passworD1#';
 
     // Sign Up
-    const signUpUrl = Cypress.env('apiBaseUrl') + '/auth/sign-up';
+    const signUpUrl = `${Cypress.env('apiBaseUrl')}/auth/sign-up`;
     cy.request('POST', signUpUrl, {
       name: userName,
       email: userEmail,

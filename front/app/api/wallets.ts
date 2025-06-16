@@ -1,13 +1,13 @@
 import type { DataPage } from '~/types/page';
 
-import apiClient, { type PageFilters } from './client';
 import type { Wallet } from '~/types/wallet';
+import apiClient, { type PageFilters } from './client';
 
 const basePath = (profileCode: string) => `/profiles/${profileCode}/wallets`;
 
 export const fetchWallets = async (
   profileCode: string,
-  pageFilters: PageFilters
+  pageFilters: PageFilters,
 ): Promise<DataPage<Wallet>> => {
   console.debug('Fetching wallets with filters:', pageFilters);
   const data = await apiClient.getPage<Wallet>(basePath(profileCode), pageFilters);

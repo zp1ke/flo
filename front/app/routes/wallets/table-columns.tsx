@@ -1,8 +1,8 @@
 import type { ColumnDef } from '@tanstack/react-table';
 import { DataTableColumnHeader } from '~/components/table/data-table-column-header';
 
-import { DataTableRowActions } from './table-row-actions';
 import type { Wallet } from '~/types/wallet';
+import { DataTableRowActions } from './table-row-actions';
 
 export const tableColumns = ({ t }: { t: (key: string) => string }): ColumnDef<Wallet>[] => [
   {

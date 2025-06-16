@@ -1,5 +1,5 @@
-import apiClient from './client';
 import type { AuthRequest, AuthResponse, SignUpRequest } from '~/types/auth';
+import apiClient from './client';
 
 const authPath = '/auth';
 const userPath = '/user';
@@ -9,7 +9,7 @@ interface RecoveryRequest extends AuthRequest {
 }
 
 export const signUp = async (data: SignUpRequest): Promise<AuthResponse> => {
-  return apiClient.postJson<AuthResponse>(`${authPath}/sign-up`, data);
+  return apiClient.postJson<AuthResponse>(`${authPath}/sign-up`, { ...data });
 };
 
 export const signIn = async (data: AuthRequest): Promise<AuthResponse> => {
@@ -19,7 +19,7 @@ export const signIn = async (data: AuthRequest): Promise<AuthResponse> => {
   });
 };
 
-export const sendEmailRecover = async (email: String): Promise<void> => {
+export const sendEmailRecover = async (email: string): Promise<void> => {
   await apiClient.postJson<AuthResponse>(`${authPath}/recover`, {
     email,
   });

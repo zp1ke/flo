@@ -10,7 +10,6 @@ import {
 import type { ComponentProps } from 'react';
 import { NavMain } from '~/components/layout/nav-main';
 import { NavUser } from '~/components/layout/nav-user';
-import { ProfileSwitcher } from '~/routes/profiles/profile-switcher';
 import {
   Sidebar,
   SidebarContent,
@@ -18,6 +17,7 @@ import {
   SidebarHeader,
   SidebarRail,
 } from '~/components/ui/sidebar';
+import { ProfileSwitcher } from '~/routes/profiles/profile-switcher';
 const data = {
   navMain: [
     {

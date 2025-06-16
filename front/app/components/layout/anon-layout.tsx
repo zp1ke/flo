@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { Outlet, redirect } from 'react-router';
+import useUserStore from '~/store/user-store';
 import type { HorizontalPosition } from '~/types/position';
 import AnonContainer from './anon-container';
-import useUserStore from '~/store/user-store';
 
 export async function clientLoader() {
   const user = useUserStore.getState().user;

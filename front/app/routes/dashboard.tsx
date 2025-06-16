@@ -1,8 +1,8 @@
+import PageContent from '~/components/layout/page-content';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '~/components/ui/card';
 import { Overview } from '~/routes/dashboard/overview';
 import { RecentSales } from '~/routes/dashboard/recent-sales';
 import { SectionCards } from '~/routes/dashboard/section-cards';
-import PageContent from '~/components/layout/page-content';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '~/components/ui/card';
 
 export default function Dashboard() {
   return (
@@ -12,7 +12,8 @@ export default function Dashboard() {
         <div className="flex items-center">
           <span>DAY PICKER</span>
         </div>
-      }>
+      }
+    >
       <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
         <SectionCards />
       </div>

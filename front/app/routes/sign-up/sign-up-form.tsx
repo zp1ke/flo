@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router';
 import { toast } from 'sonner';
 import { z } from 'zod';
+import type { ApiError } from '~/api/client';
 import { Button } from '~/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '~/components/ui/card';
 import {
@@ -17,7 +18,6 @@ import {
   FormMessage,
 } from '~/components/ui/form';
 import { Input } from '~/components/ui/input';
-import type { ApiError } from '~/api/client';
 import useUserStore from '~/store/user-store';
 
 export default function SignUpForm() {
@@ -146,8 +146,9 @@ export default function SignUpForm() {
             </form>
           </Form>
           <div className="text-muted-foreground *:[a]:hover:text-primary text-center text-xs text-balance *:[a]:underline *:[a]:underline-offset-4 mt-6">
-            {t('signUp.termsParagraphPre')} <a href="#">{t('signUp.termsParagraphLink1')}</a>{' '}
-            {t('signUp.termsParagraphAnd')} <a href="#">{t('signUp.termsParagraphLink2')}</a>.
+            {t('signUp.termsParagraphPre')} <a href="/terms">{t('signUp.termsParagraphLink1')}</a>{' '}
+            {t('signUp.termsParagraphAnd')} <a href="/privacy">{t('signUp.termsParagraphLink2')}</a>
+            .
           </div>
         </CardContent>
       </Card>

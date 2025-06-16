@@ -38,7 +38,8 @@ export default function AddProfileButton() {
           if (processing) {
             e.preventDefault();
           }
-        }}>
+        }}
+      >
         <DialogHeader>
           <DialogTitle>{t('profiles.add')}</DialogTitle>
           <DialogDescription>{t('profiles.editDescription')}</DialogDescription>

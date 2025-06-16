@@ -1,12 +1,12 @@
+import { useEffect } from 'react';
 import { Outlet, redirect, useNavigate } from 'react-router';
 import { AppSidebar } from '~/components/layout/app-sidebar';
 import { LanguageSelector } from '~/components/layout/language-selector';
 import { ThemeModeSelector } from '~/components/layout/theme-mode-selector';
 import { Separator } from '~/components/ui/separator';
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '~/components/ui/sidebar';
-import GeneralBanner from './general-banner';
 import useUserStore from '~/store/user-store';
-import { useEffect } from 'react';
+import GeneralBanner from './general-banner';
 
 export async function clientLoader() {
   const user = useUserStore.getState().user;
@@ -25,7 +25,7 @@ export default function AuthLayout() {
     if (!user) {
       navigate('/');
     }
-  }, [user]);
+  }, [user, navigate]);
 
   return (
     <SidebarProvider>

@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router';
 import { toast } from 'sonner';
 import { z } from 'zod';
+import type { ApiError } from '~/api/client';
 import { Button } from '~/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '~/components/ui/card';
 import {
@@ -17,7 +18,6 @@ import {
   FormMessage,
 } from '~/components/ui/form';
 import { Input } from '~/components/ui/input';
-import type { ApiError } from '~/api/client';
 import useUserStore from '~/store/user-store';
 
 export default function SignInForm() {
@@ -97,7 +97,8 @@ export default function SignInForm() {
                         <FormLabel>{t('signIn.password')}</FormLabel>
                         <Link
                           to="/recover"
-                          className="ml-auto inline-block text-sm underline-offset-4 hover:underline">
+                          className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
+                        >
                           {t('signIn.forgotPassword')}
                         </Link>
                       </div>
