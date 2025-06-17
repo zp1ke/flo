@@ -29,7 +29,7 @@ function SlidingNumberRoller({
     stiffness: 200,
     damping: 20,
     mass: 0.4,
-  }
+  },
 }: SlidingNumberRollerProps) {
   const startNumber = Math.floor(prevValue / place) % 10;
   const targetNumber = Math.floor(value / place) % 10;
