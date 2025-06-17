@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router';
 import { toast } from 'sonner';
 import { z } from 'zod';
 import type { ApiError } from '~/api/client';
+import { TypingText } from '~/components/animate-ui/text/typing';
 import { Button } from '~/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '~/components/ui/card';
 import {
@@ -67,8 +68,12 @@ export default function SignUpForm() {
     <div className="flex flex-col gap-6">
       <Card>
         <CardHeader>
-          <CardTitle className="text-2xl">{t('signUp.title')}</CardTitle>
-          <CardDescription>{t('signUp.description')}</CardDescription>
+          <CardTitle className="text-2xl">
+            <TypingText text={t('signUp.title')} />
+          </CardTitle>
+          <CardDescription>
+            <TypingText text={t('signUp.description')} />
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>

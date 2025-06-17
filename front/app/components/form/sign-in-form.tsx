@@ -19,6 +19,7 @@ import {
 } from '~/components/ui/form';
 import { Input } from '~/components/ui/input';
 import useUserStore from '~/store/user-store';
+import { TypingText } from '../animate-ui/text/typing';
 
 export default function SignInForm() {
   const signIn = useUserStore((state) => state.signIn);
@@ -61,8 +62,12 @@ export default function SignInForm() {
     <div className="flex flex-col gap-6">
       <Card>
         <CardHeader>
-          <CardTitle className="text-2xl">{t('signIn.title')}</CardTitle>
-          <CardDescription>{t('signIn.description')}</CardDescription>
+          <CardTitle className="text-2xl">
+            <TypingText text={t('signIn.title')} />
+          </CardTitle>
+          <CardDescription>
+            <TypingText text={t('signIn.description')} />
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>

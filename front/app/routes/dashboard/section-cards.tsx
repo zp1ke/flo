@@ -1,4 +1,5 @@
 import { TrendingDownIcon, TrendingUpIcon } from 'lucide-react';
+import { SlidingNumber } from '~/components/animate-ui/text/sliding-number';
 import { Badge } from '~/components/ui/badge';
 import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from '~/components/ui/card';
 
@@ -8,8 +9,8 @@ export function SectionCards() {
       <Card className="@container/card">
         <CardHeader className="relative">
           <CardDescription>Total Revenue</CardDescription>
-          <CardTitle className="@[250px]/card:text-3xl text-2xl font-semibold tabular-nums">
-            $1,250.00
+          <CardTitle className="@[250px]/card:text-3xl text-2xl font-semibold tabular-nums flex justify-start items-center">
+            $&nbsp;<SlidingNumber number={1250} decimalPlaces={2} />
           </CardTitle>
           <div className="absolute right-4 top-4">
             <Badge variant="outline" className="flex gap-1 rounded-lg text-xs">
@@ -29,7 +30,7 @@ export function SectionCards() {
         <CardHeader className="relative">
           <CardDescription>New Customers</CardDescription>
           <CardTitle className="@[250px]/card:text-3xl text-2xl font-semibold tabular-nums">
-            1,234
+            <SlidingNumber number={1234} decimalPlaces={0} />
           </CardTitle>
           <div className="absolute right-4 top-4">
             <Badge variant="outline" className="flex gap-1 rounded-lg text-xs">
@@ -49,7 +50,7 @@ export function SectionCards() {
         <CardHeader className="relative">
           <CardDescription>Active Accounts</CardDescription>
           <CardTitle className="@[250px]/card:text-3xl text-2xl font-semibold tabular-nums">
-            45,678
+            <SlidingNumber number={45_678} decimalPlaces={0} />
           </CardTitle>
           <div className="absolute right-4 top-4">
             <Badge variant="outline" className="flex gap-1 rounded-lg text-xs">
@@ -68,8 +69,8 @@ export function SectionCards() {
       <Card className="@container/card">
         <CardHeader className="relative">
           <CardDescription>Growth Rate</CardDescription>
-          <CardTitle className="@[250px]/card:text-3xl text-2xl font-semibold tabular-nums">
-            4.5%
+          <CardTitle className="@[250px]/card:text-3xl text-2xl font-semibold tabular-nums flex justify-start items-center">
+            <SlidingNumber number={4.5} decimalPlaces={1} />&nbsp;%
           </CardTitle>
           <div className="absolute right-4 top-4">
             <Badge variant="outline" className="flex gap-1 rounded-lg text-xs">

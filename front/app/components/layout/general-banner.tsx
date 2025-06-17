@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import useUserStore from '~/store/user-store';
+import { TypingText } from '../animate-ui/text/typing';
 
 export default function GeneralBanner() {
   const user = useUserStore((state) => state.user);
@@ -7,7 +8,11 @@ export default function GeneralBanner() {
 
   if (user && !user?.verified) {
     return (
-      <div className="text-destructive text-sm font-medium">{t('verify.userNotVerified')}</div>
+      <TypingText
+        className="text-destructive text-sm font-medium"
+        text={t('verify.userNotVerified')}
+        loop={true}
+      />
     );
   }
 
