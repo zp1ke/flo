@@ -1,4 +1,4 @@
-import { create } from 'zustand';
+import { type StoreApi, type UseBoundStore, create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { signIn, signOut, signUp } from '~/api/auth';
 import { fetchProfiles } from '~/api/profiles';

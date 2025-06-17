@@ -1,25 +1,21 @@
 import type { ColumnFilter, Table } from '@tanstack/react-table';
-import { Loader2, RefreshCwIcon, X } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { Loader2, RefreshCwIcon, SearchIcon, X } from 'lucide-react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '~/components/ui/button';
 import { Input } from '~/components/ui/input';
-import useDebounce from '~/hooks/use-debounce';
-import { FetchState } from '~/types/fetch-state';
 
 import { DataTableFacetedFilter } from './data-table-faceted-filter';
 import { DataTableViewOptions } from './data-table-view-options';
 
 interface DataTableProps<TData> {
   facetedFilters?: DataTableSelectFilter[];
-  fetchState?: FetchState;
   table: Table<TData>;
   textFilters?: DataTableFilter[];
 }
 
 export function DataTableToolbar<TData>({
   facetedFilters,
-  fetchState,
   table,
   textFilters,
 }: DataTableProps<TData>) {
@@ -28,31 +24,34 @@ export function DataTableToolbar<TData>({
   const [filters, setFilters] = useState<Record<string, string>>(
     parseFilters(table.getState().columnFilters),
   );
-  const debouncedFilters = useDebounce<Record<string, string>>(filters, 1000);
 
-  useEffect(() => {
-    for (const [column, value] of Object.entries(debouncedFilters)) {
+  const loading = (): boolean => table.options?.meta?.loading?.() ?? false;
+
+  const fetch = () => {
+    table.options?.meta?.fetch?.();
+  };
+
+  const reset = () => {
+    setFilters({});
+    table.resetColumnFilters(true);
+    setTimeout(fetch, 100);
+  };
+
+  const search = () => {
+    table.resetColumnFilters(true);
+    for (const [column, value] of Object.entries(filters)) {
       table.getColumn(column)?.setFilterValue(value ? value.trim() : undefined);
     }
-    table.options?.meta?.onRefresh?.();
-  }, [debouncedFilters, table.options?.meta?.onRefresh, table]);
+    setTimeout(fetch, 100);
+  };
 
   return (
     <div className="flex items-center justify-between">
-      <div className="flex flex-1 items-center space-x-2">
-        <Button
-          variant="outline"
-          size="icon"
-          disabled={fetchState === FetchState.Loading}
-          onClick={() => table.options.meta?.onRefresh()}
-        >
-          {fetchState === FetchState.Loading && <Loader2 className="h-4 w-4 animate-spin" />}
-          {fetchState !== FetchState.Loading && <RefreshCwIcon className="h-4 w-4" />}
-        </Button>
+      <div className="flex flex-1 items-center space-x-1">
         {textFilters?.map((filter) => (
           <Input
             key={filter.column}
-            disabled={fetchState === FetchState.Loading}
+            disabled={loading()}
             type="search"
             placeholder={`${t('table.filter')} ${filter.title}...`}
             value={filters[filter.column] ?? ''}
@@ -66,26 +65,29 @@ export function DataTableToolbar<TData>({
           <DataTableFacetedFilter
             key={filter.column}
             column={table.getColumn(filter.column)}
-            disabled={fetchState === FetchState.Loading}
+            disabled={loading()}
             title={filter.title}
             options={filter.options}
           />
         ))}
-        {Object.entries(debouncedFilters).length > 0 && (
-          <Button
-            variant="outline"
-            disabled={fetchState === FetchState.Loading}
-            onClick={() => {
-              table.resetColumnFilters();
-              table.options?.meta?.onRefresh?.();
-            }}
-          >
+        {Object.keys(filters).length > 0 && (
+          <Button variant="outline" disabled={loading()} onClick={reset}>
             {t('table.reset')}
             <X />
           </Button>
         )}
+        <Button variant="outline" size="icon" disabled={loading()} onClick={search}>
+          {loading() && <Loader2 className="h-4 w-4 animate-spin" />}
+          {!loading() && <SearchIcon className="h-4 w-4" />}
+        </Button>
       </div>
-      <DataTableViewOptions table={table} />
+      <div className="flex items-center justify-end gap-1">
+        <DataTableViewOptions table={table} />
+        <Button variant="outline" size="icon" disabled={loading()} onClick={fetch}>
+          {loading() && <Loader2 className="h-4 w-4 animate-spin" />}
+          {!loading() && <RefreshCwIcon />}
+        </Button>
+      </div>
     </div>
   );
 }

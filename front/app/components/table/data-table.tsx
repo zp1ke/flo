@@ -16,11 +16,10 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 import { Loader2 } from 'lucide-react';
-import { type HTMLAttributes, useEffect, useState } from 'react';
+import { type HTMLAttributes, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useSearchParams } from 'react-router';
-import { toast } from 'sonner';
-import type { ApiError, PageFilters } from '~/api/client';
+import type { PageFilters } from '~/api/client';
 import {
   Table,
   TableBody,
@@ -29,23 +28,19 @@ import {
   TableHeader,
   TableRow,
 } from '~/components/ui/table';
-import { FetchState } from '~/types/fetch-state';
-import type { DataPage } from '~/types/page';
 import { SortDirection, sortPrefix } from '~/types/sort';
 
-import useUserStore from '~/store/user-store';
-import type { ListenerManager } from '~/types/listener';
+import type { StoreApi, UseBoundStore } from 'zustand';
+import type { DataTableStore } from '~/store/data-table-store';
 import AddItemButton, { type EditItemForm } from './add-item-button';
 import { DataTablePagination } from './data-table-pagination';
 import { DataTableToolbar } from './data-table-toolbar';
 
 interface DataTableProps<TData, TValue> extends HTMLAttributes<HTMLDivElement> {
   columns: ColumnDef<TData, TValue>[];
-  dataFetcher: (pageFilters: PageFilters) => Promise<DataPage<TData>>;
+  dataStore: UseBoundStore<StoreApi<DataTableStore<TData>>>;
   facetedFilters?: DataTableSelectFilter[];
   textFilters?: DataTableFilter[];
-  listenerManager?: ListenerManager<TData>;
-  fetchErrorMessage?: string;
   editForm: typeof EditItemForm<TData>;
   addTitle: string;
   addDescription: string;
@@ -56,17 +51,13 @@ const pageSizeKey = 'pageSize';
 
 export function DataTable<TData, TValue>({
   columns,
-  dataFetcher,
+  dataStore,
   facetedFilters,
   textFilters,
-  listenerManager,
-  fetchErrorMessage,
   editForm,
   addTitle,
   addDescription,
 }: DataTableProps<TData, TValue>) {
-  const profile = useUserStore((state) => state.profile);
-
   const { t } = useTranslation();
   const location = useLocation();
   const [searchParams] = useSearchParams();
@@ -78,36 +69,15 @@ export function DataTable<TData, TValue>({
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>(
     filtersFrom(searchParams, columns),
   );
-  const [data, setData] = useState<DataPage<TData>>({ data: [], total: 0 });
-  const [fetchState, setFetchState] = useState(FetchState.Loading);
   const [pagination, setPagination] = useState<PaginationState>(initialPagination);
   const [sorting, setSorting] = useState<SortingState>(sortingFrom(searchParams, columns));
   const [rowSelection, setRowSelection] = useState({});
 
-  listenerManager?.addListener('data-table', () => {
-    setFetchState(FetchState.Loading);
-  });
+  const page = dataStore((state) => state.page);
+  const loading = dataStore((state) => state.loading);
+  const fetchData = dataStore((state) => state.fetchData);
 
-  useEffect(() => {
-    if (fetchState === FetchState.Loading) {
-      dataFetcher(pageFilters())
-        .then((data) => {
-          setData(data);
-          updateUrlParams();
-          setFetchState(FetchState.Success);
-        })
-        .catch((e) => {
-          setData({ data: [], total: 0 });
-          setFetchState(FetchState.Error);
-          toast.error(fetchErrorMessage ?? t('table.fetchError'), {
-            description: t((e as ApiError).message),
-            closeButton: true,
-          });
-        });
-    }
-  }, [fetchState, dataFetcher, fetchErrorMessage, t]);
-
-  const pageFilters = (): PageFilters => {
+  const fetch = () => {
     const sort: Record<string, SortDirection> = {};
     for (const columnSort of sorting) {
       sort[columnSort.id] = columnSort.desc ? SortDirection.Desc : SortDirection.Asc;
@@ -119,12 +89,15 @@ export function DataTable<TData, TValue>({
       }
     }
 
-    return {
+    const pageFilters = {
       page: pagination.pageIndex,
       size: pagination.pageSize,
       sort,
       filters,
     } satisfies PageFilters;
+
+    fetchData(pageFilters);
+    updateUrlParams();
   };
 
   const updateUrlParams = () => {
@@ -149,7 +122,7 @@ export function DataTable<TData, TValue>({
   };
 
   const table = useReactTable({
-    data: data.data,
+    data: page.data,
     columns: columns,
     enableRowSelection: true,
     getCoreRowModel: getCoreRowModel(),
@@ -162,24 +135,21 @@ export function DataTable<TData, TValue>({
     manualSorting: true,
     manualFiltering: true,
     meta: {
-      fetchState,
-      isLoading: () => fetchState === FetchState.Loading,
-      onRefresh: () => {
-        setFetchState(FetchState.Loading);
-      },
+      loading: () => loading,
+      fetch: fetch,
     },
     onColumnFiltersChange: setColumnFilters,
     onColumnVisibilityChange: setColumnVisibility,
     onPaginationChange: (state) => {
       setPagination(state);
-      setFetchState(FetchState.Loading);
+      fetch();
     },
     onRowSelectionChange: setRowSelection,
     onSortingChange: (state) => {
       setSorting(state);
-      setFetchState(FetchState.Loading);
+      fetch();
     },
-    rowCount: data.total,
+    rowCount: page.total,
     state: {
       columnFilters,
       columnVisibility,
@@ -192,19 +162,9 @@ export function DataTable<TData, TValue>({
   return (
     <div className="space-y-4">
       <div className="flex items-center">
-        <AddItemButton
-          title={addTitle}
-          description={addDescription}
-          form={editForm}
-          onAdded={() => setFetchState(FetchState.Loading)}
-        />
+        <AddItemButton title={addTitle} description={addDescription} form={editForm} />
       </div>
-      <DataTableToolbar
-        facetedFilters={facetedFilters}
-        fetchState={fetchState}
-        table={table}
-        textFilters={textFilters}
-      />
+      <DataTableToolbar facetedFilters={facetedFilters} table={table} textFilters={textFilters} />
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -236,7 +196,7 @@ export function DataTable<TData, TValue>({
             ) : (
               <TableRow>
                 <TableCell colSpan={columns.length} className="h-24 text-center">
-                  {fetchState === FetchState.Loading ? (
+                  {loading ? (
                     <div className="flex items-center justify-center space-x-2">
                       <Loader2 className="h-4 w-4 animate-spin" />
                       <span>{t('table.loading')}</span>
@@ -250,11 +210,7 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      <DataTablePagination
-        disabled={fetchState === FetchState.Loading}
-        pageSizes={pageSizes}
-        table={table}
-      />
+      <DataTablePagination disabled={loading} pageSizes={pageSizes} table={table} />
     </div>
   );
 }

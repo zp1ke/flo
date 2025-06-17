@@ -12,9 +12,8 @@ import {
 import { cn } from '~/lib/utils';
 
 export type EditItemFormProps<T> = {
-  onSaved: (item: T) => Promise<void>;
   onProcessing: (processing: boolean) => void;
-  onCancel: () => void;
+  onDone: () => void;
 };
 
 // biome-ignore lint/correctness/noEmptyPattern: <explanation>
@@ -26,22 +25,11 @@ interface AddItemButtonProps<T> {
   title: string;
   description: string;
   form: typeof EditItemForm<T>;
-  onAdded: (item: T) => void;
 }
 
-export default function AddItemButton<T>({
-  title,
-  description,
-  form,
-  onAdded,
-}: AddItemButtonProps<T>) {
+export default function AddItemButton<T>({ title, description, form }: AddItemButtonProps<T>) {
   const [addOpen, setAddOpen] = useState(false);
   const [processing, setProcessing] = useState(false);
-
-  const onAddedItem = async (item: T) => {
-    setAddOpen(false);
-    onAdded(item);
-  };
 
   return (
     <Dialog open={addOpen} onOpenChange={setAddOpen}>
@@ -64,9 +52,8 @@ export default function AddItemButton<T>({
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
         {form({
-          onSaved: onAddedItem,
           onProcessing: setProcessing,
-          onCancel: () => setAddOpen(false),
+          onDone: () => setAddOpen(false),
         })}
       </DialogContent>
     </Dialog>

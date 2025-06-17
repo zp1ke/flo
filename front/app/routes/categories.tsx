@@ -1,30 +1,34 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { fetchCategories } from '~/api/categories';
+import { toast } from 'sonner';
 import PageContent from '~/components/layout/page-content';
 import { DataTable } from '~/components/table/data-table';
 import { tableColumns } from '~/routes/categories/table-columns';
-import useUserStore from '~/store/user-store';
-import type { Category } from '~/types/category';
-import { ListenerManager } from '~/types/listener';
+import useCategoryStore from '~/store/category-store';
 import { EditCategoryForm } from './categories/edit-category-form';
 
 export default function Categories() {
-  const profile = useUserStore((state) => state.profile);
-
   const { t } = useTranslation();
 
   const columns = useMemo(() => tableColumns({ t }), [t]);
-  const listenerManager = useMemo(() => new ListenerManager<Category>(), []);
+
+  const errorMessage = useCategoryStore((state) => state.errorMessage);
+
+  useEffect(() => {
+    if (errorMessage) {
+      toast.error(t('categories.fetchError') ?? t('table.fetchError'), {
+        description: t(errorMessage),
+        closeButton: true,
+      });
+    }
+  }, [errorMessage, t]);
 
   return (
     <PageContent title={t('categories.title')} subtitle={t('categories.subtitle')}>
       <DataTable
         columns={columns}
-        dataFetcher={(pageFilters) => fetchCategories(profile?.code ?? '', pageFilters)}
+        dataStore={useCategoryStore}
         textFilters={[{ title: t('categories.name'), column: 'name' }]}
-        listenerManager={listenerManager}
-        fetchErrorMessage={t('categories.fetchError')}
         addTitle={t('categories.add')}
         addDescription={t('categories.editDescription')}
         editForm={EditCategoryForm}

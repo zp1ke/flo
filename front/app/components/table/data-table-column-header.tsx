@@ -30,17 +30,17 @@ export function DataTableColumnHeader<TData, TValue>({
 
   const { t } = useTranslation();
 
-  const disabled = table.options?.meta?.isLoading();
+  const loading = (): boolean => table.options?.meta?.loading?.() ?? false;
 
   return (
     <div className={cn('flex items-center space-x-2', className)}>
       <DropdownMenu>
-        <DropdownMenuTrigger asChild disabled={disabled}>
+        <DropdownMenuTrigger asChild disabled={loading()}>
           <Button
             variant="ghost"
             size="sm"
             className="-ml-3 h-8 data-[state=open]:bg-accent"
-            disabled={disabled}
+            disabled={loading()}
           >
             <span>{title}</span>
             {column.getIsSorted() === 'desc' ? (
