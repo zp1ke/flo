@@ -40,9 +40,8 @@ type EditTransactionFormProps = EditItemFormProps<Transaction> & {
 
 export function EditTransactionForm({
   disableCancel,
-  onCancel,
+  onDone,
   onProcessing,
-  onSaved,
   transaction,
 }: EditTransactionFormProps) {
   const profile = useUserStore((state) => state.profile);
@@ -141,10 +140,10 @@ export function EditTransactionForm({
     };
 
     try {
-      const saved = transaction
+      transaction
         ? await updateTransaction(profile?.code ?? '-', transactionData)
         : await addTransaction(profile?.code ?? '-', transactionData);
-      await onSaved(saved);
+      onDone(false);
       form.reset();
     } catch (e) {
       toast.error(t('transactions.saveError'), {
@@ -313,7 +312,7 @@ export function EditTransactionForm({
               variant="secondary"
               disabled={processing}
               className="flex"
-              onClick={onCancel}
+              onClick={() => onDone(true)}
             >
               {t('transactions.cancel')}
             </Button>

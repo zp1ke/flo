@@ -28,9 +28,8 @@ type EditWalletFormProps = EditItemFormProps<Wallet> & {
 
 export function EditWalletForm({
   disableCancel,
-  onCancel,
+  onDone,
   onProcessing,
-  onSaved,
   wallet,
 }: EditWalletFormProps) {
   const profile = useUserStore((state) => state.profile);
@@ -66,10 +65,10 @@ export function EditWalletForm({
       name,
     };
     try {
-      const saved = wallet
+      wallet
         ? await updateWallet(profile?.code ?? '-', walletData)
         : await addWallet(profile?.code ?? '-', walletData);
-      await onSaved(saved);
+      onDone(false);
       form.reset();
     } catch (e) {
       toast.error(t('wallets.saveError'), {
@@ -112,7 +111,7 @@ export function EditWalletForm({
               variant="secondary"
               disabled={processing}
               className="flex"
-              onClick={onCancel}
+              onClick={() => onDone(true)}
             >
               {t('wallets.cancel')}
             </Button>

@@ -36,21 +36,17 @@ export function DataTableRowActions<TData>({ row, table }: DataTableRowActionsPr
   const { t } = useTranslation();
 
   const category = categorySchema.parse(row.original);
-  const disabled = table.options?.meta?.isLoading();
+  const loading = () => table.options?.meta?.loading() ?? false;
 
   const [editOpen, setEditOpen] = useState<boolean>(false);
   const [editing, setEditing] = useState<boolean>(false);
   const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
   const [deleting, setDeleting] = useState<boolean>(false);
 
-  useEffect(() => {
-    if (profile?.code) {
-      table.options.meta?.onRefresh();
+  const onDoneCategory = async (canceled: boolean) => {
+    if (!canceled) {
+      table.options.meta?.fetch();
     }
-  }, [profile, table.options.meta?.onRefresh]);
-
-  const onSavedCategory = async () => {
-    table.options.meta?.onRefresh();
 
     setEditOpen(false);
     setEditing(false);
@@ -60,7 +56,7 @@ export function DataTableRowActions<TData>({ row, table }: DataTableRowActionsPr
     setDeleting(true);
 
     await deleteCategory(profile?.code ?? '-', category);
-    table.options.meta?.onRefresh();
+    table.options.meta?.fetch();
 
     setDeleteOpen(false);
     setDeleting(false);
@@ -75,18 +71,18 @@ export function DataTableRowActions<TData>({ row, table }: DataTableRowActionsPr
       }}
     >
       <DropdownMenu>
-        <DropdownMenuTrigger asChild disabled={disabled}>
+        <DropdownMenuTrigger asChild disabled={loading()}>
           <Button variant="ghost" className="flex h-8 w-8 p-0 data-[state=open]:bg-muted">
             <MoreHorizontal />
             <span className="sr-only">{t('table.openMenu')}</span>
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-[160px]">
-          <DropdownMenuItem disabled={disabled} onClick={() => setEditOpen(true)}>
+          <DropdownMenuItem disabled={loading()} onClick={() => setEditOpen(true)}>
             {t('categories.edit')}
           </DropdownMenuItem>
           <DropdownMenuItem
-            disabled={disabled}
+            disabled={loading()}
             className="text-destructive"
             onClick={() => setDeleteOpen(true)}
           >
@@ -111,12 +107,7 @@ export function DataTableRowActions<TData>({ row, table }: DataTableRowActionsPr
           </DialogDescription>
         </DialogHeader>
         {editOpen && (
-          <EditCategoryForm
-            category={category}
-            onSaved={onSavedCategory}
-            onProcessing={setEditing}
-            onCancel={() => setEditOpen(false)}
-          />
+          <EditCategoryForm category={category} onDone={onDoneCategory} onProcessing={setEditing} />
         )}
         {deleteOpen && (
           <DialogFooter>

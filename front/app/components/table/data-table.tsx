@@ -162,7 +162,12 @@ export function DataTable<TData, TValue>({
   return (
     <div className="space-y-4">
       <div className="flex items-center">
-        <AddItemButton title={addTitle} description={addDescription} form={editForm} />
+        <AddItemButton
+          title={addTitle}
+          description={addDescription}
+          form={editForm}
+          table={table}
+        />
       </div>
       <DataTableToolbar facetedFilters={facetedFilters} table={table} textFilters={textFilters} />
       <div className="rounded-md border">

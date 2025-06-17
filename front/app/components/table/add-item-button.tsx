@@ -1,3 +1,4 @@
+import type { Table } from '@tanstack/react-table';
 import { PlusIcon } from 'lucide-react';
 import { useState } from 'react';
 import { Button } from '~/components/ui/button';
@@ -13,7 +14,7 @@ import { cn } from '~/lib/utils';
 
 export type EditItemFormProps<T> = {
   onProcessing: (processing: boolean) => void;
-  onDone: () => void;
+  onDone: (canceled: boolean) => void;
 };
 
 // biome-ignore lint/correctness/noEmptyPattern: <explanation>
@@ -25,9 +26,15 @@ interface AddItemButtonProps<T> {
   title: string;
   description: string;
   form: typeof EditItemForm<T>;
+  table: Table<T>;
 }
 
-export default function AddItemButton<T>({ title, description, form }: AddItemButtonProps<T>) {
+export default function AddItemButton<T>({
+  title,
+  description,
+  form,
+  table,
+}: AddItemButtonProps<T>) {
   const [addOpen, setAddOpen] = useState(false);
   const [processing, setProcessing] = useState(false);
 
@@ -53,7 +60,10 @@ export default function AddItemButton<T>({ title, description, form }: AddItemBu
         </DialogHeader>
         {form({
           onProcessing: setProcessing,
-          onDone: () => setAddOpen(false),
+          onDone: () => {
+            setAddOpen(false);
+            table.options?.meta?.fetch();
+          },
         })}
       </DialogContent>
     </Dialog>

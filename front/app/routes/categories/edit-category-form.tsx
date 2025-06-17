@@ -28,9 +28,8 @@ type EditCategoryFormProps = EditItemFormProps<Category> & {
 
 export function EditCategoryForm({
   disableCancel,
-  onCancel,
   onProcessing,
-  onSaved,
+  onDone,
   category,
 }: EditCategoryFormProps) {
   const profile = useUserStore((state) => state.profile);
@@ -66,10 +65,10 @@ export function EditCategoryForm({
       name,
     };
     try {
-      const saved = category
+      category
         ? await updateCategory(profile?.code ?? '-', categoryData)
         : await addCategory(profile?.code ?? '-', categoryData);
-      await onSaved(saved);
+      onDone(false);
       form.reset();
     } catch (e) {
       toast.error(t('categories.saveError'), {
@@ -112,7 +111,7 @@ export function EditCategoryForm({
               variant="secondary"
               disabled={processing}
               className="flex"
-              onClick={onCancel}
+              onClick={() => onDone(true)}
             >
               {t('categories.cancel')}
             </Button>

@@ -16,7 +16,7 @@ export default function Categories() {
 
   useEffect(() => {
     if (errorMessage) {
-      toast.error(t('categories.fetchError') ?? t('table.fetchError'), {
+      toast.error(t('categories.fetchError'), {
         description: t(errorMessage),
         closeButton: true,
       });
