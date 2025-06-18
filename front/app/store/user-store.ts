@@ -1,4 +1,4 @@
-import { type StoreApi, type UseBoundStore, create } from 'zustand';
+import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { signIn, signOut, signUp } from '~/api/auth';
 import { fetchProfiles } from '~/api/profiles';
@@ -39,7 +39,8 @@ const useUserStore = create<UserStore>()(
         await signOut();
         get().clean();
       },
-      clean: () => set({ token: null, user: null, profile: null, profiles: [] }),
+      clean: () =>
+        set({ token: null, user: null, profile: null, profiles: [] }),
 
       profile: null as Profile | null,
       setProfile: (profile: Profile) => set({ profile }),

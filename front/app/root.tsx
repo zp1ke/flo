@@ -1,11 +1,11 @@
 import type { ReactNode } from 'react';
 import {
+  isRouteErrorResponse,
   Links,
   Meta,
   Outlet,
   Scripts,
   ScrollRestoration,
-  isRouteErrorResponse,
 } from 'react-router';
 import { ThemeProvider } from '~/contexts/theme-provider';
 
@@ -16,9 +16,12 @@ import { Toaster } from './components/ui/sonner';
 import './lib/i18n';
 import type { ApiError } from './api/client';
 
-// biome-ignore lint/correctness/noEmptyPattern: <explanation>
+// biome-ignore lint/correctness/noEmptyPattern: meta function doesn't use destructured parameters
 export function meta({}: Route.MetaArgs) {
-  return [{ title: 'Flo APP' }, { name: 'description', content: 'Welcome to Flo APP' }];
+  return [
+    { title: 'Flo APP' },
+    { name: 'description', content: 'Welcome to Flo APP' },
+  ];
 }
 
 export const links: Route.LinksFunction = () => [
@@ -81,7 +84,8 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
 
   if (isRouteErrorResponse(error)) {
     message = error.status === 404 ? '404' : 'Error';
-    details = error.status === 404 ? 'Page not found.' : error.statusText || details;
+    details =
+      error.status === 404 ? 'Page not found.' : error.statusText || details;
   } else if (error as ApiError) {
     const ApiError = error as ApiError;
     details += ` ${ApiError.message}`;

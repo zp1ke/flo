@@ -8,7 +8,13 @@ import { toast } from 'sonner';
 import { z } from 'zod';
 import type { ApiError } from '~/api/client';
 import { Button } from '~/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '~/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '~/components/ui/card';
 import {
   Form,
   FormControl,
@@ -29,8 +35,14 @@ export default function SignInForm() {
   const [processing, setProcessing] = useState(false);
 
   const formSchema = z.object({
-    email: z.string().email(t('signIn.validEmail')).max(255, t('signIn.emailMax255')),
-    password: z.string().min(3, t('signIn.passwordSize')).max(100, t('signIn.passwordSize')),
+    email: z
+      .string()
+      .email(t('signIn.validEmail'))
+      .max(255, t('signIn.emailMax255')),
+    password: z
+      .string()
+      .min(3, t('signIn.passwordSize'))
+      .max(100, t('signIn.passwordSize')),
   });
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -81,7 +93,6 @@ export default function SignInForm() {
                       <FormLabel>{t('signIn.email')}</FormLabel>
                       <FormControl>
                         <Input
-                          id="sign-in-email"
                           placeholder={t('signIn.emailPlaceholder')}
                           type="email"
                           required
@@ -109,7 +120,6 @@ export default function SignInForm() {
                       </div>
                       <FormControl>
                         <Input
-                          id="sign-in-password"
                           placeholder={t('signIn.passwordPlaceholder')}
                           type="password"
                           required
@@ -131,7 +141,9 @@ export default function SignInForm() {
             </form>
           </Form>
           <div className="flex mt-4 text-center justify-between text-sm">
-            <span className="text-muted-foreground">{t('signIn.noAccount')}</span>
+            <span className="text-muted-foreground">
+              {t('signIn.noAccount')}
+            </span>
             <Link to="/sign-up" className="underline underline-offset-4">
               {t('signUp.title')}
             </Link>

@@ -9,7 +9,13 @@ import { z } from 'zod';
 import { sendEmailRecover } from '~/api/auth';
 import type { ApiError } from '~/api/client';
 import { Button } from '~/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '~/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '~/components/ui/card';
 import {
   Form,
   FormControl,
@@ -26,7 +32,10 @@ export default function RecoverForm() {
   const [sent, setSent] = useState(false);
 
   const formSchema = z.object({
-    email: z.string().email(t('recover.validEmail')).max(255, t('recover.emailMax255')),
+    email: z
+      .string()
+      .email(t('recover.validEmail'))
+      .max(255, t('recover.emailMax255')),
   });
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -63,7 +72,9 @@ export default function RecoverForm() {
         </CardHeader>
         <CardContent>
           <div className="flex mt-4 text-center justify-between text-sm">
-            <span className="text-muted-foreground">{t('recover.goSignIn')}</span>
+            <span className="text-muted-foreground">
+              {t('recover.goSignIn')}
+            </span>
             <Link to="/" className="underline underline-offset-4 ml-2">
               {t('signIn.title')}
             </Link>
@@ -112,7 +123,9 @@ export default function RecoverForm() {
             </form>
           </Form>
           <div className="flex mt-4 text-center justify-between text-sm">
-            <span className="text-muted-foreground">{t('recover.noAccount')}</span>
+            <span className="text-muted-foreground">
+              {t('recover.noAccount')}
+            </span>
             <Link to="/sign-up" className="underline underline-offset-4">
               {t('signUp.title')}
             </Link>

@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '~/components/ui/button';
 import { Input } from '~/components/ui/input';
-
+import type { DataTableFilter, DataTableSelectFilter } from './data-filter';
 import { DataTableFacetedFilter } from './data-table-faceted-filter';
 import { DataTableViewOptions } from './data-table-view-options';
 
@@ -56,7 +56,10 @@ export function DataTableToolbar<TData>({
             placeholder={`${t('table.filter')} ${filter.title}...`}
             value={filters[filter.column] ?? ''}
             onChange={(event) =>
-              setFilters((prev) => ({ ...prev, [filter.column]: event.target.value }))
+              setFilters((prev) => ({
+                ...prev,
+                [filter.column]: event.target.value,
+              }))
             }
             className="w-[150px] lg:w-[250px]"
           />
@@ -76,14 +79,26 @@ export function DataTableToolbar<TData>({
             <X />
           </Button>
         )}
-        <Button variant="outline" size="icon" disabled={loading()} onClick={search}>
-          {loading() && <Loader2 className="h-4 w-4 animate-spin" />}
-          {!loading() && <SearchIcon className="h-4 w-4" />}
-        </Button>
+        {(textFilters?.length || facetedFilters?.length) && (
+          <Button
+            variant="outline"
+            size="icon"
+            disabled={loading()}
+            onClick={search}
+          >
+            {loading() && <Loader2 className="h-4 w-4 animate-spin" />}
+            {!loading() && <SearchIcon className="h-4 w-4" />}
+          </Button>
+        )}
       </div>
       <div className="flex items-center justify-end gap-1">
         <DataTableViewOptions table={table} />
-        <Button variant="outline" size="icon" disabled={loading()} onClick={fetch}>
+        <Button
+          variant="outline"
+          size="icon"
+          disabled={loading()}
+          onClick={fetch}
+        >
           {loading() && <Loader2 className="h-4 w-4 animate-spin" />}
           {!loading() && <RefreshCwIcon />}
         </Button>

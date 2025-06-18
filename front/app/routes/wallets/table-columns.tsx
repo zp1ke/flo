@@ -4,12 +4,20 @@ import { DataTableColumnHeader } from '~/components/table/data-table-column-head
 import type { Wallet } from '~/types/wallet';
 import { DataTableRowActions } from './table-row-actions';
 
-export const tableColumns = ({ t }: { t: (key: string) => string }): ColumnDef<Wallet>[] => [
+export const tableColumns = ({
+  t,
+}: {
+  t: (key: string) => string;
+}): ColumnDef<Wallet>[] => [
   {
     id: 'code',
     accessorKey: 'code',
     header: ({ column, table }) => (
-      <DataTableColumnHeader column={column} table={table} title={t('wallets.code')} />
+      <DataTableColumnHeader
+        column={column}
+        table={table}
+        title={t('wallets.code')}
+      />
     ),
     cell: ({ row }) => <div className="w-[80px]">{row.getValue('code')}</div>,
     enableSorting: false,
@@ -19,10 +27,16 @@ export const tableColumns = ({ t }: { t: (key: string) => string }): ColumnDef<W
     id: 'name',
     accessorKey: 'name',
     header: ({ column, table }) => (
-      <DataTableColumnHeader column={column} table={table} title={t('wallets.name')} />
+      <DataTableColumnHeader
+        column={column}
+        table={table}
+        title={t('wallets.name')}
+      />
     ),
     cell: ({ row }) => (
-      <div className="max-w-[500px] truncate font-medium">{row.getValue('name')}</div>
+      <div className="max-w-[500px] truncate font-medium">
+        {row.getValue('name')}
+      </div>
     ),
     enableSorting: true,
     enableHiding: false,

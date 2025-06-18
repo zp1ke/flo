@@ -9,7 +9,13 @@ import { z } from 'zod';
 import type { ApiError } from '~/api/client';
 import { TypingText } from '~/components/animate-ui/text/typing';
 import { Button } from '~/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '~/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '~/components/ui/card';
 import {
   Form,
   FormControl,
@@ -29,8 +35,14 @@ export default function SignUpForm() {
   const [processing, setProcessing] = useState(false);
 
   const formSchema = z.object({
-    email: z.string().email(t('signUp.validEmail')).max(255, t('signUp.emailMax255')),
-    name: z.string().min(3, t('signUp.nameSize')).max(255, t('signUp.nameSize')),
+    email: z
+      .string()
+      .email(t('signUp.validEmail'))
+      .max(255, t('signUp.emailMax255')),
+    name: z
+      .string()
+      .min(3, t('signUp.nameSize'))
+      .max(255, t('signUp.nameSize')),
     password: z
       .string()
       .min(3, t('signUp.passwordSize'))
@@ -87,7 +99,7 @@ export default function SignUpForm() {
                       <FormLabel>{t('signUp.name')}</FormLabel>
                       <FormControl>
                         <Input
-                          id="sign-up-name"
+                          aria-label="sign-up-name"
                           placeholder={t('signUp.namePlaceholder')}
                           type="text"
                           required
@@ -107,7 +119,7 @@ export default function SignUpForm() {
                       <FormLabel>{t('signUp.email')}</FormLabel>
                       <FormControl>
                         <Input
-                          id="sign-up-email"
+                          aria-label="sign-up-email"
                           placeholder={t('signUp.emailPlaceholder')}
                           type="email"
                           required
@@ -129,7 +141,7 @@ export default function SignUpForm() {
                       </div>
                       <FormControl>
                         <Input
-                          id="sign-up-password"
+                          aria-label="sign-up-password"
                           placeholder={t('signUp.passwordPlaceholder')}
                           type="password"
                           required
@@ -151,9 +163,10 @@ export default function SignUpForm() {
             </form>
           </Form>
           <div className="text-muted-foreground *:[a]:hover:text-primary text-center text-xs text-balance *:[a]:underline *:[a]:underline-offset-4 mt-6">
-            {t('signUp.termsParagraphPre')} <a href="/terms">{t('signUp.termsParagraphLink1')}</a>{' '}
-            {t('signUp.termsParagraphAnd')} <a href="/privacy">{t('signUp.termsParagraphLink2')}</a>
-            .
+            {t('signUp.termsParagraphPre')}{' '}
+            <a href="/terms">{t('signUp.termsParagraphLink1')}</a>{' '}
+            {t('signUp.termsParagraphAnd')}{' '}
+            <a href="/privacy">{t('signUp.termsParagraphLink2')}</a>.
           </div>
         </CardContent>
       </Card>

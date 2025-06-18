@@ -15,7 +15,11 @@ export const tableColumns = ({
     id: 'code',
     accessorKey: 'code',
     header: ({ column, table }) => (
-      <DataTableColumnHeader column={column} table={table} title={t('transactions.code')} />
+      <DataTableColumnHeader
+        column={column}
+        table={table}
+        title={t('transactions.code')}
+      />
     ),
     cell: ({ row }) => <div className="w-[80px]">{row.getValue('code')}</div>,
     enableSorting: false,
@@ -25,7 +29,11 @@ export const tableColumns = ({
     id: 'datetime',
     accessorKey: 'datetime',
     header: ({ column, table }) => (
-      <DataTableColumnHeader column={column} table={table} title={t('transactions.datetime')} />
+      <DataTableColumnHeader
+        column={column}
+        table={table}
+        title={t('transactions.datetime')}
+      />
     ),
     cell: ({ row }) => {
       const options: Intl.DateTimeFormatOptions = {
@@ -38,7 +46,11 @@ export const tableColumns = ({
       };
       const datetime = new Date(row.getValue('datetime'));
       const formattedDatetime = datetime.toLocaleDateString(language, options);
-      return <div className="max-w-[500px] truncate font-medium">{formattedDatetime}</div>;
+      return (
+        <div className="max-w-[500px] truncate font-medium">
+          {formattedDatetime}
+        </div>
+      );
     },
     enableSorting: true,
     enableHiding: false,
@@ -47,7 +59,11 @@ export const tableColumns = ({
     id: 'amount',
     accessorKey: 'amount',
     header: ({ column, table }) => (
-      <DataTableColumnHeader column={column} table={table} title={t('transactions.amount')} />
+      <DataTableColumnHeader
+        column={column}
+        table={table}
+        title={t('transactions.amount')}
+      />
     ),
     cell: ({ row }) => {
       const amount = Number.parseFloat(row.getValue('amount'));
@@ -55,7 +71,11 @@ export const tableColumns = ({
         style: 'currency',
         currency: 'USD',
       }).format(amount);
-      return <div className="max-w-[500px] truncate font-medium">{formattedAmount}</div>;
+      return (
+        <div className="max-w-[500px] truncate font-medium">
+          {formattedAmount}
+        </div>
+      );
     },
     enableSorting: true,
     enableHiding: false,
@@ -64,10 +84,16 @@ export const tableColumns = ({
     id: 'description',
     accessorKey: 'description',
     header: ({ column, table }) => (
-      <DataTableColumnHeader column={column} table={table} title={t('transactions.description')} />
+      <DataTableColumnHeader
+        column={column}
+        table={table}
+        title={t('transactions.description')}
+      />
     ),
     cell: ({ row }) => (
-      <div className="max-w-[500px] truncate font-medium">{row.getValue('description')}</div>
+      <div className="max-w-[500px] truncate font-medium">
+        {row.getValue('description')}
+      </div>
     ),
     enableSorting: false,
     enableHiding: true,

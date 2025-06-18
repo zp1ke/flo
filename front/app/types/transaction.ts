@@ -3,7 +3,10 @@ import { z } from 'zod';
 const descriptionMaxLength = 255;
 
 export const transactionDescriptionIsValid = (description?: string) => {
-  return !description || (description.length && description.length <= descriptionMaxLength);
+  return (
+    !description ||
+    (description.length && description.length <= descriptionMaxLength)
+  );
 };
 
 export const transactionSchema = z.object({

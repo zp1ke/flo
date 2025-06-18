@@ -9,7 +9,13 @@ import { z } from 'zod';
 import { recoverPassword } from '~/api/auth';
 import type { ApiError } from '~/api/client';
 import { Button } from '~/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '~/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '~/components/ui/card';
 import {
   Form,
   FormControl,
@@ -26,7 +32,10 @@ export default function RecoveryForm({ code }: { code: string }) {
   const [saved, setSaved] = useState(false);
 
   const formSchema = z.object({
-    email: z.string().email(t('recover.validEmail')).max(255, t('recover.emailMax255')),
+    email: z
+      .string()
+      .email(t('recover.validEmail'))
+      .max(255, t('recover.emailMax255')),
     password: z
       .string()
       .min(3, t('signUp.passwordSize'))
@@ -69,7 +78,9 @@ export default function RecoveryForm({ code }: { code: string }) {
         </CardHeader>
         <CardContent>
           <div className="flex mt-4 text-center justify-between text-sm">
-            <span className="text-muted-foreground">{t('recovery.goSignIn')}</span>
+            <span className="text-muted-foreground">
+              {t('recovery.goSignIn')}
+            </span>
             <Link to="/" className="underline underline-offset-4 ml-2">
               {t('signIn.title')}
             </Link>
@@ -140,7 +151,9 @@ export default function RecoveryForm({ code }: { code: string }) {
             </form>
           </Form>
           <div className="flex mt-4 text-center justify-between text-sm">
-            <span className="text-muted-foreground">{t('recovery.noAccount')}</span>
+            <span className="text-muted-foreground">
+              {t('recovery.noAccount')}
+            </span>
             <Link to="/sign-up" className="underline underline-offset-4">
               {t('signUp.title')}
             </Link>

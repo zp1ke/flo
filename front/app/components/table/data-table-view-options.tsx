@@ -15,21 +15,30 @@ interface DataTableViewOptionsProps<TData> {
   table: Table<TData>;
 }
 
-export function DataTableViewOptions<TData>({ table }: DataTableViewOptionsProps<TData>) {
+export function DataTableViewOptions<TData>({
+  table,
+}: DataTableViewOptionsProps<TData>) {
   const columns = table
     .getAllColumns()
-    .filter((column) => typeof column.accessorFn !== 'undefined' && column.getCanHide());
+    .filter(
+      (column) =>
+        typeof column.accessorFn !== 'undefined' && column.getCanHide(),
+    );
+
+  const { t } = useTranslation();
 
   if (!columns.length) {
     return <></>;
   }
 
-  const { t } = useTranslation();
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="sm" className="ml-auto hidden h-8 lg:flex">
+        <Button
+          variant="outline"
+          size="sm"
+          className="ml-auto hidden h-8 lg:flex"
+        >
           <Settings2 />
           {t('table.view')}
         </Button>

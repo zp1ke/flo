@@ -12,7 +12,8 @@ import {
 } from '~/components/ui/dropdown-menu';
 import { cn } from '~/lib/utils';
 
-interface DataTableColumnHeaderProps<TData, TValue> extends HTMLAttributes<HTMLDivElement> {
+interface DataTableColumnHeaderProps<TData, TValue>
+  extends HTMLAttributes<HTMLDivElement> {
   column: Column<TData, TValue>;
   table: Table<TData>;
   title: string;
@@ -24,11 +25,11 @@ export function DataTableColumnHeader<TData, TValue>({
   table,
   title,
 }: DataTableColumnHeaderProps<TData, TValue>) {
+  const { t } = useTranslation();
+
   if (!column.getCanSort()) {
     return <div className={cn(className)}>{title}</div>;
   }
-
-  const { t } = useTranslation();
 
   const loading = (): boolean => table.options?.meta?.loading?.() ?? false;
 

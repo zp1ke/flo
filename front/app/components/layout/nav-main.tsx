@@ -1,7 +1,11 @@
 import { ChevronRight, type LucideIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Link, useLocation } from 'react-router';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '~/components/ui/collapsible';
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from '~/components/ui/collapsible';
 import {
   SidebarGroup,
   SidebarGroupLabel,
@@ -50,7 +54,10 @@ export function NavMain({
                     variant={isActive ? 'outline' : 'default'}
                     asChild
                   >
-                    <Link to={item.url} style={{ pointerEvents: isActive ? 'none' : 'auto' }}>
+                    <Link
+                      to={item.url}
+                      style={{ pointerEvents: isActive ? 'none' : 'auto' }}
+                    >
                       {item.icon && <item.icon />}
                       <span>{t(`nav.${item.title}`)}</span>
                       {item.items && (

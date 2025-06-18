@@ -16,7 +16,8 @@ export type AnonContextType = {
 };
 
 export default function AnonLayout() {
-  const [placeholderPosition, setPlaceholderPosition] = useState<HorizontalPosition>('left');
+  const [placeholderPosition, setPlaceholderPosition] =
+    useState<HorizontalPosition>('left');
 
   return (
     <AnonContainer placeholderPosition={placeholderPosition}>

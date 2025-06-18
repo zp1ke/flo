@@ -1,10 +1,9 @@
 import axios, { type AxiosInstance } from 'axios';
 import config from '~/config';
-import type { DataPage } from '~/types/page';
-import { type SortDirection, sortPrefix } from '~/types/sort';
-
 import { getLanguage } from '~/lib/i18n';
 import useUserStore from '~/store/user-store';
+import type { DataPage } from '~/types/page';
+import { type SortDirection, sortPrefix } from '~/types/sort';
 
 export interface ApiError {
   message: string;
@@ -36,7 +35,10 @@ class ApiClient {
     });
   }
 
-  async getPage<T>(url: string, pageFilters?: PageFilters): Promise<DataPage<T>> {
+  async getPage<T>(
+    url: string,
+    pageFilters?: PageFilters,
+  ): Promise<DataPage<T>> {
     try {
       const response = await this.axios.get<ApiPage<T>>(url, {
         params: paramsFrom(pageFilters),
@@ -65,7 +67,9 @@ class ApiClient {
 
   async postJson<T>(url: string, data?: Record<string, unknown>): Promise<T> {
     try {
-      const response = await this.axios.post<T>(url, data, { headers: headers() });
+      const response = await this.axios.post<T>(url, data, {
+        headers: headers(),
+      });
       return response.data;
     } catch (error) {
       throw parseError(error);
@@ -74,7 +78,9 @@ class ApiClient {
 
   async putJson<T>(url: string, data: Record<string, unknown>): Promise<T> {
     try {
-      const response = await this.axios.put<T>(url, data, { headers: headers() });
+      const response = await this.axios.put<T>(url, data, {
+        headers: headers(),
+      });
       return response.data;
     } catch (error) {
       throw parseError(error);
@@ -111,7 +117,9 @@ const paramsFrom = (pageFilters?: PageFilters): URLSearchParams => {
     params.set('size', pageFilters.size.toString());
     if (pageFilters.sort) {
       for (const [key, value] of Object.entries(pageFilters.sort)) {
-        const theKey = key.startsWith(sortPrefix) ? key.substring(sortPrefix.length) : key;
+        const theKey = key.startsWith(sortPrefix)
+          ? key.substring(sortPrefix.length)
+          : key;
         params.append('sort', `${theKey},${value}`);
       }
     }

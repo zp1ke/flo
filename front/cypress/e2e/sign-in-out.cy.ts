@@ -23,8 +23,8 @@ describe('Sign In & Out Test', () => {
     cy.get('.flo-app-loading').should('not.exist');
     cy.contains('Flo');
 
-    cy.get('input[id="sign-in-email"]').type(userEmail);
-    cy.get('input[id="sign-in-password"]').type(userPassword);
+    cy.get('input[type="email"]').type(userEmail);
+    cy.get('input[type="password"]').type(userPassword);
 
     cy.get('button[type="submit"]').click();
 
@@ -39,9 +39,9 @@ describe('Sign In & Out Test', () => {
     // Sign Out
     cy.intercept('POST', '/api/v1/user/sign-out').as('signOutRequest');
 
-    cy.get('#sign-out-menu').click();
-    cy.get('#sign-out').click();
-    cy.get('button[id="sign-out-confirm"]').click();
+    cy.get('[aria-label="user-menu"]').click();
+    cy.get('[aria-label="sign-out"]').click();
+    cy.get('button[aria-label="sign-out-confirm"]').click();
 
     cy.wait('@signOutRequest').its('response.statusCode').should('eq', 204);
     cy.wait(100);

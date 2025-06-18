@@ -10,7 +10,10 @@ import { EditTransactionForm } from './transactions/edit-transaction-form';
 export default function Transactions() {
   const { t, i18n } = useTranslation();
 
-  const columns = useMemo(() => tableColumns({ t, language: i18n.language }), [t, i18n]);
+  const columns = useMemo(
+    () => tableColumns({ t, language: i18n.language }),
+    [t, i18n],
+  );
 
   const errorMessage = useTransactionStore((state) => state.errorMessage);
 
@@ -24,7 +27,10 @@ export default function Transactions() {
   }, [errorMessage, t]);
 
   return (
-    <PageContent title={t('transactions.title')} subtitle={t('transactions.subtitle')}>
+    <PageContent
+      title={t('transactions.title')}
+      subtitle={t('transactions.subtitle')}
+    >
       <DataTable
         columns={columns}
         dataStore={useTransactionStore}

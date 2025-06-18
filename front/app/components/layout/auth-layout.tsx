@@ -4,7 +4,11 @@ import { AppSidebar } from '~/components/layout/app-sidebar';
 import { LanguageSelector } from '~/components/layout/language-selector';
 import { ThemeModeSelector } from '~/components/layout/theme-mode-selector';
 import { Separator } from '~/components/ui/separator';
-import { SidebarInset, SidebarProvider, SidebarTrigger } from '~/components/ui/sidebar';
+import {
+  SidebarInset,
+  SidebarProvider,
+  SidebarTrigger,
+} from '~/components/ui/sidebar';
 import useUserStore from '~/store/user-store';
 import GeneralBanner from './general-banner';
 

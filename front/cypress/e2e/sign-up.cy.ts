@@ -9,9 +9,9 @@ describe('Sign Up Test', () => {
     cy.contains('Flo');
 
     const userName = 'Sign Up User';
-    cy.get('input[id="sign-up-name"]').type(userName);
-    cy.get('input[id="sign-up-email"]').type('sign-up@email.com');
-    cy.get('input[id="sign-up-password"]').type('passworD1#');
+    cy.get('input[aria-label="sign-up-name"]').type(userName);
+    cy.get('input[aria-label="sign-up-email"]').type('sign-up@email.com');
+    cy.get('input[aria-label="sign-up-password"]').type('passworD1#');
 
     cy.get('button[type="submit"]').click();
     cy.wait('@signUpRequest').its('response.statusCode').should('eq', 201);

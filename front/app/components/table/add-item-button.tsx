@@ -12,20 +12,20 @@ import {
 } from '~/components/ui/dialog';
 import { cn } from '~/lib/utils';
 
-export type EditItemFormProps<T> = {
+export type EditItemFormProps = {
   onProcessing: (processing: boolean) => void;
   onDone: (canceled: boolean) => void;
 };
 
-// biome-ignore lint/correctness/noEmptyPattern: <explanation>
-export const EditItemForm = <T,>({}: EditItemFormProps<T>) => {
+// biome-ignore lint/correctness/noEmptyPattern: empty destructuring pattern is intentional for generic component
+export const EditItemForm = ({}: EditItemFormProps) => {
   return <></>;
 };
 
 interface AddItemButtonProps<T> {
   title: string;
   description: string;
-  form: typeof EditItemForm<T>;
+  form: typeof EditItemForm;
   table: Table<T>;
 }
 

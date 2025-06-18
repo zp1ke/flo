@@ -10,7 +10,11 @@ import {
   CommandItem,
   CommandList,
 } from '~/components/ui/command';
-import { Popover, PopoverContent, PopoverTrigger } from '~/components/ui/popover';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '~/components/ui/popover';
 import { cn } from '~/lib/utils';
 
 export interface ValueManager<T> {
@@ -58,7 +62,9 @@ export function SearchableSelect<T>({
         }}
       >
         {item.label()}
-        <Check className={cn('ml-auto', selected ? 'opacity-100' : 'opacity-0')} />
+        <Check
+          className={cn('ml-auto', selected ? 'opacity-100' : 'opacity-0')}
+        />
       </CommandItem>
     );
   };
@@ -69,7 +75,10 @@ export function SearchableSelect<T>({
         <Button
           disabled={!options.length || disabled}
           variant="outline"
-          className={cn('w-full justify-between', !value && 'text-muted-foreground')}
+          className={cn(
+            'w-full justify-between',
+            !value && 'text-muted-foreground',
+          )}
         >
           {theValue?.label() ?? placeholder}
           <ChevronsUpDown className="opacity-50" />

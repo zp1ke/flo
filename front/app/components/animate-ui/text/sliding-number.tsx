@@ -2,9 +2,9 @@
 
 import {
   type MotionValue,
+  motion,
   type SpringOptions,
   type UseInViewOptions,
-  motion,
   useInView,
   useSpring,
   useTransform,
@@ -144,17 +144,22 @@ function SlidingNumber({
   );
 
   const formatNumber = React.useCallback(
-    (num: number) => (decimalPlaces != null ? num.toFixed(decimalPlaces) : num.toString()),
+    (num: number) =>
+      decimalPlaces != null ? num.toFixed(decimalPlaces) : num.toString(),
     [decimalPlaces],
   );
 
   const numberStr = formatNumber(effectiveNumber);
   const [newIntStrRaw, newDecStrRaw = ''] = numberStr.split('.');
-  const newIntStr = padStart && newIntStrRaw?.length === 1 ? `0${newIntStrRaw}` : newIntStrRaw;
+  const newIntStr =
+    padStart && newIntStrRaw?.length === 1 ? `0${newIntStrRaw}` : newIntStrRaw;
 
   const prevFormatted = formatNumber(prevNumberRef.current);
   const [prevIntStrRaw = '', prevDecStrRaw = ''] = prevFormatted.split('.');
-  const prevIntStr = padStart && prevIntStrRaw.length === 1 ? `0${prevIntStrRaw}` : prevIntStrRaw;
+  const prevIntStr =
+    padStart && prevIntStrRaw.length === 1
+      ? `0${prevIntStrRaw}`
+      : prevIntStrRaw;
 
   const adjustedPrevInt = React.useMemo(() => {
     return prevIntStr.length > (newIntStr?.length ?? 0)
@@ -175,19 +180,28 @@ function SlidingNumber({
 
   const intDigitCount = newIntStr?.length ?? 0;
   const intPlaces = React.useMemo(
-    () => Array.from({ length: intDigitCount }, (_, i) => 10 ** (intDigitCount - i - 1)),
+    () =>
+      Array.from(
+        { length: intDigitCount },
+        (_, i) => 10 ** (intDigitCount - i - 1),
+      ),
     [intDigitCount],
   );
   const decPlaces = React.useMemo(
     () =>
       newDecStrRaw
-        ? Array.from({ length: newDecStrRaw.length }, (_, i) => 10 ** (newDecStrRaw.length - i - 1))
+        ? Array.from(
+            { length: newDecStrRaw.length },
+            (_, i) => 10 ** (newDecStrRaw.length - i - 1),
+          )
         : [],
     [newDecStrRaw],
   );
 
   const newDecValue = newDecStrRaw ? Number.parseInt(newDecStrRaw, 10) : 0;
-  const prevDecValue = adjustedPrevDec ? Number.parseInt(adjustedPrevDec, 10) : 0;
+  const prevDecValue = adjustedPrevDec
+    ? Number.parseInt(adjustedPrevDec, 10)
+    : 0;
 
   return (
     <span

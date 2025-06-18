@@ -3,14 +3,18 @@ import type { DataPage } from '~/types/page';
 import type { Transaction } from '~/types/transaction';
 import apiClient, { type PageFilters } from './client';
 
-const basePath = (profileCode: string) => `/profiles/${profileCode}/transactions`;
+const basePath = (profileCode: string) =>
+  `/profiles/${profileCode}/transactions`;
 
 export const fetchTransactions = async (
   profileCode: string,
   pageFilters: PageFilters,
 ): Promise<DataPage<Transaction>> => {
   console.debug('Fetching transactions with filters:', pageFilters);
-  const data = await apiClient.getPage<Transaction>(basePath(profileCode), pageFilters);
+  const data = await apiClient.getPage<Transaction>(
+    basePath(profileCode),
+    pageFilters,
+  );
   return data;
 };
 
@@ -19,7 +23,10 @@ export const addTransaction = async (
   transaction: Transaction,
 ): Promise<Transaction> => {
   console.debug('Adding transaction:', transaction);
-  const saved = await apiClient.postJson<Transaction>(basePath(profileCode), transaction);
+  const saved = await apiClient.postJson<Transaction>(
+    basePath(profileCode),
+    transaction,
+  );
   return saved;
 };
 

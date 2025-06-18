@@ -19,9 +19,13 @@ import {
 } from '~/components/ui/form';
 import { Input } from '~/components/ui/input';
 import useUserStore from '~/store/user-store';
-import { type Category, categoryNameIsValid, categorySchema } from '~/types/category';
+import {
+  type Category,
+  categoryNameIsValid,
+  categorySchema,
+} from '~/types/category';
 
-type EditCategoryFormProps = EditItemFormProps<Category> & {
+type EditCategoryFormProps = EditItemFormProps & {
   disableCancel?: boolean;
   category?: Category;
 };
@@ -39,7 +43,10 @@ export function EditCategoryForm({
   const [processing, setProcessing] = useState(false);
 
   const formSchema = z.object({
-    name: categorySchema.shape.name.refine(categoryNameIsValid, t('categories.nameSize')),
+    name: categorySchema.shape.name.refine(
+      categoryNameIsValid,
+      t('categories.nameSize'),
+    ),
     setDefault: z.boolean().default(true).optional(),
   });
 

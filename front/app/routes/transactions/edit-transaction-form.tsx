@@ -23,7 +23,10 @@ import {
   FormMessage,
 } from '~/components/ui/form';
 import { Input } from '~/components/ui/input';
-import { SearchableSelect, type ValueManager } from '~/components/ui/searchable-select';
+import {
+  SearchableSelect,
+  type ValueManager,
+} from '~/components/ui/searchable-select';
 import useUserStore from '~/store/user-store';
 import { type Category, categorySchema } from '~/types/category';
 import {
@@ -33,7 +36,7 @@ import {
 } from '~/types/transaction';
 import { type Wallet, walletSchema } from '~/types/wallet';
 
-type EditTransactionFormProps = EditItemFormProps<Transaction> & {
+type EditTransactionFormProps = EditItemFormProps & {
   disableCancel?: boolean;
   transaction?: Transaction;
 };
@@ -81,9 +84,14 @@ export function EditTransactionForm({
         return;
       }
       setFetchingCategories(true);
-      const categories = await fetchCategories(profileCode, { page: 0, size: 100 });
+      const categories = await fetchCategories(profileCode, {
+        page: 0,
+        size: 100,
+      });
       if (transaction) {
-        const category = categories.data.find((c) => c.code === transaction.categoryCode);
+        const category = categories.data.find(
+          (c) => c.code === transaction.categoryCode,
+        );
         if (category) {
           form.setValue('category', category);
         }
@@ -103,7 +111,9 @@ export function EditTransactionForm({
       setFetchingWallets(true);
       const wallets = await fetchWallets(profileCode, { page: 0, size: 100 });
       if (transaction) {
-        const wallet = wallets.data.find((c) => c.code === transaction.walletCode);
+        const wallet = wallets.data.find(
+          (c) => c.code === transaction.walletCode,
+        );
         if (wallet) {
           form.setValue('wallet', wallet);
         }
@@ -164,7 +174,9 @@ export function EditTransactionForm({
             name="amount"
             render={({ field }) => (
               <FormItem className="grid gap-2">
-                <FormLabel htmlFor="amount">{t('transactions.amount')}</FormLabel>
+                <FormLabel htmlFor="amount">
+                  {t('transactions.amount')}
+                </FormLabel>
                 <FormControl>
                   <Input
                     {...field}
@@ -174,7 +186,9 @@ export function EditTransactionForm({
                     disabled={processing}
                     value={field.value || ''}
                     onChange={(e) => {
-                      const value = e.target.value ? Number.parseFloat(e.target.value) : 0;
+                      const value = e.target.value
+                        ? Number.parseFloat(e.target.value)
+                        : 0;
                       field.onChange(value);
                     }}
                   />
@@ -188,7 +202,9 @@ export function EditTransactionForm({
             name="datetime"
             render={({ field }) => (
               <FormItem className="grid gap-2">
-                <FormLabel htmlFor="datetime">{t('transactions.datetime')}</FormLabel>
+                <FormLabel htmlFor="datetime">
+                  {t('transactions.datetime')}
+                </FormLabel>
                 <FormControl>
                   <DateTimePicker
                     value={field.value}
@@ -206,7 +222,9 @@ export function EditTransactionForm({
             name="description"
             render={({ field }) => (
               <FormItem className="grid gap-2">
-                <FormLabel htmlFor="description">{t('transactions.description')}</FormLabel>
+                <FormLabel htmlFor="description">
+                  {t('transactions.description')}
+                </FormLabel>
                 <FormControl>
                   <Input
                     placeholder={t('transactions.descriptionPlaceholder')}
@@ -242,9 +260,15 @@ export function EditTransactionForm({
                     options={categories}
                     placeholder={t('transactions.categoryPlaceholder')}
                     searchTitle={t('transactions.categorySearchTitle')}
-                    searchNotMatchMessage={t('transactions.categorySearchNotMatch')}
-                    disabled={processing || !categories.length || fetchingCategories}
-                    converter={(category: Category): ValueManager<Category> => ({
+                    searchNotMatchMessage={t(
+                      'transactions.categorySearchNotMatch',
+                    )}
+                    disabled={
+                      processing || !categories.length || fetchingCategories
+                    }
+                    converter={(
+                      category: Category,
+                    ): ValueManager<Category> => ({
                       value: category,
                       key: () => category.code ?? '',
                       label: () => category.name,
@@ -254,7 +278,11 @@ export function EditTransactionForm({
                 </FormControl>
                 <FormDescription>
                   {t('transactions.categoriesManageDescription')}{' '}
-                  <Link to="/categories" className="underline underline-offset-4" target="_blank">
+                  <Link
+                    to="/categories"
+                    className="underline underline-offset-4"
+                    target="_blank"
+                  >
                     {t('transactions.categoriesManageLink')}
                   </Link>
                 </FormDescription>
@@ -284,7 +312,9 @@ export function EditTransactionForm({
                     options={wallets}
                     placeholder={t('transactions.walletPlaceholder')}
                     searchTitle={t('transactions.walletSearchTitle')}
-                    searchNotMatchMessage={t('transactions.walletSearchNotMatch')}
+                    searchNotMatchMessage={t(
+                      'transactions.walletSearchNotMatch',
+                    )}
                     disabled={processing || !wallets.length || fetchingWallets}
                     converter={(wallet: Wallet): ValueManager<Wallet> => ({
                       value: wallet,
@@ -296,7 +326,11 @@ export function EditTransactionForm({
                 </FormControl>
                 <FormDescription>
                   {t('transactions.walletsManageDescription')}{' '}
-                  <Link to="/wallets" className="underline underline-offset-4" target="_blank">
+                  <Link
+                    to="/wallets"
+                    className="underline underline-offset-4"
+                    target="_blank"
+                  >
                     {t('transactions.walletsManageLink')}
                   </Link>
                 </FormDescription>

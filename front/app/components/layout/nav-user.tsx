@@ -49,7 +49,7 @@ export function NavUser() {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <SidebarMenuButton
-                id="sign-out-menu"
+                aria-label="user-menu"
                 size="lg"
                 className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
               >
@@ -57,7 +57,9 @@ export function NavUser() {
                   <UserCircleIcon className="h-8 w-8" />
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">{profile?.name}</span>
+                  <span className="truncate font-semibold">
+                    {profile?.name}
+                  </span>
                   <span className="truncate text-xs">{user?.email}</span>
                 </div>
                 <ChevronsUpDown className="ml-auto size-4" />
@@ -75,14 +77,19 @@ export function NavUser() {
                     <UserCircleIcon className="h-8 w-8" />
                   </Avatar>
                   <div className="grid flex-1 text-left text-sm leading-tight">
-                    <span className="truncate font-semibold">{profile?.name}</span>
+                    <span className="truncate font-semibold">
+                      {profile?.name}
+                    </span>
                     <span className="truncate text-xs">{user?.email}</span>
                   </div>
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DialogTrigger asChild>
-                <DropdownMenuItem className="cursor-pointer text-destructive" id="sign-out">
+                <DropdownMenuItem
+                  className="cursor-pointer text-destructive"
+                  aria-label="sign-out"
+                >
                   <LogOut />
                   {t('signOut.title')}
                 </DropdownMenuItem>
@@ -90,7 +97,10 @@ export function NavUser() {
             </DropdownMenuContent>
           </DropdownMenu>
           <DialogContent
-            className={cn('sm:max-w-[425px]', signingOut && '[&>button]:hidden')}
+            className={cn(
+              'sm:max-w-[425px]',
+              signingOut && '[&>button]:hidden',
+            )}
             onInteractOutside={(e) => {
               if (signingOut) {
                 e.preventDefault();
@@ -99,7 +109,9 @@ export function NavUser() {
           >
             <DialogHeader>
               <DialogTitle>{t('signOut.confirmTitle')}</DialogTitle>
-              <DialogDescription>{t('signOut.confirmMessage')}</DialogDescription>
+              <DialogDescription>
+                {t('signOut.confirmMessage')}
+              </DialogDescription>
             </DialogHeader>
             <DialogFooter>
               <DialogClose asChild>
@@ -108,7 +120,7 @@ export function NavUser() {
                 </Button>
               </DialogClose>
               <Button
-                id="sign-out-confirm"
+                aria-label="sign-out-confirm"
                 className="ml-auto flex"
                 variant="destructive"
                 disabled={signingOut}

@@ -81,7 +81,9 @@ export function ProfileSwitcher() {
                   <GalleryVerticalEnd className="size-4" />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">{profile?.name}</span>
+                  <span className="truncate font-semibold">
+                    {profile?.name}
+                  </span>
                   <span className="truncate text-xs">{profile?.code}</span>
                 </div>
                 <ChevronsUpDown className="ml-auto" />
@@ -124,13 +126,18 @@ export function ProfileSwitcher() {
                   <div className="flex size-6 items-center justify-center rounded-md border bg-background">
                     <Plus className="size-4" />
                   </div>
-                  <div className="font-medium text-muted-foreground">{t('profiles.add')}</div>
+                  <div className="font-medium text-muted-foreground">
+                    {t('profiles.add')}
+                  </div>
                 </DropdownMenuItem>
               </DialogTrigger>
             </DropdownMenuContent>
           </DropdownMenu>
           <DialogContent
-            className={cn('sm:max-w-[425px]', processing && '[&>button]:hidden')}
+            className={cn(
+              'sm:max-w-[425px]',
+              processing && '[&>button]:hidden',
+            )}
             onInteractOutside={(e) => {
               if (processing) {
                 e.preventDefault();
@@ -139,7 +146,9 @@ export function ProfileSwitcher() {
           >
             <DialogHeader>
               <DialogTitle>{t('profiles.add')}</DialogTitle>
-              <DialogDescription>{t('profiles.editDescription')}</DialogDescription>
+              <DialogDescription>
+                {t('profiles.editDescription')}
+              </DialogDescription>
             </DialogHeader>
             <EditProfileForm
               onSaved={onAddedProfile}

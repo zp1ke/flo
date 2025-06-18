@@ -1,5 +1,12 @@
 import { Rocket } from 'lucide-react';
-import { SiDribbble, SiFacebook, SiGithub, SiInstagram, SiX, SiYoutube } from 'react-icons/si';
+import {
+  SiDribbble,
+  SiFacebook,
+  SiGithub,
+  SiInstagram,
+  SiX,
+  SiYoutube,
+} from 'react-icons/si';
 import { Link } from 'react-router';
 
 const sections = [
@@ -65,8 +72,8 @@ export default function About() {
               <span className="text-xl font-bold">StarterBlocks TODO</span>
             </Link>
             <p className="mt-4 max-w-xs text-muted-foreground">
-              Lorem ipsum dolor, sit amet consectetur adipisicing elit. Esse non cupiditate quae nam
-              molestias.
+              Lorem ipsum dolor, sit amet consectetur adipisicing elit. Esse non
+              cupiditate quae nam molestias.
             </p>
 
             {/* Social Links */}

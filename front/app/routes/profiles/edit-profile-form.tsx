@@ -19,7 +19,11 @@ import {
 } from '~/components/ui/form';
 import { Input } from '~/components/ui/input';
 import useUserStore from '~/store/user-store';
-import { type Profile, profileNameIsValid, profileSchema } from '~/types/profile';
+import {
+  type Profile,
+  profileNameIsValid,
+  profileSchema,
+} from '~/types/profile';
 
 export function EditProfileForm({
   disableCancel,
@@ -42,7 +46,10 @@ export function EditProfileForm({
   const [processing, setProcessing] = useState(false);
 
   const formSchema = z.object({
-    name: profileSchema.shape.name.refine(profileNameIsValid, t('profiles.nameSize')),
+    name: profileSchema.shape.name.refine(
+      profileNameIsValid,
+      t('profiles.nameSize'),
+    ),
     setDefault: z.boolean().default(true).optional(),
   });
 
@@ -66,7 +73,9 @@ export function EditProfileForm({
 
     const profileData: Profile = { code: profile?.code, name };
     try {
-      const saved = profile ? await updateProfile(profileData) : await addProfile(profileData);
+      const saved = profile
+        ? await updateProfile(profileData)
+        : await addProfile(profileData);
       if (setDefault) {
         setProfile(saved);
       }

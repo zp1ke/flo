@@ -1,6 +1,6 @@
 'use client';
 
-import { type UseInViewOptions, motion, useInView } from 'motion/react';
+import { motion, type UseInViewOptions } from 'motion/react';
 import * as React from 'react';
 
 import { useEffect } from 'react';
@@ -23,7 +23,10 @@ function CursorBlinker({ className }: { className?: string }) {
         },
       }}
       animate="blinking"
-      className={cn('inline-block h-5 w-[1px] translate-y-1 bg-black dark:bg-white', className)}
+      className={cn(
+        'inline-block h-5 w-[1px] translate-y-1 bg-black dark:bg-white',
+        className,
+      )}
     />
   );
 }
@@ -57,12 +60,6 @@ function TypingText({
 }: TypingTextProps) {
   const localRef = React.useRef<HTMLSpanElement>(null);
   React.useImperativeHandle(ref, () => localRef.current as HTMLSpanElement);
-
-  const inViewResult = useInView(localRef, {
-    once: inViewOnce,
-    margin: inViewMargin,
-  });
-  const isInView = !inView || inViewResult;
 
   const [started, setStarted] = React.useState(false);
   const [displayedText, setDisplayedText] = React.useState<string>('');

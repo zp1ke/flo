@@ -21,7 +21,7 @@ import { Input } from '~/components/ui/input';
 import useUserStore from '~/store/user-store';
 import { type Wallet, walletNameIsValid, walletSchema } from '~/types/wallet';
 
-type EditWalletFormProps = EditItemFormProps<Wallet> & {
+type EditWalletFormProps = EditItemFormProps & {
   disableCancel?: boolean;
   wallet?: Wallet;
 };
@@ -39,7 +39,10 @@ export function EditWalletForm({
   const [processing, setProcessing] = useState(false);
 
   const formSchema = z.object({
-    name: walletSchema.shape.name.refine(walletNameIsValid, t('wallets.nameSize')),
+    name: walletSchema.shape.name.refine(
+      walletNameIsValid,
+      t('wallets.nameSize'),
+    ),
     setDefault: z.boolean().default(true).optional(),
   });
 

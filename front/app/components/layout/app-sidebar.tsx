@@ -18,6 +18,7 @@ import {
   SidebarRail,
 } from '~/components/ui/sidebar';
 import { ProfileSwitcher } from '~/routes/profiles/profile-switcher';
+
 const data = {
   navMain: [
     {

@@ -1,5 +1,11 @@
 import PageContent from '~/components/layout/page-content';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '~/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '~/components/ui/card';
 import { Overview } from '~/routes/dashboard/overview';
 import { RecentSales } from '~/routes/dashboard/recent-sales';
 import { SectionCards } from '~/routes/dashboard/section-cards';

@@ -3,9 +3,6 @@ import {
   type ColumnFilter,
   type ColumnFiltersState,
   type ColumnSort,
-  type PaginationState,
-  type SortingState,
-  type VisibilityState,
   flexRender,
   getCoreRowModel,
   getFacetedRowModel,
@@ -13,12 +10,16 @@ import {
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
+  type PaginationState,
+  type SortingState,
   useReactTable,
+  type VisibilityState,
 } from '@tanstack/react-table';
 import { Loader2 } from 'lucide-react';
 import { type HTMLAttributes, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useSearchParams } from 'react-router';
+import type { StoreApi, UseBoundStore } from 'zustand';
 import type { PageFilters } from '~/api/client';
 import {
   Table,
@@ -28,11 +29,10 @@ import {
   TableHeader,
   TableRow,
 } from '~/components/ui/table';
-import { SortDirection, sortPrefix } from '~/types/sort';
-
-import type { StoreApi, UseBoundStore } from 'zustand';
 import type { DataTableStore } from '~/store/data-table-store';
+import { SortDirection, sortPrefix } from '~/types/sort';
 import AddItemButton, { type EditItemForm } from './add-item-button';
+import type { DataTableFilter, DataTableSelectFilter } from './data-filter';
 import { DataTablePagination } from './data-table-pagination';
 import { DataTableToolbar } from './data-table-toolbar';
 
@@ -41,7 +41,7 @@ interface DataTableProps<TData, TValue> extends HTMLAttributes<HTMLDivElement> {
   dataStore: UseBoundStore<StoreApi<DataTableStore<TData>>>;
   facetedFilters?: DataTableSelectFilter[];
   textFilters?: DataTableFilter[];
-  editForm: typeof EditItemForm<TData>;
+  editForm: typeof EditItemForm;
   addTitle: string;
   addDescription: string;
 }
@@ -63,14 +63,19 @@ export function DataTable<TData, TValue>({
   const [searchParams] = useSearchParams();
 
   const initialPagination = paginationFrom(searchParams);
-  const pageSizes = Array.from(new Set([initialPagination.pageSize, 10, 20, 40, 50])).sort();
+  const pageSizes = Array.from(
+    new Set([initialPagination.pageSize, 10, 20, 40, 50]),
+  ).sort();
 
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>(
     filtersFrom(searchParams, columns),
   );
-  const [pagination, setPagination] = useState<PaginationState>(initialPagination);
-  const [sorting, setSorting] = useState<SortingState>(sortingFrom(searchParams, columns));
+  const [pagination, setPagination] =
+    useState<PaginationState>(initialPagination);
+  const [sorting, setSorting] = useState<SortingState>(
+    sortingFrom(searchParams, columns),
+  );
   const [rowSelection, setRowSelection] = useState({});
 
   const page = dataStore((state) => state.page);
@@ -80,7 +85,9 @@ export function DataTable<TData, TValue>({
   const fetch = () => {
     const sort: Record<string, SortDirection> = {};
     for (const columnSort of sorting) {
-      sort[columnSort.id] = columnSort.desc ? SortDirection.Desc : SortDirection.Asc;
+      sort[columnSort.id] = columnSort.desc
+        ? SortDirection.Desc
+        : SortDirection.Asc;
     }
     const filters: Record<string, string> = {};
     for (const columnFilter of columnFilters) {
@@ -106,7 +113,9 @@ export function DataTable<TData, TValue>({
       pageSize: String(pagination.pageSize),
     };
     for (const columnSort of sorting) {
-      params[sortPrefix + columnSort.id] = columnSort.desc ? SortDirection.Desc : SortDirection.Asc;
+      params[sortPrefix + columnSort.id] = columnSort.desc
+        ? SortDirection.Desc
+        : SortDirection.Asc;
     }
     for (const columnFilter of columnFilters) {
       if (columnFilter.value) {
@@ -169,7 +178,11 @@ export function DataTable<TData, TValue>({
           table={table}
         />
       </div>
-      <DataTableToolbar facetedFilters={facetedFilters} table={table} textFilters={textFilters} />
+      <DataTableToolbar
+        facetedFilters={facetedFilters}
+        table={table}
+        textFilters={textFilters}
+      />
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -180,7 +193,10 @@ export function DataTable<TData, TValue>({
                     <TableHead key={header.id} colSpan={header.colSpan}>
                       {header.isPlaceholder
                         ? null
-                        : flexRender(header.column.columnDef.header, header.getContext())}
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext(),
+                          )}
                     </TableHead>
                   );
                 })}
@@ -190,24 +206,39 @@ export function DataTable<TData, TValue>({
           <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && 'selected'}
+                >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext(),
+                      )}
                     </TableCell>
                   ))}
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={columns.length} className="h-24 text-center">
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-24 text-center"
+                >
                   {loading ? (
                     <div className="flex items-center justify-center space-x-2">
                       <Loader2 className="h-4 w-4 animate-spin" />
                       <span>{t('table.loading')}</span>
                     </div>
                   ) : (
-                    <span>{t(columnFilters.length ? 'table.noResults' : 'table.noData')}</span>
+                    <span>
+                      {t(
+                        columnFilters.length
+                          ? 'table.noResults'
+                          : 'table.noData',
+                      )}
+                    </span>
                   )}
                 </TableCell>
               </TableRow>
@@ -215,14 +246,22 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      <DataTablePagination disabled={loading} pageSizes={pageSizes} table={table} />
+      <DataTablePagination
+        disabled={loading}
+        pageSizes={pageSizes}
+        table={table}
+      />
     </div>
   );
 }
 
 const paginationFrom = (searchParams: URLSearchParams): PaginationState => {
-  const pageIndex = searchParams.get(pageKey) ? Number(searchParams.get(pageKey)) - 1 : 0;
-  const pageSize = searchParams.get(pageSizeKey) ? Number(searchParams.get(pageSizeKey)) : 10;
+  const pageIndex = searchParams.get(pageKey)
+    ? Number(searchParams.get(pageKey)) - 1
+    : 0;
+  const pageSize = searchParams.get(pageSizeKey)
+    ? Number(searchParams.get(pageSizeKey))
+    : 10;
   return { pageIndex, pageSize };
 };
 

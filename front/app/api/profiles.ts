@@ -2,6 +2,7 @@ import type { DataPage } from '~/types/page';
 import type { Profile } from '~/types/profile';
 
 import apiClient, { type PageFilters } from './client';
+
 const basePath = '/profiles';
 
 export const fetchProfiles = async (): Promise<DataPage<Profile>> => {
@@ -21,7 +22,10 @@ export const addProfile = async (profile: Profile): Promise<Profile> => {
 
 export const updateProfile = async (profile: Profile): Promise<Profile> => {
   console.debug('Updating profile:', profile);
-  const saved = await apiClient.putJson<Profile>(`${basePath}/${profile.code}`, profile);
+  const saved = await apiClient.putJson<Profile>(
+    `${basePath}/${profile.code}`,
+    profile,
+  );
   return saved;
 };
 

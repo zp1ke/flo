@@ -23,13 +23,22 @@ export function ThemeModeSelector() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => setTheme('light')} disabled={theme === 'light'}>
+        <DropdownMenuItem
+          onClick={() => setTheme('light')}
+          disabled={theme === 'light'}
+        >
           {t('theme.light')}
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme('dark')} disabled={theme === 'dark'}>
+        <DropdownMenuItem
+          onClick={() => setTheme('dark')}
+          disabled={theme === 'dark'}
+        >
           {t('theme.dark')}
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme('system')} disabled={theme === 'system'}>
+        <DropdownMenuItem
+          onClick={() => setTheme('system')}
+          disabled={theme === 'system'}
+        >
           {t('theme.system')}
         </DropdownMenuItem>
       </DropdownMenuContent>

@@ -24,7 +24,10 @@ export default function Categories() {
   }, [errorMessage, t]);
 
   return (
-    <PageContent title={t('categories.title')} subtitle={t('categories.subtitle')}>
+    <PageContent
+      title={t('categories.title')}
+      subtitle={t('categories.subtitle')}
+    >
       <DataTable
         columns={columns}
         dataStore={useCategoryStore}
