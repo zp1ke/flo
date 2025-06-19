@@ -1,4 +1,5 @@
 import type { AuthRequest, AuthResponse, SignUpRequest } from '~/types/auth';
+import type { User } from '~/types/user';
 import apiClient from './client';
 
 const authPath = '/auth';
@@ -34,6 +35,10 @@ export const recoverPassword = async (data: RecoveryRequest): Promise<void> => {
 
 export const verifyUser = async (code: string): Promise<void> => {
   await apiClient.postJson(`${authPath}/verify/${code}`);
+};
+
+export const fetchUser = async (): Promise<User | null> => {
+  return await apiClient.getJson<User>(`${userPath}/me`);
 };
 
 export const signOut = async (): Promise<void> => {

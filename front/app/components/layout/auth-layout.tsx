@@ -17,6 +17,7 @@ export async function clientLoader() {
   if (!user) {
     throw redirect('/');
   }
+  await useUserStore.getState().fetchUser();
   await useUserStore.getState().loadProfiles();
 }
 

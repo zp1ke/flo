@@ -16,7 +16,7 @@ import {
   type VisibilityState,
 } from '@tanstack/react-table';
 import { Loader2 } from 'lucide-react';
-import { type HTMLAttributes, useCallback, useState } from 'react';
+import { type HTMLAttributes, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useSearchParams } from 'react-router';
 import type { StoreApi, UseBoundStore } from 'zustand';
@@ -30,6 +30,7 @@ import {
   TableRow,
 } from '~/components/ui/table';
 import type { DataTableStore } from '~/store/data-table-store';
+import useUserStore from '~/store/user-store';
 import { SortDirection, sortPrefix } from '~/types/sort';
 import AddItemButton, { type EditItemForm } from './add-item-button';
 import type { DataTableFilter, DataTableSelectFilter } from './data-filter';
@@ -49,7 +50,7 @@ interface DataTableProps<TData, TValue> extends HTMLAttributes<HTMLDivElement> {
 const pageKey = 'page';
 const pageSizeKey = 'pageSize';
 
-export function DataTable<TData, TValue>({
+export const DataTable = <TData, TValue>({
   columns,
   dataStore,
   facetedFilters,
@@ -57,27 +58,24 @@ export function DataTable<TData, TValue>({
   editForm,
   addTitle,
   addDescription,
-}: DataTableProps<TData, TValue>) {
+}: DataTableProps<TData, TValue>) => {
   const { t } = useTranslation();
   const location = useLocation();
   const [searchParams] = useSearchParams();
-
-  const initialPagination = paginationFrom(searchParams);
-  const pageSizes = Array.from(
-    new Set([initialPagination.pageSize, 10, 20, 40, 50]),
-  ).sort();
 
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>(
     filtersFrom(searchParams, columns),
   );
-  const [pagination, setPagination] =
-    useState<PaginationState>(initialPagination);
+  const [pagination, setPagination] = useState<PaginationState>(
+    paginationFrom(searchParams),
+  );
   const [sorting, setSorting] = useState<SortingState>(
     sortingFrom(searchParams, columns),
   );
   const [rowSelection, setRowSelection] = useState({});
 
+  const profile = useUserStore((state) => state.profile);
   const page = dataStore((state) => state.page);
   const loading = dataStore((state) => state.loading);
   const fetchData = dataStore((state) => state.fetchData);
@@ -142,6 +140,12 @@ export function DataTable<TData, TValue>({
     fetchData,
     updateUrlParams,
   ]);
+
+  useEffect(() => {
+    if (profile) {
+      fetch();
+    }
+  }, [profile, fetch]);
 
   const table = useReactTable({
     data: page.data,
@@ -261,12 +265,14 @@ export function DataTable<TData, TValue>({
       </div>
       <DataTablePagination
         disabled={loading}
-        pageSizes={pageSizes}
+        pageSizes={Array.from(
+          new Set([pagination.pageSize, 10, 20, 40, 50]),
+        ).sort()}
         table={table}
       />
     </div>
   );
-}
+};
 
 const paginationFrom = (searchParams: URLSearchParams): PaginationState => {
   const pageIndex = searchParams.get(pageKey)
