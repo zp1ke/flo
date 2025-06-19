@@ -1,8 +1,14 @@
-import { Edit2Icon, TrashIcon, UserRoundCheckIcon } from 'lucide-react';
+import {
+  Edit2Icon,
+  Loader2,
+  TrashIcon,
+  UserRoundCheckIcon,
+} from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import type { ApiError } from '~/api/client';
+import { deleteProfile } from '~/api/profiles';
 import { Button } from '~/components/ui/button';
 import {
   Card,
@@ -13,8 +19,10 @@ import {
 } from '~/components/ui/card';
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from '~/components/ui/dialog';
@@ -25,6 +33,7 @@ import {
 } from '~/components/ui/tooltip';
 import { cn } from '~/lib/utils';
 import useUserStore from '~/store/user-store';
+import type { Profile } from '~/types/profile';
 import { EditProfileForm } from './edit-profile-form';
 
 export const ProfilesCards = () => {
@@ -37,9 +46,12 @@ export const ProfilesCards = () => {
   const loadProfiles = useUserStore((state) => state.loadProfiles);
 
   const [editOpen, setEditOpen] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
   const [processing, setProcessing] = useState(false);
 
   const refreshProfiles = async () => {
+    setProcessing(true);
+
     try {
       await loadProfiles(true);
     } catch (error) {
@@ -47,7 +59,19 @@ export const ProfilesCards = () => {
         description: t((error as ApiError).message),
         closeButton: true,
       });
+    } finally {
+      setProcessing(false);
     }
+  };
+
+  const onDelete = async (profile: Profile) => {
+    setProcessing(true);
+
+    await deleteProfile(profile);
+    await refreshProfiles();
+
+    setDeleteOpen(false);
+    setProcessing(false);
   };
 
   return (
@@ -105,6 +129,67 @@ export const ProfilesCards = () => {
           </Dialog>
         );
 
+        const deleteButton = (
+          <Dialog open={deleteOpen} onOpenChange={setDeleteOpen}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="destructive"
+                  size="icon"
+                  disabled={loading || processing}
+                  onClick={() => {
+                    setDeleteOpen(true);
+                  }}
+                >
+                  <TrashIcon />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>{t('profiles.delete')}</p>
+              </TooltipContent>
+            </Tooltip>
+            <DialogContent
+              className={cn(
+                'sm:max-w-[425px]',
+                processing && '[&>button]:hidden',
+              )}
+              onInteractOutside={(e) => {
+                if (processing) {
+                  e.preventDefault();
+                }
+              }}
+            >
+              <DialogHeader>
+                <DialogTitle>{t('profiles.confirmDelete')}</DialogTitle>
+                <DialogDescription>
+                  {t('profiles.confirmDeleteMessage', { name: profile.name })}
+                </DialogDescription>
+              </DialogHeader>
+              <DialogFooter>
+                <DialogClose asChild>
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    disabled={processing}
+                  >
+                    {t('profiles.cancel')}
+                  </Button>
+                </DialogClose>
+                <Button
+                  className="ml-auto flex"
+                  variant="destructive"
+                  disabled={processing}
+                  onClick={() => onDelete(profile)}
+                >
+                  {processing && <Loader2 className="animate-spin" />}
+                  {processing && t('profiles.deleting')}
+                  {!processing && t('profiles.confirm')}
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        );
+
         return (
           <Card className="@container/card" key={profile.code}>
             <CardHeader className="relative">
@@ -144,22 +229,7 @@ export const ProfilesCards = () => {
                 </Tooltip>
               )}
               {editButton}
-              {isActive || (
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      variant="destructive"
-                      size="icon"
-                      disabled={loading || processing}
-                    >
-                      <TrashIcon />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>{t('profiles.delete')}</p>
-                  </TooltipContent>
-                </Tooltip>
-              )}
+              {isActive || deleteButton}
             </CardFooter>
           </Card>
         );
