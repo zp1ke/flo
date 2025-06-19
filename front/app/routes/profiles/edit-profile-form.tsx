@@ -27,15 +27,13 @@ import {
 
 export function EditProfileForm({
   disableCancel,
-  onCancel,
+  onDone,
   onProcessing,
-  onSaved,
   profile,
 }: {
   disableCancel?: boolean;
-  onCancel: () => void;
+  onDone: (canceled: boolean) => void;
   onProcessing: (processing: boolean) => void;
-  onSaved: (profile: Profile) => Promise<void>;
   profile?: Profile;
 }) {
   const setProfile = useUserStore((state) => state.setProfile);
@@ -80,7 +78,7 @@ export function EditProfileForm({
         setProfile(saved);
       }
       await loadProfiles();
-      await onSaved(saved);
+      onDone(false);
       form.reset();
     } catch (e) {
       toast.error(t('profiles.saveError'), {
@@ -129,7 +127,7 @@ export function EditProfileForm({
                     />
                   </FormControl>
                   <div className="space-y-1 leading-none">
-                    <FormLabel>{t('profiles.defaultProfile')}</FormLabel>
+                    <FormLabel>{t('profiles.setActive')}</FormLabel>
                   </div>
                 </FormItem>
               )}
@@ -143,7 +141,7 @@ export function EditProfileForm({
               variant="secondary"
               disabled={processing}
               className="flex"
-              onClick={onCancel}
+              onClick={() => onDone(true)}
             >
               {t('profiles.cancel')}
             </Button>

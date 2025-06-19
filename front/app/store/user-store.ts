@@ -7,6 +7,8 @@ import type { Profile } from '~/types/profile';
 import type { User } from '~/types/user';
 
 interface UserStore {
+  loading: boolean;
+
   token: string | null;
   user: User | null;
 
@@ -25,6 +27,8 @@ interface UserStore {
 const useUserStore = create<UserStore>()(
   persist(
     (set, get) => ({
+      loading: false,
+
       token: null as string | null,
       user: null as User | null,
       signUp: async (request: SignUpRequest) => {
@@ -49,15 +53,26 @@ const useUserStore = create<UserStore>()(
       loadProfiles: async (throwOnError?: boolean) => {
         const { user } = get();
         if (user) {
+          set({ loading: true });
           console.debug('Loading profiles from API...');
+
           try {
             const profiles = await fetchProfiles();
-            set((state) => ({
-              profiles: profiles.data as Profile[],
-              profile: state.profile || profiles.data[0] || null,
-            }));
+            set((state) => {
+              const activeProfile =
+                profiles.data.find((p) => p.code === state.profile?.code) ??
+                profiles.data[0] ??
+                null;
+
+              return {
+                profiles: profiles.data as Profile[],
+                profile: activeProfile,
+                loading: false,
+              };
+            });
           } catch (error) {
             console.error('Failed to load profiles:', error);
+            set({ loading: false });
             if (throwOnError) {
               throw error;
             }

@@ -16,7 +16,7 @@ import {
   type VisibilityState,
 } from '@tanstack/react-table';
 import { Loader2 } from 'lucide-react';
-import { type HTMLAttributes, useState } from 'react';
+import { type HTMLAttributes, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useSearchParams } from 'react-router';
 import type { StoreApi, UseBoundStore } from 'zustand';
@@ -82,7 +82,36 @@ export function DataTable<TData, TValue>({
   const loading = dataStore((state) => state.loading);
   const fetchData = dataStore((state) => state.fetchData);
 
-  const fetch = () => {
+  const updateUrlParams = useCallback(() => {
+    const params: Record<string, string> = {
+      page: String(pagination.pageIndex + 1),
+      pageSize: String(pagination.pageSize),
+    };
+    for (const columnSort of sorting) {
+      params[sortPrefix + columnSort.id] = columnSort.desc
+        ? SortDirection.Desc
+        : SortDirection.Asc;
+    }
+    for (const columnFilter of columnFilters) {
+      if (columnFilter.value) {
+        params[columnFilter.id] = columnFilter.value.toString();
+      }
+    }
+
+    const url = new URL(location.pathname, window.location.origin);
+    for (const [key, value] of Object.entries(params)) {
+      url.searchParams.set(key, value);
+    }
+    history.pushState({}, '', url);
+  }, [
+    location.pathname,
+    pagination.pageIndex,
+    pagination.pageSize,
+    sorting,
+    columnFilters,
+  ]);
+
+  const fetch = useCallback(() => {
     const sort: Record<string, SortDirection> = {};
     for (const columnSort of sorting) {
       sort[columnSort.id] = columnSort.desc
@@ -105,30 +134,14 @@ export function DataTable<TData, TValue>({
 
     fetchData(pageFilters);
     updateUrlParams();
-  };
-
-  const updateUrlParams = () => {
-    const params: Record<string, string> = {
-      page: String(pagination.pageIndex + 1),
-      pageSize: String(pagination.pageSize),
-    };
-    for (const columnSort of sorting) {
-      params[sortPrefix + columnSort.id] = columnSort.desc
-        ? SortDirection.Desc
-        : SortDirection.Asc;
-    }
-    for (const columnFilter of columnFilters) {
-      if (columnFilter.value) {
-        params[columnFilter.id] = columnFilter.value.toString();
-      }
-    }
-
-    const url = new URL(location.pathname, window.location.origin);
-    for (const [key, value] of Object.entries(params)) {
-      url.searchParams.set(key, value);
-    }
-    history.pushState({}, '', url);
-  };
+  }, [
+    sorting,
+    columnFilters,
+    pagination.pageIndex,
+    pagination.pageSize,
+    fetchData,
+    updateUrlParams,
+  ]);
 
   const table = useReactTable({
     data: page.data,

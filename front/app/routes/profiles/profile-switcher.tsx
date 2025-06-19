@@ -38,6 +38,7 @@ import useUserStore from '~/store/user-store';
 import { EditProfileForm } from './edit-profile-form';
 
 export function ProfileSwitcher() {
+  const loading = useUserStore((state) => state.loading);
   const profile = useUserStore((state) => state.profile);
   const profiles = useUserStore((state) => state.profiles);
   const setProfile = useUserStore((state) => state.setProfile);
@@ -49,21 +50,14 @@ export function ProfileSwitcher() {
   const [addOpen, setAddOpen] = useState(false);
   const [processing, setProcessing] = useState(false);
 
-  const onAddedProfile = async () => {
-    setAddOpen(false);
-  };
-
   const refreshProfiles = async () => {
     try {
-      setProcessing(true);
       await loadProfiles(true);
     } catch (error) {
       toast.error(t('profiles.fetchError'), {
         description: t((error as ApiError).message),
         closeButton: true,
       });
-    } finally {
-      setProcessing(false);
     }
   };
 
@@ -101,7 +95,7 @@ export function ProfileSwitcher() {
                   variant="secondary"
                   size="icon"
                   onClick={refreshProfiles}
-                  disabled={processing}
+                  disabled={loading}
                 >
                   <RefreshCwIcon />
                 </Button>
@@ -122,7 +116,7 @@ export function ProfileSwitcher() {
               ))}
               <DropdownMenuSeparator />
               <DialogTrigger asChild>
-                <DropdownMenuItem className="gap-2 p-2" disabled={processing}>
+                <DropdownMenuItem className="gap-2 p-2" disabled={loading}>
                   <div className="flex size-6 items-center justify-center rounded-md border bg-background">
                     <Plus className="size-4" />
                   </div>
@@ -151,9 +145,13 @@ export function ProfileSwitcher() {
               </DialogDescription>
             </DialogHeader>
             <EditProfileForm
-              onSaved={onAddedProfile}
+              onDone={(canceled: boolean) => {
+                if (!canceled) {
+                  refreshProfiles();
+                }
+                setAddOpen(false);
+              }}
               onProcessing={setProcessing}
-              onCancel={() => setAddOpen(false)}
             />
           </DialogContent>
         </Dialog>
