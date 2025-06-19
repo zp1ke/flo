@@ -35,6 +35,12 @@
     "subtitle": "Manage your categories",
     "title": "Categories"
   },
+  "dashboard": {
+    "date": "Date",
+    "pickDate": "Pick a date",
+    "subtitle": "Your financial overview",
+    "title": "Dashboard"
+  },
   "error": {
     "details": "An unexpected error occurred.",
     "message": "Oops!",
