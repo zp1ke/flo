@@ -3,6 +3,7 @@ package com.zp1ke.flo.data.service;
 import com.zp1ke.flo.data.domain.Profile;
 import com.zp1ke.flo.data.domain.Wallet;
 import com.zp1ke.flo.data.model.SettingCode;
+import com.zp1ke.flo.data.repository.TransactionRepository;
 import com.zp1ke.flo.data.repository.WalletRepository;
 import com.zp1ke.flo.data.repository.WalletSpec;
 import com.zp1ke.flo.data.util.DomainUtils;
@@ -24,6 +25,8 @@ public class WalletService {
     private final Validator validator;
 
     private final WalletRepository walletRepository;
+
+    private final TransactionRepository transactionRepository;
 
     private final ProfileService profileService;
 
@@ -88,7 +91,10 @@ public class WalletService {
     }
 
     public void delete(@Nonnull Wallet wallet) {
-        // TODO: Verify if the wallet can be deleted (e.g., no transactions associated)
+        var count = transactionRepository.countByWallet(wallet);
+        if (count > 0) {
+            throw new IllegalArgumentException("wallet.associated-transactions");
+        }
         walletRepository.delete(wallet);
     }
 }

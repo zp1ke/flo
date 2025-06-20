@@ -5,6 +5,7 @@ import com.zp1ke.flo.data.domain.Profile;
 import com.zp1ke.flo.data.model.SettingCode;
 import com.zp1ke.flo.data.repository.CategoryRepository;
 import com.zp1ke.flo.data.repository.CategorySpec;
+import com.zp1ke.flo.data.repository.TransactionRepository;
 import com.zp1ke.flo.data.util.DomainUtils;
 import com.zp1ke.flo.utils.StringUtils;
 import jakarta.annotation.Nonnull;
@@ -24,6 +25,8 @@ public class CategoryService {
     private final Validator validator;
 
     private final CategoryRepository categoryRepository;
+
+    private final TransactionRepository transactionRepository;
 
     private final ProfileService profileService;
 
@@ -86,7 +89,10 @@ public class CategoryService {
     }
 
     public void delete(@Nonnull Category category) {
-        // TODO: verify if category is not used in any transactions
+        var transactionsCount = transactionRepository.countByCategory(category);
+        if (transactionsCount > 0) {
+            throw new IllegalArgumentException("category.associated-transactions");
+        }
         categoryRepository.delete(category);
     }
 }

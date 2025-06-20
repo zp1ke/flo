@@ -1,7 +1,9 @@
 package com.zp1ke.flo.data.repository;
 
+import com.zp1ke.flo.data.domain.Category;
 import com.zp1ke.flo.data.domain.Profile;
 import com.zp1ke.flo.data.domain.Transaction;
+import com.zp1ke.flo.data.domain.Wallet;
 import jakarta.annotation.Nonnull;
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -18,4 +20,8 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long>,
     long countByCreatedAtBetweenAndProfileIn(@Nonnull OffsetDateTime from,
                                              @Nonnull OffsetDateTime to,
                                              @Nonnull List<Profile> profiles);
+
+    long countByCategory(@Nonnull Category category);
+
+    long countByWallet(@Nonnull Wallet wallet);
 }
