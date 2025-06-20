@@ -10,15 +10,17 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 public interface CategoryRepository extends JpaRepository<Category, Long>, JpaSpecificationExecutor<Category> {
 
-    boolean existsByProfileAndName(@Nonnull Profile profile, @Nonnull String name);
+    boolean existsByProfileAndNameAndEnabledTrue(@Nonnull Profile profile, @Nonnull String name);
 
-    boolean existsByProfileAndNameAndIdNot(@Nonnull Profile profile, @Nonnull String name, @Nonnull Long id);
+    boolean existsByProfileAndNameAndIdNotAndEnabledTrue(@Nonnull Profile profile, @Nonnull String name, @Nonnull Long id);
 
-    int countByProfileIn(@Nonnull List<Profile> profiles);
+    int countByEnabledTrueAndProfileIn(@Nonnull List<Profile> profiles);
 
-    boolean existsByProfileAndCode(@Nonnull Profile profile, @Nonnull String code);
+    boolean existsByProfileAndCodeAndEnabledTrue(@Nonnull Profile profile, @Nonnull String code);
 
-    Optional<Category> findByProfileAndCode(@Nonnull Profile profile, @Nonnull String code);
+    Optional<Category> findByProfileAndCodeAndEnabledTrue(@Nonnull Profile profile, @Nonnull String code);
 
-    List<Category> findAllByProfileAndCodeIn(@Nonnull Profile profile, @Nonnull List<String> codes);
+    List<Category> findAllByProfileAndEnabledTrueAndCodeIn(@Nonnull Profile profile, @Nonnull List<String> codes);
+
+    boolean existsByProfileAndEnabledTrue(@Nonnull Profile profile);
 }

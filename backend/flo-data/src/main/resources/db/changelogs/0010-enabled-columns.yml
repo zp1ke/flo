@@ -1,0 +1,70 @@
+databaseChangeLog:
+  - changeSet:
+      id: flo-0010
+      author: zp1ke
+      changes:
+        - addColumn:
+            tableName: categories
+            columns:
+              - column:
+                  name: enabled
+                  type: boolean
+                  defaultValue: true
+        - createIndex:
+            columns:
+              - column:
+                  name: enabled
+            indexName: categories_idx_enabled
+            tableName: categories
+        - addColumn:
+            tableName: profiles
+            columns:
+              - column:
+                  name: enabled
+                  type: boolean
+                  defaultValue: true
+        - createIndex:
+            columns:
+              - column:
+                  name: enabled
+            indexName: profiles_idx_enabled
+            tableName: profiles
+        - addColumn:
+            tableName: settings
+            columns:
+              - column:
+                  name: enabled
+                  type: boolean
+                  defaultValue: true
+        - createIndex:
+            columns:
+              - column:
+                  name: enabled
+            indexName: settings_idx_enabled
+            tableName: settings
+        - addColumn:
+            tableName: users
+            columns:
+              - column:
+                  name: enabled
+                  type: boolean
+                  defaultValue: true
+        - createIndex:
+            columns:
+              - column:
+                  name: enabled
+            indexName: users_idx_enabled
+            tableName: users
+        - addColumn:
+            tableName: wallets
+            columns:
+              - column:
+                  name: enabled
+                  type: boolean
+                  defaultValue: true
+        - createIndex:
+            columns:
+              - column:
+                  name: enabled
+            indexName: wallets_idx_enabled
+            tableName: wallets

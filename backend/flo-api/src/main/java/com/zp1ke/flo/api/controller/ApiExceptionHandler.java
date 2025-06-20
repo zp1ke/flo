@@ -17,6 +17,12 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ControllerAdvice
 public class ApiExceptionHandler {
+    public static Map<String, Object> errorMap(String message) {
+        return Map.of(
+            "message", message
+        );
+    }
+
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseEntity<Map<String, Object>> handleGenericException(Exception ex) {
@@ -78,11 +84,5 @@ public class ApiExceptionHandler {
         return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
             .body(errorMap);
-    }
-
-    public static Map<String, Object> errorMap(String message) {
-        return Map.of(
-            "message", message
-        );
     }
 }

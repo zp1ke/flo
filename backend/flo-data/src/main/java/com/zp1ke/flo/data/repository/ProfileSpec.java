@@ -7,6 +7,11 @@ import org.springframework.data.jpa.domain.Specification;
 
 public class ProfileSpec {
 
+    public static Specification<Profile> enabled() {
+        return (root, query, builder)
+            -> builder.isTrue(root.get("enabled"));
+    }
+
     public static Specification<Profile> withUser(User user) {
         return (root, query, builder)
             -> {

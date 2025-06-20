@@ -16,6 +16,7 @@ import lombok.*;
     @Index(name = "users_idx_created_at", columnList = "created_at"),
     @Index(name = "users_idx_updated_at", columnList = "updated_at"),
     @Index(name = "users_idx_verify_code", columnList = "verify_code"),
+    @Index(name = "users_idx_enabled", columnList = "enabled"),
 })
 @Getter
 @Setter
@@ -50,6 +51,14 @@ public class User extends Auditable {
 
     @Column(name = "verified_at")
     private OffsetDateTime verifiedAt;
+
+    /**
+     * Indicates whether the entity is enabled or not.
+     * If false, the entity is considered disabled and should not be used in operations.
+     */
+    @Column
+    @Builder.Default
+    private boolean enabled = true;
 
     public void generateUsernameIfMissing() {
         if (StringUtils.isBlank(username) && StringUtils.isNotBlank(email)) {

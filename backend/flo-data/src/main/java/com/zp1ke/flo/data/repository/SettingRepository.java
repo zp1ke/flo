@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface SettingRepository extends JpaRepository<Setting, Long> {
 
-    boolean existsByCodeAndUser(@Nonnull SettingCode code, @Nonnull User user);
+    boolean existsByCodeAndUserAndEnabledTrue(@Nonnull SettingCode code, @Nonnull User user);
 
-    Optional<Setting> findByCodeAndUser(@Nonnull SettingCode code, @Nonnull User user);
+    Optional<Setting> findByCodeAndUserAndEnabledTrue(@Nonnull SettingCode code, @Nonnull User user);
 }

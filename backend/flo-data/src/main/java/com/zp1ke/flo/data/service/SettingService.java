@@ -31,7 +31,7 @@ public class SettingService {
             SettingCode.USER_MAX_TRANSACTIONS_PER_DAY, DEFAULT_USER_MAX_TRANSACTIONS_PER_DAY
         );
         defaultSettings.forEach((code, value) -> {
-            if (!settingRepository.existsByCodeAndUser(code, user)) {
+            if (!settingRepository.existsByCodeAndUserAndEnabledTrue(code, user)) {
                 var setting = Setting.builder()
                     .code(code)
                     .value(value)
@@ -43,7 +43,7 @@ public class SettingService {
     }
 
     public Integer getIntegerValue(@Nonnull User user, @Nonnull SettingCode code) {
-        var setting = settingRepository.findByCodeAndUser(code, user);
+        var setting = settingRepository.findByCodeAndUserAndEnabledTrue(code, user);
         return setting
             .map(value -> Integer.valueOf(value.getValue()))
             .orElse(null);

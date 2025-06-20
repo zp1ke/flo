@@ -7,6 +7,11 @@ import org.springframework.data.jpa.domain.Specification;
 
 public class WalletSpec {
 
+    public static Specification<Wallet> enabled() {
+        return (root, query, builder)
+            -> builder.isTrue(root.get("enabled"));
+    }
+
     public static Specification<Wallet> withProfile(Profile profile) {
         return (root, query, builder)
             -> {

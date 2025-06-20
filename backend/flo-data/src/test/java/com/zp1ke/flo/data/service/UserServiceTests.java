@@ -66,7 +66,7 @@ class UserServiceTests {
             .build();
 
         var userRepository = mock(UserRepository.class);
-        when(userRepository.findByEmail("test@example.com"))
+        when(userRepository.findByEmailAndEnabledTrue("test@example.com"))
             .thenReturn(Optional.of(User.builder().build()));
 
         var userService = createUserService(userRepository);
@@ -83,11 +83,11 @@ class UserServiceTests {
             .build();
 
         var userRepository = mock(UserRepository.class);
-        when(userRepository.findByEmail("test@example.com"))
+        when(userRepository.findByEmailAndEnabledTrue("test@example.com"))
             .thenReturn(Optional.empty());
-        when(userRepository.existsByUsername(anyString()))
+        when(userRepository.existsByUsernameAndEnabledTrue(anyString()))
             .thenReturn(false);
-        when(userRepository.findByUsername(anyString()))
+        when(userRepository.findByUsernameAndEnabledTrue(anyString()))
             .thenReturn(Optional.of(user));
         when(userRepository.save(any(User.class)))
             .thenAnswer(invocation -> {
@@ -101,7 +101,7 @@ class UserServiceTests {
         var createdUser = userService.create(user, profileFromUser(user));
         assertNotNull(createdUser);
         assertNotNull(createdUser.getUsername());
-        verify(userRepository).existsByUsername(anyString());
+        verify(userRepository).existsByUsernameAndEnabledTrue(anyString());
     }
 
     @Test
@@ -113,11 +113,11 @@ class UserServiceTests {
             .build();
 
         var userRepository = mock(UserRepository.class);
-        when(userRepository.findByEmail("test@example.com"))
+        when(userRepository.findByEmailAndEnabledTrue("test@example.com"))
             .thenReturn(Optional.empty());
-        when(userRepository.existsByUsername(anyString()))
+        when(userRepository.existsByUsernameAndEnabledTrue(anyString()))
             .thenReturn(false);
-        when(userRepository.findByUsername(anyString()))
+        when(userRepository.findByUsernameAndEnabledTrue(anyString()))
             .thenReturn(Optional.of(user));
         when(userRepository.save(any(User.class)))
             .thenAnswer(invocation -> invocation.getArgument(0));

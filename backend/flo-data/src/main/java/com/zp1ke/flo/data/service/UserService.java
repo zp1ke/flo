@@ -36,7 +36,7 @@ public class UserService {
     public User findByUsernameAndValidToken(@Nonnull String username,
                                             @Nonnull String token,
                                             @Nonnull String remoteAddress) {
-        var user = userRepository.findByUsername(username);
+        var user = userRepository.findByUsernameAndEnabledTrue(username);
         if (user.isPresent()) {
             var userToken = userTokenRepository.findByTokenAndUserAndRemoteAddress(token, user.get(), remoteAddress);
             if (userToken.isPresent() && userToken.get().isValid()) {
@@ -59,11 +59,11 @@ public class UserService {
             throw new IllegalArgumentException("user.invalid_email");
         }
 
-        if (userRepository.existsByEmail(user.getEmail())) {
+        if (userRepository.existsByEmailAndEnabledTrue(user.getEmail())) {
             throw new IllegalArgumentException("user.email_already_exists");
         }
 
-        if (userRepository.existsByUsername(user.getUsername())) {
+        if (userRepository.existsByUsernameAndEnabledTrue(user.getUsername())) {
             throw new IllegalArgumentException("user.username_already_exists");
         }
 
@@ -85,9 +85,9 @@ public class UserService {
             return null;
         }
 
-        var byEmailOrUsername = userRepository.findByEmail(emailOrUsername);
+        var byEmailOrUsername = userRepository.findByEmailAndEnabledTrue(emailOrUsername);
         if (byEmailOrUsername.isEmpty()) {
-            byEmailOrUsername = userRepository.findByUsername(emailOrUsername);
+            byEmailOrUsername = userRepository.findByUsernameAndEnabledTrue(emailOrUsername);
         }
         return byEmailOrUsername.orElse(null);
     }
@@ -97,9 +97,9 @@ public class UserService {
             return null;
         }
 
-        var byEmailOrUsername = userRepository.findByEmail(emailOrUsername);
+        var byEmailOrUsername = userRepository.findByEmailAndEnabledTrue(emailOrUsername);
         if (byEmailOrUsername.isEmpty()) {
-            byEmailOrUsername = userRepository.findByUsername(emailOrUsername);
+            byEmailOrUsername = userRepository.findByUsernameAndEnabledTrue(emailOrUsername);
         }
         if (byEmailOrUsername.isEmpty()) {
             return null;
@@ -133,7 +133,7 @@ public class UserService {
     }
 
     public void verifyUserByCode(@Nonnull String code) {
-        var userByCode = userRepository.findByVerifyCode(code);
+        var userByCode = userRepository.findByVerifyCodeAndEnabledTrue(code);
         if (userByCode.isEmpty()) {
             throw new IllegalArgumentException("user.verify_code_not_found");
         }
@@ -145,7 +145,7 @@ public class UserService {
     }
 
     public void sendRecoveryEmail(@Nonnull String email) {
-        var userByEmail = userRepository.findByEmail(email);
+        var userByEmail = userRepository.findByEmailAndEnabledTrue(email);
         if (userByEmail.isPresent()) {
             var user = userByEmail.get();
             user.setVerifyCode(StringUtils.generateRandomCode(6));
@@ -159,7 +159,7 @@ public class UserService {
     public void recoverUser(@Nonnull String code,
                             @Nonnull String username,
                             @Nonnull String password) {
-        var userByCode = userRepository.findByVerifyCode(code);
+        var userByCode = userRepository.findByVerifyCodeAndEnabledTrue(code);
         if (userByCode.isEmpty()) {
             throw new IllegalArgumentException("user.verify_code_not_found");
         }

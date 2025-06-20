@@ -15,6 +15,7 @@ import lombok.*;
     @Index(name = "profiles_idx_user_id", columnList = "user_id"),
     @Index(name = "profiles_idx_created_at", columnList = "created_at"),
     @Index(name = "profiles_idx_updated_at", columnList = "updated_at"),
+    @Index(name = "profiles_idx_enabled", columnList = "enabled"),
 })
 @Getter
 @Setter
@@ -45,6 +46,14 @@ public class Profile extends Auditable {
     @Size(max = 50, message = "profile.language-size")
     @Column(length = 50)
     private String language;
+
+    /**
+     * Indicates whether the entity is enabled or not.
+     * If false, the entity is considered disabled and should not be used in operations.
+     */
+    @Column
+    @Builder.Default
+    private boolean enabled = true;
 
     public Locale getLocale() {
         if (StringUtils.isNotBlank(language)) {

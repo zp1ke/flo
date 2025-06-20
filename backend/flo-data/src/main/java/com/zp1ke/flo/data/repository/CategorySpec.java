@@ -7,6 +7,11 @@ import org.springframework.data.jpa.domain.Specification;
 
 public class CategorySpec {
 
+    public static Specification<Category> enabled() {
+        return (root, query, builder)
+            -> builder.isTrue(root.get("enabled"));
+    }
+
     public static Specification<Category> withProfile(Profile profile) {
         return (root, query, builder)
             -> {

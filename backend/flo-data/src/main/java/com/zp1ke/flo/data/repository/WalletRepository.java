@@ -10,17 +10,17 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 public interface WalletRepository extends JpaRepository<Wallet, Long>, JpaSpecificationExecutor<Wallet> {
 
-    boolean existsByProfileAndName(@Nonnull Profile profile, @Nonnull String name);
+    boolean existsByProfileAndNameAndEnabledTrue(@Nonnull Profile profile, @Nonnull String name);
 
-    boolean existsByProfileAndNameAndIdNot(@Nonnull Profile profile, @Nonnull String name, @Nonnull Long id);
+    boolean existsByProfileAndNameAndIdNotAndEnabledTrue(@Nonnull Profile profile, @Nonnull String name, @Nonnull Long id);
 
-    int countByProfileIn(@Nonnull List<Profile> profiles);
+    int countByEnabledTrueAndProfileIn(@Nonnull List<Profile> profiles);
 
-    boolean existsByProfileAndCode(@Nonnull Profile profile, @Nonnull String code);
+    boolean existsByProfileAndCodeAndEnabledTrue(@Nonnull Profile profile, @Nonnull String code);
 
-    Optional<Wallet> findByProfileAndCode(@Nonnull Profile profile, @Nonnull String code);
+    Optional<Wallet> findByProfileAndCodeAndEnabledTrue(@Nonnull Profile profile, @Nonnull String code);
 
-    List<Wallet> findAllByProfile(@Nonnull Profile profile);
+    List<Wallet> findAllByProfileAndCodeInAndEnabledTrue(@Nonnull Profile profile, @Nonnull List<String> codes);
 
-    List<Wallet> findAllByProfileAndCodeIn(@Nonnull Profile profile, @Nonnull List<String> codes);
+    boolean existsByProfileAndEnabledTrue(@Nonnull Profile profile);
 }

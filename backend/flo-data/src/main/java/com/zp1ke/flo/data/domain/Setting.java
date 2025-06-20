@@ -14,6 +14,7 @@ import lombok.*;
     @Index(name = "settings_idx_user_id", columnList = "user_id"),
     @Index(name = "settings_idx_created_at", columnList = "created_at"),
     @Index(name = "settings_idx_updated_at", columnList = "updated_at"),
+    @Index(name = "settings_idx_enabled", columnList = "enabled"),
 })
 @Getter
 @Setter
@@ -40,4 +41,12 @@ public class Setting extends Auditable {
     @ManyToOne(optional = false)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
+
+    /**
+     * Indicates whether the entity is enabled or not.
+     * If false, the entity is considered disabled and should not be used in operations.
+     */
+    @Column
+    @Builder.Default
+    private boolean enabled = true;
 }

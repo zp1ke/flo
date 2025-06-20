@@ -13,17 +13,17 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ProfileRepository extends JpaRepository<Profile, Long>, JpaSpecificationExecutor<Profile> {
 
-    boolean existsByUserAndCode(@Nonnull User user, @Nonnull String code);
+    boolean existsByUserAndCodeAndEnabledTrue(@Nonnull User user, @Nonnull String code);
 
-    Optional<Profile> findByUserAndCode(@Nonnull User user, @Nonnull String code);
+    Optional<Profile> findByUserAndCodeAndEnabledTrue(@Nonnull User user, @Nonnull String code);
 
-    List<Profile> findAllByUser(@Nonnull User user);
+    List<Profile> findAllByUserAndEnabledTrue(@Nonnull User user);
 
-    boolean existsByUserAndName(@NotNull User user, @Nonnull String name);
+    boolean existsByUserAndNameAndEnabledTrue(@NotNull User user, @Nonnull String name);
 
-    Integer countByUser(@Nonnull User user);
+    Integer countByUserAndEnabledTrue(@Nonnull User user);
 
-    boolean existsByUserAndNameAndIdNot(@Nonnull User user, @Nonnull String name, @Nonnull Long id);
+    boolean existsByUserAndNameAndIdNotAndEnabledTrue(@Nonnull User user, @Nonnull String name, @Nonnull Long id);
 
-    Optional<Profile> findTopByUserOrderByCreatedAtAsc(@Nonnull User user);
+    Optional<Profile> findTopByUserAndEnabledTrueOrderByCreatedAtAsc(@Nonnull User user);
 }

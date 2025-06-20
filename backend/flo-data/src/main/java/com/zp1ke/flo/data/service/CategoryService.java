@@ -36,7 +36,8 @@ public class CategoryService {
     public Category save(@Nonnull Category category) {
         if (StringUtils.isBlank(category.getCode())) {
             category.setCode(DomainUtils
-                .generateRandomCode((code) -> categoryRepository.existsByProfileAndCode(category.getProfile(), code)));
+                .generateRandomCode((code) -> categoryRepository
+                    .existsByProfileAndCodeAndEnabledTrue(category.getProfile(), code)));
         }
 
         var violations = validator.validate(category);
@@ -46,18 +47,19 @@ public class CategoryService {
 
         if (category.getId() == null) {
             // Check if a category with the same name already exists for the profile
-            if (categoryRepository.existsByProfileAndName(category.getProfile(), category.getName())) {
+            if (categoryRepository.existsByProfileAndNameAndEnabledTrue(category.getProfile(), category.getName())) {
                 throw new IllegalArgumentException("category.name-duplicate");
             }
 
             var maxCategories = settingService.getIntegerValue(category.getProfile().getUser(), SettingCode.USER_MAX_CATEGORIES);
             var profiles = profileService.profilesOfUser(category.getProfile().getUser());
-            if (maxCategories != null && categoryRepository.countByProfileIn(profiles) >= maxCategories) {
+            if (maxCategories != null && categoryRepository.countByEnabledTrueAndProfileIn(profiles) >= maxCategories) {
                 throw new IllegalArgumentException("category.max-categories-reached");
             }
         } else {
             // Check if a category with the same name already exists for the profile
-            if (categoryRepository.existsByProfileAndNameAndIdNot(category.getProfile(), category.getName(), category.getId())) {
+            if (categoryRepository
+                .existsByProfileAndNameAndIdNotAndEnabledTrue(category.getProfile(), category.getName(), category.getId())) {
                 throw new IllegalArgumentException("category.name-duplicate");
             }
         }
@@ -66,21 +68,22 @@ public class CategoryService {
     }
 
     public Optional<Category> categoryOfProfileByCode(@Nonnull Profile profile, @Nonnull String code) {
-        return categoryRepository.findByProfileAndCode(profile, code);
+        return categoryRepository.findByProfileAndCodeAndEnabledTrue(profile, code);
     }
 
     @Nonnull
     public Page<Category> categoriesOfProfile(@Nonnull Profile profile,
                                               String nameFilter,
                                               @Nonnull Pageable pageable) {
-        var specification = CategorySpec.withProfile(profile)
+        var specification = CategorySpec.enabled()
+            .and(CategorySpec.withProfile(profile))
             .and(CategorySpec.nameLike(nameFilter));
         return categoryRepository.findAll(specification, pageable);
     }
 
     public List<Long> idsOfCodes(@Nonnull Profile profile, List<String> codes) {
         if (codes != null && !codes.isEmpty()) {
-            return categoryRepository.findAllByProfileAndCodeIn(profile, codes)
+            return categoryRepository.findAllByProfileAndEnabledTrueAndCodeIn(profile, codes)
                 .stream()
                 .map(Category::getId)
                 .toList();
@@ -91,8 +94,10 @@ public class CategoryService {
     public void delete(@Nonnull Category category) {
         var transactionsCount = transactionRepository.countByCategory(category);
         if (transactionsCount > 0) {
-            throw new IllegalArgumentException("category.associated-transactions");
+            category.setEnabled(false);
+            categoryRepository.save(category);
+        } else {
+            categoryRepository.delete(category);
         }
-        categoryRepository.delete(category);
     }
 }

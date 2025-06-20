@@ -13,6 +13,7 @@ import lombok.*;
     @Index(name = "wallets_idx_profile_id", columnList = "profile_id"),
     @Index(name = "wallets_idx_created_at", columnList = "created_at"),
     @Index(name = "wallets_idx_updated_at", columnList = "updated_at"),
+    @Index(name = "wallets_idx_enabled", columnList = "enabled"),
 })
 @Getter
 @Setter
@@ -39,4 +40,12 @@ public class Wallet extends Auditable {
     @ManyToOne(optional = false)
     @JoinColumn(name = "profile_id", referencedColumnName = "id")
     private Profile profile;
+
+    /**
+     * Indicates whether the entity is enabled or not.
+     * If false, the entity is considered disabled and should not be used in operations.
+     */
+    @Column
+    @Builder.Default
+    private boolean enabled = true;
 }

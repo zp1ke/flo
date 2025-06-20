@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.data.jpa.domain.Specification;
 
 public class TransactionSpec {
+
     public static Specification<Transaction> withProfile(Profile profile) {
         return (root, query, builder)
             -> {

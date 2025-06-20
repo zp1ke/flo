@@ -36,7 +36,8 @@ public class WalletService {
     public Wallet save(@Nonnull Wallet wallet) {
         if (StringUtils.isBlank(wallet.getCode())) {
             wallet.setCode(DomainUtils
-                .generateRandomCode((code) -> walletRepository.existsByProfileAndCode(wallet.getProfile(), code)));
+                .generateRandomCode((code) -> walletRepository
+                    .existsByProfileAndCodeAndEnabledTrue(wallet.getProfile(), code)));
         }
 
         var violations = validator.validate(wallet);
@@ -46,19 +47,19 @@ public class WalletService {
 
         if (wallet.getId() == null) {
             // Check if a wallet with the same name already exists for the profile
-            if (walletRepository.existsByProfileAndName(wallet.getProfile(), wallet.getName())) {
+            if (walletRepository.existsByProfileAndNameAndEnabledTrue(wallet.getProfile(), wallet.getName())) {
                 throw new IllegalArgumentException("wallet.name-duplicate");
             }
 
             var maxWallets = settingService.getIntegerValue(wallet.getProfile().getUser(),
                 SettingCode.USER_MAX_WALLETS);
             var profiles = profileService.profilesOfUser(wallet.getProfile().getUser());
-            if (maxWallets != null && walletRepository.countByProfileIn(profiles) >= maxWallets) {
+            if (maxWallets != null && walletRepository.countByEnabledTrueAndProfileIn(profiles) >= maxWallets) {
                 throw new IllegalArgumentException("wallet.max-wallets-reached");
             }
         } else {
             // Check if a wallet with the same name already exists for the profile
-            if (walletRepository.existsByProfileAndNameAndIdNot(wallet.getProfile(), wallet.getName(),
+            if (walletRepository.existsByProfileAndNameAndIdNotAndEnabledTrue(wallet.getProfile(), wallet.getName(),
                 wallet.getId())) {
                 throw new IllegalArgumentException("wallet.name-duplicate");
             }
@@ -68,7 +69,7 @@ public class WalletService {
     }
 
     public Optional<Wallet> walletOfProfileByCode(@Nonnull Profile profile, @Nonnull String code) {
-        return walletRepository.findByProfileAndCode(profile, code);
+        return walletRepository.findByProfileAndCodeAndEnabledTrue(profile, code);
     }
 
     @Nonnull
@@ -82,7 +83,7 @@ public class WalletService {
 
     public List<Long> idsOfCodes(@Nonnull Profile profile, List<String> codes) {
         if (codes != null && !codes.isEmpty()) {
-            return walletRepository.findAllByProfileAndCodeIn(profile, codes)
+            return walletRepository.findAllByProfileAndCodeInAndEnabledTrue(profile, codes)
                 .stream()
                 .map(Wallet::getId)
                 .toList();
@@ -93,8 +94,10 @@ public class WalletService {
     public void delete(@Nonnull Wallet wallet) {
         var count = transactionRepository.countByWallet(wallet);
         if (count > 0) {
-            throw new IllegalArgumentException("wallet.associated-transactions");
+            wallet.setEnabled(false);
+            walletRepository.save(wallet);
+        } else {
+            walletRepository.delete(wallet);
         }
-        walletRepository.delete(wallet);
     }
 }
