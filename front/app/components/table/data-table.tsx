@@ -1,7 +1,5 @@
 import {
   type ColumnDef,
-  type ColumnFilter,
-  type ColumnFiltersState,
   type ColumnSort,
   flexRender,
   getCoreRowModel,
@@ -69,10 +67,10 @@ export const DataTable = <TData, TValue>({
   const location = useLocation();
   const [searchParams] = useSearchParams();
 
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>(
-    filtersFrom(searchParams, columns),
+  const [filters, setFilters] = useState<Record<string, string>>(
+    parseUrlFilters(searchParams),
   );
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [pagination, setPagination] = useState<PaginationState>(
     paginationFrom(searchParams),
   );
@@ -87,65 +85,19 @@ export const DataTable = <TData, TValue>({
   const fetchData = dataStore((state) => state.fetchData);
 
   const updateUrlParams = useCallback(() => {
-    const params: Record<string, string> = {
-      page: String(pagination.pageIndex + 1),
-      pageSize: String(pagination.pageSize),
-    };
-    for (const columnSort of sorting) {
-      params[sortPrefix + columnSort.id] = columnSort.desc
-        ? SortDirection.Desc
-        : SortDirection.Asc;
-    }
-    for (const columnFilter of columnFilters) {
-      if (columnFilter.value) {
-        params[columnFilter.id] = columnFilter.value.toString();
-      }
-    }
+    const params = paramsOf(pagination, sorting, filters);
 
     const url = new URL(location.pathname, window.location.origin);
     for (const [key, value] of Object.entries(params)) {
       url.searchParams.set(key, value);
     }
     history.pushState({}, '', url);
-  }, [
-    location.pathname,
-    pagination.pageIndex,
-    pagination.pageSize,
-    sorting,
-    columnFilters,
-  ]);
+  }, [location.pathname, pagination, sorting, filters]);
 
   const fetch = useCallback(() => {
-    const sort: Record<string, SortDirection> = {};
-    for (const columnSort of sorting) {
-      sort[columnSort.id] = columnSort.desc
-        ? SortDirection.Desc
-        : SortDirection.Asc;
-    }
-    const filters: Record<string, string> = {};
-    for (const columnFilter of columnFilters) {
-      if (columnFilter.value) {
-        filters[columnFilter.id] = columnFilter.value.toString();
-      }
-    }
-
-    const pageFilters = {
-      page: pagination.pageIndex,
-      size: pagination.pageSize,
-      sort,
-      filters,
-    } satisfies PageFilters;
-
-    fetchData(pageFilters);
+    fetchData(pageFiltersOf(pagination, sorting, filters));
     updateUrlParams();
-  }, [
-    sorting,
-    columnFilters,
-    pagination.pageIndex,
-    pagination.pageSize,
-    fetchData,
-    updateUrlParams,
-  ]);
+  }, [sorting, filters, pagination, fetchData, updateUrlParams]);
 
   useEffect(() => {
     if (profile) {
@@ -169,8 +121,9 @@ export const DataTable = <TData, TValue>({
     meta: {
       loading: () => loading,
       fetch: fetch,
+      filters: filters,
+      setFilters: setFilters,
     },
-    onColumnFiltersChange: setColumnFilters,
     onColumnVisibilityChange: setColumnVisibility,
     onPaginationChange: (state) => {
       setPagination(state);
@@ -183,7 +136,6 @@ export const DataTable = <TData, TValue>({
     },
     rowCount: page.total,
     state: {
-      columnFilters,
       columnVisibility,
       pagination,
       rowSelection,
@@ -257,11 +209,7 @@ export const DataTable = <TData, TValue>({
                     </div>
                   ) : (
                     <span>
-                      {t(
-                        columnFilters.length
-                          ? 'table.noResults'
-                          : 'table.noData',
-                      )}
+                      {t(filters.length ? 'table.noResults' : 'table.noData')}
                     </span>
                   )}
                 </TableCell>
@@ -314,23 +262,57 @@ const sortingFrom = <TData, TValue>(
   return sorting;
 };
 
-const filtersFrom = <TData, TValue>(
+const parseUrlFilters = (
   searchParams: URLSearchParams,
-  columns: ColumnDef<TData, TValue>[],
-): ColumnFiltersState => {
-  const filters: ColumnFilter[] = [];
+): Record<string, string> => {
+  const filters: Record<string, string> = {};
   searchParams.forEach((value, key) => {
-    if (
-      !key.startsWith(sortPrefix) &&
-      key !== pageKey &&
-      key !== pageSizeKey &&
-      columns.some((column) => column.id === key)
-    ) {
-      filters.push({
-        id: key,
-        value,
-      } satisfies ColumnFilter);
+    if (!key.startsWith(sortPrefix) && key !== pageKey && key !== pageSizeKey) {
+      filters[key] = value.trim();
     }
   });
   return filters;
+};
+
+const paramsOf = (
+  pagination: PaginationState,
+  sorting: SortingState,
+  filters: Record<string, string>,
+): Record<string, string> => {
+  const params: Record<string, string> = {
+    page: String(pagination.pageIndex + 1),
+    pageSize: String(pagination.pageSize),
+  };
+  for (const columnSort of sorting) {
+    params[sortPrefix + columnSort.id] = columnSort.desc
+      ? SortDirection.Desc
+      : SortDirection.Asc;
+  }
+  for (const [key, value] of Object.entries(filters)) {
+    if (value) {
+      params[key] = value.toString();
+    }
+  }
+
+  return params;
+};
+
+const pageFiltersOf = (
+  pagination: PaginationState,
+  sorting: SortingState,
+  filters: Record<string, string>,
+): PageFilters => {
+  const sort: Record<string, SortDirection> = {};
+  for (const columnSort of sorting) {
+    sort[columnSort.id] = columnSort.desc
+      ? SortDirection.Desc
+      : SortDirection.Asc;
+  }
+
+  return {
+    page: pagination.pageIndex,
+    size: pagination.pageSize,
+    sort,
+    filters,
+  } satisfies PageFilters;
 };

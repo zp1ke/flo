@@ -222,6 +222,7 @@
     "datetime": "Date & Time",
     "datetimePlaceholder": "Select date and time",
     "editDescription": "Click save when you're done.",
+    "fetchError": "Could not fetch transactions.",
     "fromDate": "From Date",
     "title": "Transactions",
     "toDate": "To Date",

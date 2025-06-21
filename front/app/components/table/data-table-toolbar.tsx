@@ -29,7 +29,7 @@ export function DataTableToolbar<TData>({
   const { t } = useTranslation();
 
   const [filters, setFilters] = useState<Record<string, string>>(
-    parseFilters(table.getState().columnFilters),
+    table.options?.meta?.filters ?? {},
   );
 
   const loading = (): boolean => table.options?.meta?.loading?.() ?? false;
@@ -44,10 +44,7 @@ export function DataTableToolbar<TData>({
   };
 
   const search = () => {
-    table.resetColumnFilters(true);
-    for (const [column, value] of Object.entries(filters)) {
-      table.getColumn(column)?.setFilterValue(value ? value.trim() : undefined);
-    }
+    table.options?.meta?.setFilters?.(filters);
     setTimeout(fetch, 100);
   };
 
@@ -125,15 +122,3 @@ export function DataTableToolbar<TData>({
     </div>
   );
 }
-
-const parseFilters = (filters: ColumnFilter[]): Record<string, string> => {
-  return filters.reduce(
-    (acc, filter) => {
-      if (filter.id && filter.value) {
-        acc[filter.id] = String(filter.value).trim();
-      }
-      return acc;
-    },
-    {} as Record<string, string>,
-  );
-};
