@@ -1,4 +1,4 @@
-import type { ColumnFilter, Table } from '@tanstack/react-table';
+import type { Table } from '@tanstack/react-table';
 import { Loader2, RefreshCwIcon, SearchIcon, X } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -29,8 +29,26 @@ export function DataTableToolbar<TData>({
   const { t } = useTranslation();
 
   const [filters, setFilters] = useState<Record<string, string>>(
-    table.options?.meta?.filters ?? {},
+    Object.entries(table.options?.meta?.filters ?? {}).reduce(
+      (acc, [key, value]) => {
+        if (value) {
+          acc[key] = value;
+        }
+        return acc;
+      },
+      {} as Record<string, string>,
+    ),
   );
+
+  const setFilter = (key: string, value: string) => {
+    const newFilters = { ...filters };
+    if (value) {
+      newFilters[key] = value;
+    } else {
+      delete newFilters[key];
+    }
+    setFilters(newFilters);
+  };
 
   const loading = (): boolean => table.options?.meta?.loading?.() ?? false;
 
@@ -40,12 +58,11 @@ export function DataTableToolbar<TData>({
 
   const reset = () => {
     setFilters({});
-    search();
+    search({});
   };
 
-  const search = () => {
-    table.options?.meta?.setFilters?.(filters);
-    setTimeout(fetch, 100);
+  const search = (values: Record<string, string>) => {
+    table.options?.meta?.setFilters?.(values);
   };
 
   return (
@@ -58,12 +75,7 @@ export function DataTableToolbar<TData>({
             type="search"
             placeholder={`${t('table.filter')} ${filter.title}...`}
             value={filters[filter.column] ?? ''}
-            onChange={(event) =>
-              setFilters((prev) => ({
-                ...prev,
-                [filter.column]: event.target.value,
-              }))
-            }
+            onChange={(event) => setFilter(filter.column, event.target.value)}
             className="w-[150px] lg:w-[250px]"
           />
         ))}
@@ -71,12 +83,7 @@ export function DataTableToolbar<TData>({
           const props: DataTableCustomFilterRenderProps = {
             value: filters[filter.column],
             disabled: loading(),
-            onChange: (value) => {
-              setFilters((prev) => ({
-                ...prev,
-                [filter.column]: value,
-              }));
-            },
+            onChange: (value) => setFilter(filter.column, value),
           };
           return filter.render(props);
         })}
@@ -89,7 +96,7 @@ export function DataTableToolbar<TData>({
             options={filter.options}
           />
         ))}
-        {Object.keys(filters).length > 0 && (
+        {Object.entries(filters).length > 0 && (
           <Button variant="outline" disabled={loading()} onClick={reset}>
             {t('table.reset')}
             <X />
@@ -100,7 +107,7 @@ export function DataTableToolbar<TData>({
             variant="outline"
             size="icon"
             disabled={loading()}
-            onClick={search}
+            onClick={() => search(filters)}
           >
             {loading() && <Loader2 className="h-4 w-4 animate-spin" />}
             {!loading() && <SearchIcon className="h-4 w-4" />}

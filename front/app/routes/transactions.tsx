@@ -39,7 +39,7 @@ export default function Transactions() {
           maxDate={new Date()}
           onChange={(date) => {
             if (date) {
-              onChange(date.toISOString());
+              onChange(date.toLocaleDateString());
             }
           }}
           disabled={disabled}
@@ -60,7 +60,7 @@ export default function Transactions() {
           maxDate={new Date()}
           onChange={(date) => {
             if (date) {
-              onChange(date.toISOString());
+              onChange(date.toLocaleDateString());
             }
           }}
           disabled={disabled}

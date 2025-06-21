@@ -33,12 +33,11 @@ export function DatePicker({
   disabled,
 }: DatePickerProps) {
   const [open, setOpen] = useState(false);
-  const [date, setDate] = useState<Date | undefined>(value);
 
   const id = useId();
 
   const formatDate = () => {
-    if (!date) {
+    if (!value) {
       return placeholder ?? '';
     }
     const options: Intl.DateTimeFormatOptions = {
@@ -46,7 +45,7 @@ export function DatePicker({
       month: 'long',
       day: 'numeric',
     };
-    const datetime = new Date(date);
+    const datetime = new Date(value);
     return datetime.toLocaleDateString(getLanguage(), options);
   };
 
@@ -75,7 +74,7 @@ export function DatePicker({
             id={id}
             className={cn(
               'w-48 justify-between font-normal',
-              !date && 'text-muted-foreground',
+              !value && 'text-muted-foreground',
             )}
             disabled={disabled}
           >
@@ -86,11 +85,10 @@ export function DatePicker({
         <PopoverContent className="w-auto overflow-hidden p-0" align="start">
           <Calendar
             mode="single"
-            selected={date}
+            selected={value}
             captionLayout="dropdown"
             hidden={hidden}
             onSelect={(date) => {
-              setDate(date);
               onChange?.(date);
               setOpen(false);
             }}

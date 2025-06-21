@@ -95,8 +95,8 @@ export const DataTable = <TData, TValue>({
   }, [location.pathname, pagination, sorting, filters]);
 
   const fetch = useCallback(() => {
-    fetchData(pageFiltersOf(pagination, sorting, filters));
     updateUrlParams();
+    fetchData(pageFiltersOf(pagination, sorting, filters));
   }, [sorting, filters, pagination, fetchData, updateUrlParams]);
 
   useEffect(() => {
@@ -122,7 +122,10 @@ export const DataTable = <TData, TValue>({
       loading: () => loading,
       fetch: fetch,
       filters: filters,
-      setFilters: setFilters,
+      setFilters: (newFilters: Record<string, string>) => {
+        setFilters(newFilters);
+        fetch();
+      },
     },
     onColumnVisibilityChange: setColumnVisibility,
     onPaginationChange: (state) => {
