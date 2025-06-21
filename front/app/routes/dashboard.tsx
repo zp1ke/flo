@@ -1,6 +1,11 @@
-import { useState } from 'react';
+import { Loader2, RefreshCwIcon } from 'lucide-react';
+import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
+import type { ApiError } from '~/api/client';
+import { fetchStats } from '~/api/transactions';
 import PageContent from '~/components/layout/page-content';
+import { Button } from '~/components/ui/button';
 import {
   Card,
   CardContent,
@@ -9,104 +14,152 @@ import {
   CardTitle,
 } from '~/components/ui/card';
 import { DatePicker } from '~/components/ui/date-picker';
+import Loading from '~/components/ui/loading';
 import { Overview } from '~/routes/dashboard/overview';
 import { RecentSales } from '~/routes/dashboard/recent-sales';
 import {
   type SectionCardProp,
   SectionCards,
 } from '~/routes/dashboard/section-cards';
-
-const data = [
-  {
-    key: 'income',
-    title: 'Income',
-    valuePrefix: '$',
-    value: 123456.78,
-    valueSuffix: '',
-    decimalPlaces: 2,
-    description: 'Total income',
-    trend: 'up',
-    trendValue: 5.2,
-  },
-  {
-    key: 'expenses',
-    title: 'Expenses',
-    valuePrefix: '$',
-    value: 98765.43,
-    valueSuffix: '',
-    decimalPlaces: 2,
-    description: 'Total expenses',
-    trend: 'down',
-    trendValue: 3.1,
-  },
-  {
-    key: 'profit',
-    title: 'Profit',
-    valuePrefix: '$',
-    value: 24691.35,
-    valueSuffix: '',
-    decimalPlaces: 2,
-    description: 'Total profit',
-    trend: 'up',
-    trendValue: 5.2,
-  },
-  {
-    key: 'transactions',
-    title: 'Transactions',
-    valuePrefix: '',
-    value: 1500,
-    valueSuffix: '',
-    decimalPlaces: 0,
-    description: 'Total transactions',
-    trend: 'down',
-    trendValue: 2.5,
-  },
-] satisfies SectionCardProp[];
+import useUserStore from '~/store/user-store';
+import type { TransactionsStats } from '~/types/transaction';
 
 export default function Dashboard() {
   const { t } = useTranslation();
 
+  const profile = useUserStore((state) => state.profile);
+
   const [date, setDate] = useState<Date | undefined>(new Date());
+  const [loading, setLoading] = useState<boolean>(false);
+  const [stats, setStats] = useState<TransactionsStats | undefined>(undefined);
+
+  const loadData = useCallback(async () => {
+    if (date && profile?.code) {
+      setLoading(true);
+      fetchStats(profile.code, date)
+        .then(setStats)
+        .catch((e) => {
+          toast.error(t('transactions.fetchError'), {
+            description: t((e as ApiError).message),
+            closeButton: true,
+          });
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }
+  }, [t, profile, date]);
+
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
 
   return (
     <PageContent
       title={t('dashboard.title')}
       subtitle={t('dashboard.subtitle')}
       headerEnd={
-        <div className="flex items-center">
+        <div className="flex items-end gap-1">
           <DatePicker
             title={t('dashboard.date')}
             placeholder={t('dashboard.pickDate')}
             value={date}
-            minDate={new Date('2025-06-01')} // TODO: Replace with profile creation date
+            minDate={
+              profile?.createdAt
+                ? new Date(profile.createdAt)
+                : new Date('2025-06-01')
+            }
             maxDate={new Date()}
             onChange={setDate}
           />
+          <Button
+            variant="outline"
+            size="icon"
+            disabled={loading}
+            onClick={loadData}
+          >
+            {loading && <Loader2 className="h-4 w-4 animate-spin" />}
+            {!loading && <RefreshCwIcon />}
+          </Button>
         </div>
       }
     >
-      <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
-        <SectionCards data={data} />
-      </div>
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-        <Card className="col-span-4">
-          <CardHeader>
-            <CardTitle>Overview</CardTitle>
-          </CardHeader>
-          <CardContent className="pl-2">
-            <Overview />
-          </CardContent>
-        </Card>
-        <Card className="col-span-3">
-          <CardHeader>
-            <CardTitle>Recent Sales</CardTitle>
-            <CardDescription>You made 265 sales this month.</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <RecentSales />
-          </CardContent>
-        </Card>
-      </div>
+      {loading && <Loading />}
+      {loading || (
+        <>
+          <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
+            <SectionCards data={mapStatsToSectionCards(stats)} />
+          </div>
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+            <Card className="col-span-4">
+              <CardHeader>
+                <CardTitle>Overview TODO</CardTitle>
+              </CardHeader>
+              <CardContent className="pl-2">
+                <Overview />
+              </CardContent>
+            </Card>
+            <Card className="col-span-3">
+              <CardHeader>
+                <CardTitle>{t('dashboard.recentTransactions')}</CardTitle>
+                <CardDescription>
+                  {t('dashboard.recentTransactionsDescription')}
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <RecentSales data={stats?.transactions ?? []} />
+              </CardContent>
+            </Card>
+          </div>
+        </>
+      )}
     </PageContent>
   );
 }
+
+const mapStatsToSectionCards = (
+  stats?: TransactionsStats,
+): SectionCardProp[] => {
+  if (!stats) {
+    return [];
+  }
+
+  return [
+    {
+      key: 'income',
+      title: 'dashboard.income',
+      valuePrefix: '$',
+      value: stats.income,
+      valueSuffix: '',
+      decimalPlaces: 2,
+      description: 'dashboard.incomeDescription',
+    },
+    {
+      key: 'expenses',
+      title: 'dashboard.expenses',
+      valuePrefix: '$',
+      value: stats.outcome,
+      valueSuffix: '',
+      decimalPlaces: 2,
+      description: 'dashboard.expensesDescription',
+    },
+    {
+      key: 'balance',
+      title: 'dashboard.balance',
+      valuePrefix: '$',
+      value: stats.balance,
+      valueSuffix: '',
+      decimalPlaces: 2,
+      description: 'dashboard.balanceDescription',
+    },
+    {
+      key: 'transactions',
+      title: 'dashboard.transactions',
+      valuePrefix: '',
+      value: stats.transactions.length,
+      valueSuffix: '',
+      decimalPlaces: 0,
+      description: 'dashboard.transactionsDescription',
+    },
+  ] satisfies SectionCardProp[];
+};

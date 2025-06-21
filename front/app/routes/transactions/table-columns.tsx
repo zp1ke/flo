@@ -1,6 +1,6 @@
 import type { ColumnDef } from '@tanstack/react-table';
 import { DataTableColumnHeader } from '~/components/table/data-table-column-header';
-
+import { formatDateTime, formatMoney } from '~/lib/utils';
 import type { Transaction } from '~/types/transaction';
 import { DataTableRowActions } from './table-row-actions';
 
@@ -36,16 +36,10 @@ export const tableColumns = ({
       />
     ),
     cell: ({ row }) => {
-      const options: Intl.DateTimeFormatOptions = {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: false,
-      };
-      const datetime = new Date(row.getValue('datetime'));
-      const formattedDatetime = datetime.toLocaleDateString(language, options);
+      const formattedDatetime = formatDateTime(
+        row.getValue('datetime'),
+        language,
+      );
       return (
         <div className="max-w-[500px] truncate font-medium">
           {formattedDatetime}
@@ -67,10 +61,7 @@ export const tableColumns = ({
     ),
     cell: ({ row }) => {
       const amount = Number.parseFloat(row.getValue('amount'));
-      const formattedAmount = new Intl.NumberFormat(language, {
-        style: 'currency',
-        currency: 'USD',
-      }).format(amount);
+      const formattedAmount = formatMoney(amount, language);
       return (
         <div className="max-w-[500px] truncate font-medium">
           {formattedAmount}

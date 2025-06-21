@@ -102,7 +102,9 @@ export function DataTableToolbar<TData>({
             <X />
           </Button>
         )}
-        {(textFilters?.length || facetedFilters?.length) && (
+        {(textFilters?.length ||
+          facetedFilters?.length ||
+          customFilters?.length) && (
           <Button
             variant="outline"
             size="icon"

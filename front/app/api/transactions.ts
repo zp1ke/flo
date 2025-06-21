@@ -1,7 +1,7 @@
 import type { DataPage } from '~/types/page';
 
-import type { Transaction } from '~/types/transaction';
-import apiClient, { type PageFilters } from './client';
+import type { Transaction, TransactionsStats } from '~/types/transaction';
+import apiClient, { type PageFilters, toApiDate } from './client';
 
 const basePath = (profileCode: string) =>
   `/profiles/${profileCode}/transactions`;
@@ -14,6 +14,19 @@ export const fetchTransactions = async (
   const data = await apiClient.getPage<Transaction>(
     basePath(profileCode),
     pageFilters,
+  );
+  return data;
+};
+
+export const fetchStats = async (
+  profileCode: string,
+  from: Date,
+  to?: Date,
+): Promise<TransactionsStats> => {
+  const toDate = to ? new Date(to) : from;
+  const data = await apiClient.getJson<TransactionsStats>(
+    `${basePath(profileCode)}/stats`,
+    { from: toApiDate(from), to: toApiDate(toDate) },
   );
   return data;
 };

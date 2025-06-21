@@ -27,3 +27,20 @@ export const transactionSchema = z.object({
 });
 
 export type Transaction = z.infer<typeof transactionSchema>;
+
+export type MoneyStats = {
+  income: number;
+  outcome: number;
+  balance: number;
+};
+
+export type GroupStats = MoneyStats & {
+  code: string;
+  name: string;
+};
+
+export type TransactionsStats = MoneyStats & {
+  categories: GroupStats[];
+  wallets: GroupStats[];
+  transactions: Transaction[];
+};

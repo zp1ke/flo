@@ -10,6 +10,7 @@ export const profileNameIsValid = (name: string) => {
 export const profileSchema = z.object({
   code: z.string().optional(),
   name: z.string().min(nameMinLength).max(nameMaxLength),
+  createdAt: z.string().datetime({ offset: true }).optional(),
 });
 
 export type Profile = z.infer<typeof profileSchema>;

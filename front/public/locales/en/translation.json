@@ -36,10 +36,20 @@
     "title": "Categories"
   },
   "dashboard": {
+    "balance": "Balance",
+    "balanceDescription": "Your current balance for the selected date.",
     "date": "Date",
+    "income": "Income",
+    "incomeDescription": "Total income for the selected date.",
+    "expenses": "Expenses",
+    "expensesDescription": "Total expenses for the selected date.",
     "pickDate": "Pick a date",
+    "recentTransactions": "Recent Transactions",
+    "recentTransactionsDescription": "Recent transactions for the selected date.",
     "subtitle": "Your financial overview",
-    "title": "Dashboard"
+    "title": "Dashboard",
+    "transactions": "Transactions",
+    "transactionsDescription": "Total transactions for the selected date."
   },
   "error": {
     "details": "An unexpected error occurred.",

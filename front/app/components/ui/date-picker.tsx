@@ -11,7 +11,7 @@ import {
   PopoverTrigger,
 } from '~/components/ui/popover';
 import { getLanguage } from '~/lib/i18n';
-import { cn } from '~/lib/utils';
+import { cn, formatDate } from '~/lib/utils';
 
 interface DatePickerProps {
   title?: string;
@@ -36,17 +36,11 @@ export function DatePicker({
 
   const id = useId();
 
-  const formatDate = () => {
+  const formattedDate = () => {
     if (!value) {
       return placeholder ?? '';
     }
-    const options: Intl.DateTimeFormatOptions = {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    };
-    const datetime = new Date(value);
-    return datetime.toLocaleDateString(getLanguage(), options);
+    return formatDate(value, getLanguage());
   };
 
   const hidden = useMemo(() => {
@@ -78,7 +72,7 @@ export function DatePicker({
             )}
             disabled={disabled}
           >
-            {formatDate()}
+            {formattedDate()}
             <ChevronDownIcon />
           </Button>
         </PopoverTrigger>
