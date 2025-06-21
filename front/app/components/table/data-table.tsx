@@ -33,13 +33,18 @@ import type { DataTableStore } from '~/store/data-table-store';
 import useUserStore from '~/store/user-store';
 import { SortDirection, sortPrefix } from '~/types/sort';
 import AddItemButton, { type EditItemForm } from './add-item-button';
-import type { DataTableFilter, DataTableSelectFilter } from './data-filter';
+import type {
+  DataTableCustomFilter,
+  DataTableFilter,
+  DataTableSelectFilter,
+} from './data-filter';
 import { DataTablePagination } from './data-table-pagination';
 import { DataTableToolbar } from './data-table-toolbar';
 
 interface DataTableProps<TData, TValue> extends HTMLAttributes<HTMLDivElement> {
   columns: ColumnDef<TData, TValue>[];
   dataStore: UseBoundStore<StoreApi<DataTableStore<TData>>>;
+  customFilters?: DataTableCustomFilter[];
   facetedFilters?: DataTableSelectFilter[];
   textFilters?: DataTableFilter[];
   editForm: typeof EditItemForm;
@@ -53,6 +58,7 @@ const pageSizeKey = 'pageSize';
 export const DataTable = <TData, TValue>({
   columns,
   dataStore,
+  customFilters,
   facetedFilters,
   textFilters,
   editForm,
@@ -196,6 +202,7 @@ export const DataTable = <TData, TValue>({
         />
       </div>
       <DataTableToolbar
+        customFilters={customFilters}
         facetedFilters={facetedFilters}
         table={table}
         textFilters={textFilters}

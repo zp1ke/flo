@@ -1,5 +1,6 @@
 import { ChevronDownIcon } from 'lucide-react';
-import { useId, useState } from 'react';
+import { useId, useMemo, useState } from 'react';
+import type { Matcher } from 'react-day-picker';
 
 import { Button } from '~/components/ui/button';
 import { Calendar } from '~/components/ui/calendar';
@@ -10,20 +11,26 @@ import {
   PopoverTrigger,
 } from '~/components/ui/popover';
 import { getLanguage } from '~/lib/i18n';
+import { cn } from '~/lib/utils';
 
 interface DatePickerProps {
   title?: string;
   placeholder?: string;
   value?: Date;
+  minDate?: Date;
   maxDate?: Date;
   onChange?: (date: Date | undefined) => void;
+  disabled?: boolean;
 }
 
 export function DatePicker({
   title,
   placeholder,
   value,
+  minDate,
+  maxDate,
   onChange,
+  disabled,
 }: DatePickerProps) {
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState<Date | undefined>(value);
@@ -43,6 +50,17 @@ export function DatePicker({
     return datetime.toLocaleDateString(getLanguage(), options);
   };
 
+  const hidden = useMemo(() => {
+    const matchers: Matcher[] = [];
+    if (minDate) {
+      matchers.push({ before: minDate });
+    }
+    if (maxDate) {
+      matchers.push({ after: maxDate });
+    }
+    return matchers;
+  }, [minDate, maxDate]);
+
   return (
     <div className="flex flex-col gap-3">
       {title && (
@@ -55,7 +73,11 @@ export function DatePicker({
           <Button
             variant="outline"
             id={id}
-            className="w-48 justify-between font-normal"
+            className={cn(
+              'w-48 justify-between font-normal',
+              !date && 'text-muted-foreground',
+            )}
+            disabled={disabled}
           >
             {formatDate()}
             <ChevronDownIcon />
@@ -66,7 +88,7 @@ export function DatePicker({
             mode="single"
             selected={date}
             captionLayout="dropdown"
-            hidden={{ after: new Date(), before: new Date(2025, 5, 1) }}
+            hidden={hidden}
             onSelect={(date) => {
               setDate(date);
               onChange?.(date);

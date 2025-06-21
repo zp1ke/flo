@@ -78,6 +78,8 @@ export default function Dashboard() {
             title={t('dashboard.date')}
             placeholder={t('dashboard.pickDate')}
             value={date}
+            minDate={new Date('2025-06-01')} // TODO: Replace with profile creation date
+            maxDate={new Date()}
             onChange={setDate}
           />
         </div>

@@ -4,17 +4,24 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '~/components/ui/button';
 import { Input } from '~/components/ui/input';
-import type { DataTableFilter, DataTableSelectFilter } from './data-filter';
+import type {
+  DataTableCustomFilter,
+  DataTableCustomFilterRenderProps,
+  DataTableFilter,
+  DataTableSelectFilter,
+} from './data-filter';
 import { DataTableFacetedFilter } from './data-table-faceted-filter';
 import { DataTableViewOptions } from './data-table-view-options';
 
 interface DataTableProps<TData> {
+  customFilters?: DataTableCustomFilter[];
   facetedFilters?: DataTableSelectFilter[];
   table: Table<TData>;
   textFilters?: DataTableFilter[];
 }
 
 export function DataTableToolbar<TData>({
+  customFilters,
   facetedFilters,
   table,
   textFilters,
@@ -33,8 +40,7 @@ export function DataTableToolbar<TData>({
 
   const reset = () => {
     setFilters({});
-    table.resetColumnFilters(true);
-    setTimeout(fetch, 100);
+    search();
   };
 
   const search = () => {
@@ -64,6 +70,19 @@ export function DataTableToolbar<TData>({
             className="w-[150px] lg:w-[250px]"
           />
         ))}
+        {customFilters?.map((filter) => {
+          const props: DataTableCustomFilterRenderProps = {
+            value: filters[filter.column],
+            disabled: loading(),
+            onChange: (value) => {
+              setFilters((prev) => ({
+                ...prev,
+                [filter.column]: value,
+              }));
+            },
+          };
+          return filter.render(props);
+        })}
         {facetedFilters?.map((filter) => (
           <DataTableFacetedFilter
             key={filter.column}
