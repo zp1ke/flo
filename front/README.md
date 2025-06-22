@@ -1,24 +1,30 @@
-# Welcome to React Router!
+# Flo/front
 
-A modern, production-ready template for building full-stack React applications using React Router.
-
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/remix-run/react-router-templates/tree/main/default)
+A modern, scalable web application for financial management. Features include dashboards, user authentication, transaction tracking, wallet management, and category organization. Built with React, TypeScript, Vite, Zustand, shadcn/ui, Tailwind CSS, and more.
 
 ## Features
 
-- 🚀 Server-side rendering
-- ⚡️ Hot Module Replacement (HMR)
-- 📦 Asset bundling and optimization
-- 🔄 Data loading and mutations
-- 🔒 TypeScript by default
-- 🎉 TailwindCSS for styling
-- 📖 [React Router docs](https://reactrouter.com/)
+- 📊 Financial dashboards
+- 🔐 User authentication
+- 💸 Transaction tracking
+- 👛 Wallet management
+- 🏷️ Category organization
+- 🌐 Internationalization (i18next)
+- 🧩 Component-driven UI (shadcn/ui, Tailwind CSS)
+- ⚡ Fast development with Vite
+- 🗂️ State management with Zustand
+- 📋 Data tables with @tanstack/react-table
+- 🧪 End-to-end testing with Cypress
+- 🐳 Docker-ready for deployment
+- 📝 TypeScript throughout
+- 🌍 Routing with React Router
+- 🧹 Formatting and linting with Biome
 
 ## Getting Started
 
 ### Installation
 
-Install the dependencies:
+Install dependencies:
 
 ```bash
 npm install
@@ -26,13 +32,27 @@ npm install
 
 ### Development
 
-Start the development server with HMR:
+Start the development server:
 
 ```bash
 npm run dev
 ```
 
-Your application will be available at `http://localhost:5173`.
+The app will be available at `http://localhost:3000`.
+
+### Type Checking & Linting
+
+Run type checking and code generation:
+
+```bash
+npm run typecheck
+```
+
+Run formatting and linting:
+
+```bash
+npm run format
+```
 
 ## Building for Production
 
@@ -42,46 +62,47 @@ Create a production build:
 npm run build
 ```
 
-## Deployment
+## Testing
 
-### Docker Deployment
-
-To build and run using Docker:
+Run all Cypress end-to-end tests:
 
 ```bash
-docker build -t my-app .
-
-# Run the container
-docker run -p 3000:3000 my-app
+npx cypress run
 ```
 
-The containerized application can be deployed to any platform that supports Docker, including:
+## Deployment
 
-- AWS ECS
-- Google Cloud Run
-- Azure Container Apps
-- Digital Ocean App Platform
-- Fly.io
-- Railway
+### Docker
+
+Build and run with Docker:
+
+```bash
+docker build -t zp1ke/flo-web:latest .
+docker run -p 3000:3000 flo-front
+```
 
 ### DIY Deployment
 
-If you're familiar with deploying Node applications, the built-in app server is production-ready.
+Deploy the output of `npm run build` from the `build/client` directory to your preferred static hosting or container platform.
 
-Make sure to deploy the output of `npm run build`
+## Project Structure
 
-```
-├── package.json
-├── package-lock.json (or pnpm-lock.yaml, or bun.lockb)
-├── build/
-│   ├── client/    # Static assets
-│   └── server/    # Server-side code
-```
+- `app/` — Main application source code
+  - `api/` — API client modules
+  - `components/` — UI and layout components
+  - `contexts/` — React context providers
+  - `hooks/` — Custom React hooks
+  - `lib/` — Utilities and helpers
+  - `routes/` — Route components and folders
+  - `store/` — Zustand stores
+  - `types/` — TypeScript type definitions
+- `build/` — Build output
+- `cypress/` — Cypress tests and support
+- `public/` — Static assets
+- `scripts/` — Utility scripts
+- `Dockerfile`, `nginx.conf` — Docker/server config
+- `package.json`, `tsconfig.json`, `vite.config.ts` — Project config
 
 ## Styling
 
-This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever CSS framework you prefer.
-
----
-
-Built with ❤️ using React Router.
+This project uses [Tailwind CSS](https://tailwindcss.com/) and [shadcn/ui](https://ui.shadcn.com/) for a modern, flexible UI. You can extend or customize the styling as needed.
