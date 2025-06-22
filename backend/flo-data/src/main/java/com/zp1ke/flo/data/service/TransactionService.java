@@ -20,6 +20,7 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -106,7 +107,8 @@ public class TransactionService {
             .and(TransactionSpec.datetimeBetween(from, to))
             .and(TransactionSpec.withCategories(categoriesIds))
             .and(TransactionSpec.withWallets(walletsIds));
-        var transactions = transactionRepository.findAll(specification);
+        var transactions = transactionRepository
+            .findAll(specification, Sort.by(Sort.Direction.DESC, "datetime", "id"));
         return TransactionsStats.build(from, to, transactions);
     }
 

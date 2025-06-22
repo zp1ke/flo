@@ -6,9 +6,21 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export const formatMoney = (value: number, language?: string) => {
-  return new Intl.NumberFormat(language, {
+  return new Intl.NumberFormat(language ?? 'en-US', {
     style: 'currency',
     currency: 'USD',
+  }).format(value);
+};
+
+export const formatNumber = (
+  value: number,
+  digits: number,
+  language?: string,
+) => {
+  return new Intl.NumberFormat(language ?? 'en-US', {
+    style: 'decimal',
+    minimumFractionDigits: digits,
+    maximumFractionDigits: digits,
   }).format(value);
 };
 
@@ -26,7 +38,7 @@ export const formatDateTime = (date?: Date | string, language?: string) => {
     hour12: false,
   };
   const datetime = new Date(date);
-  return datetime.toLocaleDateString(language, options);
+  return datetime.toLocaleDateString(language ?? 'en-US', options);
 };
 
 export const formatDate = (date?: Date | string, language?: string) => {
@@ -40,5 +52,5 @@ export const formatDate = (date?: Date | string, language?: string) => {
     day: 'numeric',
   };
   const datetime = new Date(date);
-  return datetime.toLocaleDateString(language, options);
+  return datetime.toLocaleDateString(language ?? 'en-US', options);
 };

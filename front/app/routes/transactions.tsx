@@ -96,6 +96,10 @@ export default function Transactions() {
         addTitle={t('transactions.add')}
         addDescription={t('transactions.editDescription')}
         editForm={EditTransactionForm}
+        initialSorting={[
+          { id: 'datetime', desc: true },
+          { id: 'id', desc: true },
+        ]}
       />
     </PageContent>
   );

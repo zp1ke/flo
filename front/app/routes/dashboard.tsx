@@ -1,4 +1,4 @@
-import { Loader2, RefreshCwIcon } from 'lucide-react';
+import { DollarSignIcon, Loader2, RefreshCwIcon } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
@@ -16,11 +16,11 @@ import {
 import { DatePicker } from '~/components/ui/date-picker';
 import Loading from '~/components/ui/loading';
 import { Overview } from '~/routes/dashboard/overview';
-import { RecentSales } from '~/routes/dashboard/recent-sales';
 import {
   type SectionCardProp,
   SectionCards,
 } from '~/routes/dashboard/section-cards';
+import { TransactionsList } from '~/routes/dashboard/transactions-list';
 import useUserStore from '~/store/user-store';
 import type { TransactionsStats } from '~/types/transaction';
 
@@ -101,13 +101,13 @@ export default function Dashboard() {
             </Card>
             <Card className="col-span-3">
               <CardHeader>
-                <CardTitle>{t('dashboard.recentTransactions')}</CardTitle>
+                <CardTitle>{t('dashboard.lastTransactions')}</CardTitle>
                 <CardDescription>
-                  {t('dashboard.recentTransactionsDescription')}
+                  {t('dashboard.lastTransactionsDescription')}
                 </CardDescription>
               </CardHeader>
-              <CardContent>
-                <RecentSales data={stats?.transactions ?? []} />
+              <CardContent className="h-full">
+                <TransactionsList data={stats?.transactions ?? []} />
               </CardContent>
             </Card>
           </div>
@@ -128,38 +128,33 @@ const mapStatsToSectionCards = (
     {
       key: 'income',
       title: 'dashboard.income',
-      valuePrefix: '$',
+      icon: DollarSignIcon,
       value: stats.income,
-      valueSuffix: '',
       decimalPlaces: 2,
       description: 'dashboard.incomeDescription',
     },
     {
       key: 'expenses',
       title: 'dashboard.expenses',
-      valuePrefix: '$',
+      icon: DollarSignIcon,
       value: stats.outcome,
-      valueSuffix: '',
       decimalPlaces: 2,
       description: 'dashboard.expensesDescription',
     },
     {
       key: 'balance',
       title: 'dashboard.balance',
-      valuePrefix: '$',
+      icon: DollarSignIcon,
       value: stats.balance,
-      valueSuffix: '',
       decimalPlaces: 2,
       description: 'dashboard.balanceDescription',
     },
     {
       key: 'transactions',
       title: 'dashboard.transactions',
-      valuePrefix: '',
       value: stats.transactions.length,
-      valueSuffix: '',
-      decimalPlaces: 0,
       description: 'dashboard.transactionsDescription',
+      colorClass: 'text-foreground',
     },
   ] satisfies SectionCardProp[];
 };

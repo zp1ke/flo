@@ -32,6 +32,7 @@ export default function Wallets() {
         addTitle={t('wallets.add')}
         addDescription={t('wallets.editDescription')}
         editForm={EditWalletForm}
+        initialSorting={[{ id: 'id', desc: true }]}
       />
     </PageContent>
   );

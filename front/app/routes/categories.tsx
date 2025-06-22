@@ -35,6 +35,7 @@ export default function Categories() {
         addTitle={t('categories.add')}
         addDescription={t('categories.editDescription')}
         editForm={EditCategoryForm}
+        initialSorting={[{ id: 'id', desc: true }]}
       />
     </PageContent>
   );

@@ -48,6 +48,7 @@ interface DataTableProps<TData, TValue> extends HTMLAttributes<HTMLDivElement> {
   editForm: typeof EditItemForm;
   addTitle: string;
   addDescription: string;
+  initialSorting?: SortingState;
 }
 
 const pageKey = 'page';
@@ -62,6 +63,7 @@ export const DataTable = <TData, TValue>({
   editForm,
   addTitle,
   addDescription,
+  initialSorting = [],
 }: DataTableProps<TData, TValue>) => {
   const { t } = useTranslation();
   const location = useLocation();
@@ -75,7 +77,7 @@ export const DataTable = <TData, TValue>({
     paginationFrom(searchParams),
   );
   const [sorting, setSorting] = useState<SortingState>(
-    sortingFrom(searchParams, columns),
+    sortingFrom(searchParams, initialSorting),
   );
   const [rowSelection, setRowSelection] = useState({});
 
@@ -242,20 +244,17 @@ const paginationFrom = (searchParams: URLSearchParams): PaginationState => {
   return { pageIndex, pageSize };
 };
 
-const sortingFrom = <TData, TValue>(
+const sortingFrom = (
   searchParams: URLSearchParams,
-  columns: ColumnDef<TData, TValue>[],
+  initialSorting: SortingState = [],
 ): SortingState => {
-  const sorting: SortingState = [];
+  const sorting: SortingState = initialSorting.slice();
   searchParams.forEach((value, key) => {
     if (!key.startsWith(sortPrefix)) {
       return;
     }
     const theKey = key.substring(sortPrefix.length);
-    if (
-      (value === SortDirection.Asc || value === SortDirection.Desc) &&
-      columns.some((column) => column.id === theKey)
-    ) {
+    if (value === SortDirection.Asc || value === SortDirection.Desc) {
       sorting.push({
         id: theKey,
         desc: value === SortDirection.Desc,

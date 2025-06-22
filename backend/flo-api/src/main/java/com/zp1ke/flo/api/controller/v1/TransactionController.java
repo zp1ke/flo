@@ -40,7 +40,7 @@ public class TransactionController {
     @Operation(summary = "Get transactions")
     public ResponseEntity<PageDto<TransactionDto>> getTransactions(@AuthenticationPrincipal User user,
                                                                    @PathVariable String profileCode,
-                                                                   @PageableDefault(sort = "datetime", direction = Sort.Direction.DESC)
+                                                                   @PageableDefault(sort = {"datetime", "id"}, direction = Sort.Direction.DESC)
                                                                    Pageable pageable,
                                                                    @RequestParam(required = false, name = "from")
                                                                    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fromDate,
@@ -104,13 +104,14 @@ public class TransactionController {
                                                          @RequestParam(name = "from")
                                                          @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fromDate,
                                                          @RequestParam(name = "to")
-                                                         @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate toDate) {
+                                                         @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate toDate,
+                                                         @RequestParam(name = "transactionsLimit", defaultValue = "10") int transactionsLimit) {
         var profile = profileService.profileOfUserByCode(user, profileCode);
         if (profile.isPresent()) {
             var from = DateTimeUtils.toOffsetDateTime(fromDate);
             var to = DateTimeUtils.toOffsetDateTime(toDate.plusDays(1));
             var stats = transactionService.getStats(profile.get(), from, to);
-            var dto = TransactionsStatsDto.fromStats(stats);
+            var dto = TransactionsStatsDto.fromStats(stats, transactionsLimit);
             return ResponseEntity.ok(dto);
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();

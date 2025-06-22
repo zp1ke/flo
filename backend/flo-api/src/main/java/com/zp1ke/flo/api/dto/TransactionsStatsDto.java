@@ -27,8 +27,10 @@ public class TransactionsStatsDto extends MoneyStats {
     private final List<TransactionDto> transactions;
 
     @Nonnull
-    public static TransactionsStatsDto fromStats(@Nonnull TransactionsStats stats) {
+    public static TransactionsStatsDto fromStats(@Nonnull TransactionsStats stats,
+                                                 int transactionsLimit) {
         var transactions = stats.getTransactions().stream()
+            .limit(transactionsLimit)
             .map(TransactionDto::fromTransaction)
             .toList();
         return TransactionsStatsDto.builder()
