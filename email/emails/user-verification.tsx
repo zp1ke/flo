@@ -50,17 +50,23 @@ export const UserVerification = () => {
               {texts.welcome} {texts.verifyEmail}
             </Text>
             <Text className="text-[14px] text-black leading-[24px]">
-              <Button href="${actionLink}" className="p-[10px_20px] bg-blue-400 text-white rounded">
+              <Button
+                href="${actionLink}"
+                className="p-[10px_20px] bg-blue-400 text-white rounded"
+              >
                 {texts.verifyNow}
               </Button>
             </Text>
             <Text className="text-[14px] text-black leading-[24px]">
               {texts.orCopyAndPaste} <CodeInline>{'${actionLink}'}</CodeInline>
             </Text>
-            <Text className="text-[12px] text-black leading-[24px]">{texts.thatsIt}</Text>
+            <Text className="text-[12px] text-black leading-[24px]">
+              {texts.thatsIt}
+            </Text>
             <Hr className="mx-0 my-[26px] w-full border border-gray-300 border-solid" />
             <Text className="text-gray-500 text-[12px] leading-[24px]">
-              {texts.thisVerification} <span className="text-black">{'${profile.name}'}</span>.{' '}
+              {texts.thisVerification}{' '}
+              <span className="text-black">{'${profile.name}'}</span>.{' '}
               {texts.thisVerificationDescription}
             </Text>
           </Container>

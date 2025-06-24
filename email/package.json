@@ -8,21 +8,19 @@
     "check-updates": "npx npm-check-updates",
     "dev": "email dev",
     "export": "email export",
-    "format": "prettier --write ./emails",
+    "format": "npx @biomejs/biome check --write ./emails",
     "typecheck": "tsc"
   },
   "dependencies": {
-    "@react-email/components": "0.0.41",
+    "@react-email/components": "0.1.0",
     "react-dom": "^19.1.0",
     "react": "^19.1.0"
   },
   "devDependencies": {
-    "@trivago/prettier-plugin-sort-imports": "^5.2.2",
-    "@types/node": "^22",
-    "@types/react": "^19.1.6",
-    "@types/react-dom": "^19.1.5",
-    "prettier": "^3.5.3",
-    "prettier-plugin-unused-imports-configurable": "^1.14.3",
+    "@types/node": "^24",
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
+    "@biomejs/biome": "2.0.5",
     "react-email": "4.0.16",
     "typescript": "^5.8.3"
   }
