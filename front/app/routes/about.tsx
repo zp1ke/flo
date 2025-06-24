@@ -1,4 +1,4 @@
-import { Rocket } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import {
   SiDribbble,
   SiFacebook,
@@ -8,6 +8,7 @@ import {
   SiYoutube,
 } from 'react-icons/si';
 import { Link } from 'react-router';
+import { useTheme } from '~/contexts/theme-provider';
 
 const sections = [
   {
@@ -61,6 +62,9 @@ const socialLinks = [
 ];
 
 export default function About() {
+  const { t } = useTranslation();
+  const { theme } = useTheme();
+
   return (
     <footer className="container mx-auto py-16">
       <div className="space-y-8 px-4 sm:px-6 lg:space-y-16 lg:px-8">
@@ -68,12 +72,37 @@ export default function About() {
           {/* Logo and Description */}
           <div>
             <Link to="/" className="flex items-center gap-1 text-primary">
-              <Rocket size={32} strokeWidth={2.7} />
-              <span className="text-xl font-bold">StarterBlocks TODO</span>
+              {theme === 'light' && (
+                <img
+                  src="/apple-touch-icon-light.png"
+                  alt={t('app.name')}
+                  className="size-[32px] object-cover"
+                />
+              )}
+              {theme === 'dark' && (
+                <img
+                  src="/apple-touch-icon-dark.png"
+                  alt={t('app.name')}
+                  className="size-[32px] object-cover"
+                />
+              )}
+              {theme === 'system' && (
+                <picture className="size-[32px] object-cover">
+                  <source
+                    srcSet="/apple-touch-icon-dark.png"
+                    media="(prefers-color-scheme: dark)"
+                  />
+                  <source
+                    srcSet="/apple-touch-icon-light.png"
+                    media="(prefers-color-scheme: light), (prefers-color-scheme: no-preference)"
+                  />
+                  <img src="/apple-touch-icon-light.png" alt={t('app.name')} />
+                </picture>
+              )}
+              <span className="text-xl font-bold ml-2">{t('app.title')}</span>
             </Link>
-            <p className="mt-4 max-w-xs text-muted-foreground">
-              Lorem ipsum dolor, sit amet consectetur adipisicing elit. Esse non
-              cupiditate quae nam molestias.
+            <p className="mt-4 max-w-xs text-muted-foreground text-justify">
+              {t('app.description')}
             </p>
 
             {/* Social Links */}
@@ -116,7 +145,7 @@ export default function About() {
           </div>
         </div>
         <p className="text-xs text-muted-foreground">
-          &copy; 2022. Company Name TODO. All rights reserved.
+          &copy; 2025. {t('app.title')}
         </p>
       </div>
     </footer>

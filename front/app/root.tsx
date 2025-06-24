@@ -35,6 +35,62 @@ export const links: Route.LinksFunction = () => [
     rel: 'stylesheet',
     href: 'https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap',
   },
+  {
+    rel: 'manifest',
+    href: '/site.webmanifest',
+  },
+  {
+    rel: 'icon',
+    href: '/favicon-light.ico',
+    media: '(prefers-color-scheme: light)',
+  },
+  {
+    rel: 'icon',
+    href: '/favicon-light-16.png',
+    media: '(prefers-color-scheme: light)',
+    type: 'image/png',
+    sizes: '16x16',
+  },
+  {
+    rel: 'icon',
+    href: '/favicon-light-32.png',
+    media: '(prefers-color-scheme: light)',
+    type: 'image/png',
+    sizes: '32x32',
+  },
+  {
+    rel: 'apple-touch-icon',
+    href: '/apple-touch-icon-light.png',
+    media: '(prefers-color-scheme: light)',
+    type: 'image/png',
+    sizes: '180x180',
+  },
+  {
+    rel: 'icon',
+    href: '/favicon-dark.ico',
+    media: '(prefers-color-scheme: dark)',
+  },
+  {
+    rel: 'icon',
+    href: '/favicon-dark-16.png',
+    media: '(prefers-color-scheme: dark)',
+    type: 'image/png',
+    sizes: '16x16',
+  },
+  {
+    rel: 'icon',
+    href: '/favicon-dark-32.png',
+    media: '(prefers-color-scheme: dark)',
+    type: 'image/png',
+    sizes: '32x32',
+  },
+  {
+    rel: 'apple-touch-icon',
+    href: '/apple-touch-icon-dark.png',
+    media: '(prefers-color-scheme: dark)',
+    type: 'image/png',
+    sizes: '180x180',
+  },
 ];
 
 export function Layout({ children }: { children: ReactNode }) {

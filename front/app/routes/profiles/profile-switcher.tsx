@@ -1,9 +1,9 @@
 import {
   ChevronsUpDown,
-  GalleryVerticalEnd,
-  GalleryVerticalIcon,
   Plus,
   RefreshCwIcon,
+  User2Icon,
+  UserCheck2Icon,
 } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -72,7 +72,11 @@ export function ProfileSwitcher() {
                 className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
               >
                 <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-                  <GalleryVerticalEnd className="size-4" />
+                  <img
+                    src="/apple-touch-icon-dark.png"
+                    alt={t('app.name')}
+                    className="size-5 object-cover"
+                  />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-semibold">
@@ -100,20 +104,26 @@ export function ProfileSwitcher() {
                   <RefreshCwIcon />
                 </Button>
               </DropdownMenuLabel>
-              {profiles.map((item, index) => (
-                <DropdownMenuItem
-                  key={item.code}
-                  onClick={() => setProfile(item)}
-                  className="gap-2 p-2"
-                  disabled={item.code === profile?.code}
-                >
-                  <div className="flex size-6 items-center justify-center rounded-sm border">
-                    <GalleryVerticalIcon className="size-4 shrink-0" />
-                  </div>
-                  {item.name}
-                  <DropdownMenuShortcut>⌘{index + 1}</DropdownMenuShortcut>
-                </DropdownMenuItem>
-              ))}
+              {profiles.map((item, index) => {
+                const isActive = item.code === profile?.code;
+                return (
+                  <DropdownMenuItem
+                    key={item.code}
+                    onClick={() => setProfile(item)}
+                    className="gap-2 p-2"
+                    disabled={isActive}
+                  >
+                    <div className="flex size-6 items-center justify-center rounded-sm border">
+                      {isActive || <User2Icon className="size-4 shrink-0" />}
+                      {isActive && (
+                        <UserCheck2Icon className="size-4 shrink-0" />
+                      )}
+                    </div>
+                    {item.name}
+                    <DropdownMenuShortcut>⌘{index + 1}</DropdownMenuShortcut>
+                  </DropdownMenuItem>
+                );
+              })}
               <DropdownMenuSeparator />
               <DialogTrigger asChild>
                 <DropdownMenuItem className="gap-2 p-2" disabled={loading}>
