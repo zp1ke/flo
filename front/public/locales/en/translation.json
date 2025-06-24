@@ -1,4 +1,12 @@
 {
+  "about": {
+    "description": "A modern, scalable web application for financial management. Features include dashboards, user authentication, transaction tracking, wallet management, and category organization. Built with React, TypeScript, Vite, Zustand, shadcn/ui, Tailwind CSS, and more.",
+    "helpfulLinks": "Helpful Links",
+    "legal": "Legal",
+    "contact": "Contact",
+    "faqs": "FAQs",
+    "privacyPolicy": "Privacy Policy"
+  },
   "api": {
     "profile.max_profiles_reached": "You have reached the maximum number of profiles allowed.",
     "unknownError": "An unknown error occurred.",
@@ -10,7 +18,6 @@
     "user.verify_code_not_found": "Verification code not found."
   },
   "app": {
-    "description": "A modern, scalable web application for financial management. Features include dashboards, user authentication, transaction tracking, wallet management, and category organization. Built with React, TypeScript, Vite, Zustand, shadcn/ui, Tailwind CSS, and more.",
     "name": "Flo",
     "title": "Flo APP",
     "welcome": "Welcome to Flo App!"

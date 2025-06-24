@@ -9,6 +9,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import type { ApiError } from '~/api/client';
+import AppLogo from '~/components/app-logo';
 import { Button } from '~/components/ui/button';
 import {
   Dialog,
@@ -71,13 +72,7 @@ export function ProfileSwitcher() {
                 size="lg"
                 className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
               >
-                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-                  <img
-                    src="/apple-touch-icon-dark.png"
-                    alt={t('app.name')}
-                    className="size-5 object-cover"
-                  />
-                </div>
+                <AppLogo className="size-6" />
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-semibold">
                     {profile?.name}
