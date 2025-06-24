@@ -19,6 +19,7 @@ export const tableColumns = ({
         column={column}
         table={table}
         title={t('transactions.code')}
+        className="hidden sm:flex"
       />
     ),
     cell: ({ row }) => <div className="w-[80px]">{row.getValue('code')}</div>,

@@ -66,8 +66,8 @@ export function DataTableToolbar<TData>({
   };
 
   return (
-    <div className="flex items-center justify-between">
-      <div className="flex flex-1 items-center space-x-1">
+    <div className="flex justify-between flex-col sm:flex-row">
+      <div className="flex flex-1 space-x-1 flex-col gap-2 sm:flex-row sm:items-center sm:gap-0">
         {textFilters?.map((filter) => (
           <Input
             key={filter.column}
@@ -116,7 +116,7 @@ export function DataTableToolbar<TData>({
           </Button>
         )}
       </div>
-      <div className="flex items-center justify-end gap-1">
+      <div className="flex items-center justify-end gap-1 mt-2 sm:mt-0">
         <DataTableViewOptions table={table} />
         <Button
           variant="outline"

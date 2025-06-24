@@ -55,7 +55,7 @@ export function DatePicker({
   }, [minDate, maxDate]);
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-1">
       {title && (
         <Label htmlFor={id} className="px-1">
           {title}

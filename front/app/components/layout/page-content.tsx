@@ -12,13 +12,13 @@ export default function PageContent({
   children?: ReactNode;
 }) {
   return (
-    <div className="@container/main flex flex-1 flex-col space-y-4 p-8 pt-6 gap-2">
-      <div className="flex items-center justify-between space-y-2">
-        <div>
+    <div className="@container/main flex flex-1 flex-col space-y-2 p-4 md:p-6 pt-0 gap-0">
+      <div className="flex flex-col md:flex-row items-center space-y-2">
+        <div className="flex flex-col mr-auto">
           <h2 className="text-xl font-bold tracking-tight">{title}</h2>
           {subtitle && <p className="text-muted-foreground">{subtitle}</p>}
         </div>
-        {headerEnd}
+        <div className="ml-auto flex items-center">{headerEnd}</div>
       </div>
       {children}
     </div>
