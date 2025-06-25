@@ -46,6 +46,7 @@
   "dashboard": {
     "balance": "Balance",
     "balanceDescription": "Your current balance for the selected date.",
+    "categories": "Categories",
     "date": "Date",
     "income": "Income",
     "incomeDescription": "Total income for the selected date.",
@@ -54,10 +55,13 @@
     "pickDate": "Pick a date",
     "lastTransactions": "Last Transactions",
     "lastTransactionsDescription": "Last transactions for the selected date.",
+    "noData": "No data available for the selected date.",
+    "overview": "Overview",
     "subtitle": "Your financial overview",
     "title": "Dashboard",
     "transactions": "Transactions",
-    "transactionsDescription": "Total transactions for the selected date."
+    "transactionsDescription": "Total transactions for the selected date.",
+    "wallets": "Wallets"
   },
   "error": {
     "details": "An unexpected error occurred.",

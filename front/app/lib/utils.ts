@@ -55,12 +55,12 @@ export const formatDate = (date?: Date | string, language?: string) => {
   return datetime.toLocaleDateString(language ?? 'en-US', options);
 };
 
-export const moneyClassName = (value: number) => {
+export const moneyClassName = (value: number, prefix = 'text') => {
   if (value > 0) {
-    return 'text-green-300';
+    return `${prefix}-green-300`;
   }
   if (value < 0) {
-    return 'text-orange-300';
+    return `${prefix}-orange-300`;
   }
-  return 'text-foreground';
+  return `${prefix}-foreground`;
 };

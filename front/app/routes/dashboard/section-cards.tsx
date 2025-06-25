@@ -1,4 +1,4 @@
-import { TrendingDownIcon, TrendingUpIcon } from 'lucide-react';
+import { DollarSignIcon, TrendingDownIcon, TrendingUpIcon } from 'lucide-react';
 import type { ComponentType, SVGProps } from 'react';
 import { useTranslation } from 'react-i18next';
 import { RollingText } from '~/components/animate-ui/text/rolling';
@@ -11,8 +11,9 @@ import {
   CardTitle,
 } from '~/components/ui/card';
 import { cn, formatNumber, moneyClassName } from '~/lib/utils';
+import type { TransactionsStats } from '~/types/transaction';
 
-export interface SectionCardProp {
+interface SectionCardProp {
   key: string;
   title: string;
   icon?: ComponentType<SVGProps<SVGSVGElement>>;
@@ -26,11 +27,13 @@ export interface SectionCardProp {
 }
 
 interface SectionCardsProps {
-  data: SectionCardProp[];
+  stats?: TransactionsStats;
 }
 
-export function SectionCards({ data }: SectionCardsProps) {
+export function SectionCards({ stats }: SectionCardsProps) {
   const { t } = useTranslation();
+
+  const data = mapStatsToSectionCards(stats);
 
   return (
     <div className="*:data-[slot=card]:shadow-xs @xl/main:grid-cols-2 @5xl/main:grid-cols-4 grid grid-cols-1 gap-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card">
@@ -90,3 +93,45 @@ export function SectionCards({ data }: SectionCardsProps) {
     </div>
   );
 }
+
+const mapStatsToSectionCards = (
+  stats?: TransactionsStats,
+): SectionCardProp[] => {
+  if (!stats) {
+    return [];
+  }
+
+  return [
+    {
+      key: 'income',
+      title: 'dashboard.income',
+      icon: DollarSignIcon,
+      value: stats.income,
+      decimalPlaces: 2,
+      description: 'dashboard.incomeDescription',
+    },
+    {
+      key: 'expenses',
+      title: 'dashboard.expenses',
+      icon: DollarSignIcon,
+      value: stats.outcome,
+      decimalPlaces: 2,
+      description: 'dashboard.expensesDescription',
+    },
+    {
+      key: 'balance',
+      title: 'dashboard.balance',
+      icon: DollarSignIcon,
+      value: stats.balance,
+      decimalPlaces: 2,
+      description: 'dashboard.balanceDescription',
+    },
+    {
+      key: 'transactions',
+      title: 'dashboard.transactions',
+      value: stats.transactions.length,
+      description: 'dashboard.transactionsDescription',
+      colorClass: 'text-foreground',
+    },
+  ] satisfies SectionCardProp[];
+};

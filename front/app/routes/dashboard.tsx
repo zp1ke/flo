@@ -1,4 +1,4 @@
-import { DollarSignIcon, Loader2, RefreshCwIcon } from 'lucide-react';
+import { Loader2, RefreshCwIcon } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
@@ -16,10 +16,7 @@ import {
 import { DatePicker } from '~/components/ui/date-picker';
 import Loading from '~/components/ui/loading';
 import { Overview } from '~/routes/dashboard/overview';
-import {
-  type SectionCardProp,
-  SectionCards,
-} from '~/routes/dashboard/section-cards';
+import { SectionCards } from '~/routes/dashboard/section-cards';
 import { TransactionsList } from '~/routes/dashboard/transactions-list';
 import useUserStore from '~/store/user-store';
 import type { TransactionsStats } from '~/types/transaction';
@@ -51,7 +48,7 @@ export default function Dashboard() {
   }, [t, profile, date]);
 
   useEffect(() => {
-    loadData();
+    loadData().then(() => {});
   }, [loadData]);
 
   return (
@@ -88,15 +85,15 @@ export default function Dashboard() {
       {loading || (
         <>
           <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
-            <SectionCards data={mapStatsToSectionCards(stats)} />
+            <SectionCards stats={stats} />
           </div>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-            <Card className="col-span-4">
+            <Card className="col-span-4 gap-0">
               <CardHeader>
-                <CardTitle>Overview TODO</CardTitle>
+                <CardTitle>{t('dashboard.overview')}</CardTitle>
               </CardHeader>
               <CardContent className="pl-2">
-                <Overview />
+                <Overview stats={stats} />
               </CardContent>
             </Card>
             <Card className="col-span-3">
@@ -116,45 +113,3 @@ export default function Dashboard() {
     </PageContent>
   );
 }
-
-const mapStatsToSectionCards = (
-  stats?: TransactionsStats,
-): SectionCardProp[] => {
-  if (!stats) {
-    return [];
-  }
-
-  return [
-    {
-      key: 'income',
-      title: 'dashboard.income',
-      icon: DollarSignIcon,
-      value: stats.income,
-      decimalPlaces: 2,
-      description: 'dashboard.incomeDescription',
-    },
-    {
-      key: 'expenses',
-      title: 'dashboard.expenses',
-      icon: DollarSignIcon,
-      value: stats.outcome,
-      decimalPlaces: 2,
-      description: 'dashboard.expensesDescription',
-    },
-    {
-      key: 'balance',
-      title: 'dashboard.balance',
-      icon: DollarSignIcon,
-      value: stats.balance,
-      decimalPlaces: 2,
-      description: 'dashboard.balanceDescription',
-    },
-    {
-      key: 'transactions',
-      title: 'dashboard.transactions',
-      value: stats.transactions.length,
-      description: 'dashboard.transactionsDescription',
-      colorClass: 'text-foreground',
-    },
-  ] satisfies SectionCardProp[];
-};
