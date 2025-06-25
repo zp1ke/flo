@@ -1,4 +1,5 @@
 import { TrendingDownIcon, TrendingUpIcon } from 'lucide-react';
+import type { ComponentType, SVGProps } from 'react';
 import { useTranslation } from 'react-i18next';
 import { RollingText } from '~/components/animate-ui/text/rolling';
 import { Badge } from '~/components/ui/badge';
@@ -9,12 +10,12 @@ import {
   CardHeader,
   CardTitle,
 } from '~/components/ui/card';
-import { cn, formatNumber } from '~/lib/utils';
+import { cn, formatNumber, moneyClassName } from '~/lib/utils';
 
 export interface SectionCardProp {
   key: string;
   title: string;
-  icon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+  icon?: ComponentType<SVGProps<SVGSVGElement>>;
   value: number;
   valueSuffix?: string;
   decimalPlaces?: number;
@@ -36,7 +37,7 @@ export function SectionCards({ data }: SectionCardsProps) {
       {data.map((item) => {
         let colorClass = item.colorClass;
         if (!colorClass) {
-          colorClass = item.value >= 0 ? 'text-green-300' : 'text-orange-300';
+          colorClass = moneyClassName(item.value);
         }
         const formattedValue = formatNumber(
           item.value,

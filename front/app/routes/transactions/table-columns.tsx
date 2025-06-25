@@ -1,6 +1,6 @@
 import type { ColumnDef } from '@tanstack/react-table';
 import { DataTableColumnHeader } from '~/components/table/data-table-column-header';
-import { cn, formatDateTime, formatMoney } from '~/lib/utils';
+import { cn, formatDateTime, formatMoney, moneyClassName } from '~/lib/utils';
 import type { Transaction } from '~/types/transaction';
 import { DataTableRowActions } from './table-row-actions';
 
@@ -67,7 +67,7 @@ export const tableColumns = ({
         <div
           className={cn(
             'max-w-[500px] truncate font-medium',
-            amount > 0 ? 'text-green-300' : 'text-orange-300',
+            moneyClassName(amount),
           )}
         >
           {formattedAmount}

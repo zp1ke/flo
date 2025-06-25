@@ -1,6 +1,6 @@
 import { TrendingDownIcon, TrendingUpIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { cn, formatDateTime, formatMoney } from '~/lib/utils';
+import { cn, formatDateTime, formatMoney, moneyClassName } from '~/lib/utils';
 import type { Transaction } from '~/types/transaction';
 
 interface TransactionsListProps {
@@ -22,13 +22,16 @@ export function TransactionsList({ data }: TransactionsListProps) {
     <div className="space-y-8">
       {data.map((transaction) => {
         const isIncome = transaction.amount >= 0;
+        const colorClassName = moneyClassName(transaction.amount);
 
         return (
           <div className="flex items-center" key={transaction.code}>
             {isIncome || (
-              <TrendingDownIcon className="h-8 w-8 text-orange-300" />
+              <TrendingDownIcon className={cn('h-8 w-8', colorClassName)} />
             )}
-            {isIncome && <TrendingUpIcon className="h-8 w-8 text-green-300" />}
+            {isIncome && (
+              <TrendingUpIcon className={cn('h-8 w-8', colorClassName)} />
+            )}
             <div className="ml-4 space-y-1">
               <p className="text-sm font-medium leading-none">
                 {transaction.description ?? transaction.code}
@@ -37,12 +40,7 @@ export function TransactionsList({ data }: TransactionsListProps) {
                 {formatDateTime(transaction.datetime, i18n.language)}
               </p>
             </div>
-            <div
-              className={cn(
-                'ml-auto font-medium',
-                isIncome ? 'text-green-300' : 'text-orange-300',
-              )}
-            >
+            <div className={cn('ml-auto font-medium', colorClassName)}>
               {formatMoney(transaction.amount, i18n.language)}
             </div>
           </div>

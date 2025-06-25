@@ -54,3 +54,13 @@ export const formatDate = (date?: Date | string, language?: string) => {
   const datetime = new Date(date);
   return datetime.toLocaleDateString(language ?? 'en-US', options);
 };
+
+export const moneyClassName = (value: number) => {
+  if (value > 0) {
+    return 'text-green-300';
+  }
+  if (value < 0) {
+    return 'text-orange-300';
+  }
+  return 'text-foreground';
+};
