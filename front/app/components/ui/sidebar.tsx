@@ -2,8 +2,9 @@ import { Slot } from '@radix-ui/react-slot';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { PanelLeftIcon } from 'lucide-react';
 import * as React from 'react';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useLocation } from 'react-router';
 import { Button } from '~/components/ui/button';
 import { Input } from '~/components/ui/input';
 import { Separator } from '~/components/ui/separator';
@@ -66,7 +67,12 @@ function SidebarProvider({
   onOpenChange?: (open: boolean) => void;
 }) {
   const isMobile = useIsMobile();
+  const location = useLocation();
+
   const [openMobile, setOpenMobile] = React.useState(false);
+  const [previousLocation, setPreviousLocation] = React.useState<string | null>(
+    location.pathname,
+  );
 
   // This is the internal state of the sidebar.
   // We use openProp and setOpenProp for control from outside the component.
@@ -93,7 +99,7 @@ function SidebarProvider({
   }, [isMobile, setOpen]);
 
   // Adds a keyboard shortcut to toggle the sidebar.
-  React.useEffect(() => {
+  useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (
         event.key === SIDEBAR_KEYBOARD_SHORTCUT &&
@@ -107,6 +113,14 @@ function SidebarProvider({
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [toggleSidebar]);
+
+  useEffect(() => {
+    if (openMobile && location.pathname !== previousLocation) {
+      // If the sidebar is open on mobile, we close it when the location changes.
+      setOpenMobile(false);
+      setPreviousLocation(location.pathname);
+    }
+  }, [location, openMobile, previousLocation]);
 
   // We add a state so that we can do data-state="expanded" or "collapsed".
   // This makes it easier to style the sidebar with Tailwind classes.

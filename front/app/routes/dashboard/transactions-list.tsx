@@ -40,7 +40,9 @@ export function TransactionsList({ data }: TransactionsListProps) {
                 {formatDateTime(transaction.datetime, i18n.language)}
               </p>
             </div>
-            <div className={cn('ml-auto font-medium', colorClassName)}>
+            <div
+              className={cn('ml-auto font-medium self-start', colorClassName)}
+            >
               {formatMoney(transaction.amount, i18n.language)}
             </div>
           </div>

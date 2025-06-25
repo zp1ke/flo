@@ -1,13 +1,6 @@
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  Bar,
-  BarChart,
-  CartesianGrid,
-  ResponsiveContainer,
-  XAxis,
-  YAxis,
-} from 'recharts';
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from 'recharts';
 import {
   type ChartConfig,
   ChartContainer,
@@ -70,52 +63,50 @@ export function Overview({ stats }: OverviewProps) {
   }
 
   return (
-    <ResponsiveContainer width="100%" height={350}>
-      <div className="flex flex-col gap-2">
-        <div className="flex items-center justify-end">
-          <Select
-            value={chartType}
-            onValueChange={(value) => {
-              setChartType(value as ChartType);
-            }}
-          >
-            <SelectTrigger className="h-8 w-36">
-              <SelectValue placeholder={'select todo chart type'} />
-            </SelectTrigger>
-            <SelectContent side="top">
-              {Object.keys(ChartType).map((cType) => (
-                <SelectItem key={cType} value={cType}>
-                  {t(`dashboard.${cType}`)}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-        <ChartContainer config={chartConfig}>
-          <BarChart data={data ?? []}>
-            <CartesianGrid vertical={false} />
-            <XAxis
-              dataKey="name"
-              tickLine={false}
-              tickMargin={10}
-              axisLine={false}
-            />
-            <YAxis
-              stroke="#888888"
-              fontSize={12}
-              tickLine={false}
-              axisLine={false}
-              tickFormatter={(value) => formatMoney(value, i18n.language)}
-            />
-            <ChartTooltip
-              cursor={false}
-              content={<ChartTooltipContent indicator="dashed" />}
-            />
-            <Bar dataKey="income" fill="var(--color-income)" radius={4} />
-            <Bar dataKey="outcome" fill="var(--color-outcome)" radius={4} />
-          </BarChart>
-        </ChartContainer>
+    <div className="flex flex-col gap-2 w-full">
+      <div className="flex items-center justify-end">
+        <Select
+          value={chartType}
+          onValueChange={(value) => {
+            setChartType(value as ChartType);
+          }}
+        >
+          <SelectTrigger className="h-8 w-36">
+            <SelectValue placeholder={'select todo chart type'} />
+          </SelectTrigger>
+          <SelectContent side="top">
+            {Object.keys(ChartType).map((cType) => (
+              <SelectItem key={cType} value={cType}>
+                {t(`dashboard.${cType}`)}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
-    </ResponsiveContainer>
+      <ChartContainer config={chartConfig}>
+        <BarChart data={data ?? []}>
+          <CartesianGrid vertical={false} />
+          <XAxis
+            dataKey="name"
+            tickLine={false}
+            tickMargin={10}
+            axisLine={false}
+          />
+          <YAxis
+            stroke="#888888"
+            fontSize={12}
+            tickLine={false}
+            axisLine={false}
+            tickFormatter={(value) => formatMoney(value, i18n.language)}
+          />
+          <ChartTooltip
+            cursor={false}
+            content={<ChartTooltipContent indicator="dashed" />}
+          />
+          <Bar dataKey="income" fill="var(--color-income)" radius={4} />
+          <Bar dataKey="outcome" fill="var(--color-outcome)" radius={4} />
+        </BarChart>
+      </ChartContainer>
+    </div>
   );
 }
