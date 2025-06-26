@@ -1,8 +1,14 @@
 import type { PageFilters } from '~/api/client';
 import type { DataPage } from '~/types/page';
 
+export type DataItem<T> = {
+  id: string;
+  item: T;
+  render: () => React.ReactNode;
+};
+
 export interface DataTableStore<T> {
-  page: DataPage<T>;
+  page: DataPage<DataItem<T>>;
   loading: boolean;
   errorMessage?: string;
 

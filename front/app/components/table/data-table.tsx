@@ -27,6 +27,7 @@ import {
   TableHeader,
   TableRow,
 } from '~/components/ui/table';
+import { useIsMobile } from '~/hooks/use-mobile';
 import type { DataTableStore } from '~/store/data-table-store';
 import useUserStore from '~/store/user-store';
 import { SortDirection, sortPrefix } from '~/types/sort';
@@ -68,6 +69,7 @@ export const DataTable = <TData, TValue>({
   const { t } = useTranslation();
   const location = useLocation();
   const [searchParams] = useSearchParams();
+  const isMobile = useIsMobile();
 
   const [filters, setFilters] = useState<Record<string, string>>(
     parseUrlFilters(searchParams),
@@ -108,7 +110,7 @@ export const DataTable = <TData, TValue>({
   }, [profile, fetch]);
 
   const table = useReactTable({
-    data: page.data,
+    data: page.data.map((item) => item.item),
     columns: columns,
     enableRowSelection: true,
     getCoreRowModel: getCoreRowModel(),
@@ -164,65 +166,74 @@ export const DataTable = <TData, TValue>({
         table={table}
         textFilters={textFilters}
       />
-      <div className="rounded-md border">
-        <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id} colSpan={header.colSpan}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
-                          )}
-                    </TableHead>
-                  );
-                })}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && 'selected'}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
-                    </TableCell>
-                  ))}
+      {isMobile || (
+        <div className="rounded-md border">
+          <Table>
+            <TableHeader>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <TableRow key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => {
+                    return (
+                      <TableHead key={header.id} colSpan={header.colSpan}>
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(
+                              header.column.columnDef.header,
+                              header.getContext(),
+                            )}
+                      </TableHead>
+                    );
+                  })}
                 </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
-                  {loading ? (
-                    <div className="flex items-center justify-center space-x-2">
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                      <span>{t('table.loading')}</span>
-                    </div>
-                  ) : (
-                    <span>
-                      {t(filters.length ? 'table.noResults' : 'table.noData')}
-                    </span>
-                  )}
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </div>
+              ))}
+            </TableHeader>
+            <TableBody>
+              {table.getRowModel().rows?.length ? (
+                table.getRowModel().rows.map((row) => (
+                  <TableRow
+                    key={row.id}
+                    data-state={row.getIsSelected() && 'selected'}
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext(),
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={columns.length}
+                    className="h-24 text-center"
+                  >
+                    {loading ? (
+                      <div className="flex items-center justify-center space-x-2">
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        <span>{t('table.loading')}</span>
+                      </div>
+                    ) : (
+                      <span>
+                        {t(filters.length ? 'table.noResults' : 'table.noData')}
+                      </span>
+                    )}
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </div>
+      )}
+      {isMobile && (
+        <div>
+          {page.data.map((item) => (
+            <div key={item.id}>{item.render()}</div>
+          ))}
+        </div>
+      )}
       <DataTablePagination
         disabled={loading}
         pageSizes={Array.from(
