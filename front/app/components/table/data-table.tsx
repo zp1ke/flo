@@ -228,10 +228,20 @@ export const DataTable = <TData, TValue>({
         </div>
       )}
       {isMobile && (
-        <div>
-          {page.data.map((item) => (
-            <div key={item.id}>{item.render()}</div>
-          ))}
+        <div className="rounded-md border">
+          {loading && (
+            <div className="flex items-center justify-center space-x-2">
+              <Loader2 className="h-4 w-4 animate-spin" />
+              <span>{t('table.loading')}</span>
+            </div>
+          )}
+          {loading ||
+            page.data.map((item) => <div key={item.id}>{item.render()}</div>)}
+          {!loading && page.data.length === 0 && (
+            <div className="p-4 align-middle text-center text-sm">
+              {t(filters.length ? 'table.noResults' : 'table.noData')}
+            </div>
+          )}
         </div>
       )}
       <DataTablePagination

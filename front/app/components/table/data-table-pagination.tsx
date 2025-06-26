@@ -31,10 +31,11 @@ export function DataTablePagination<TData>({
   return (
     <div className="flex items-center justify-between flex-col gap-2 md:flex-row">
       <div className="flex-1 text-sm text-muted-foreground">
-        {t('table.ofSelected', {
-          count: table.getFilteredRowModel().rows.length,
-          selected: table.getFilteredSelectedRowModel().rows.length,
-        })}
+        {table.getFilteredSelectedRowModel().rows.length > 0 &&
+          t('table.ofSelected', {
+            count: table.getFilteredRowModel().rows.length,
+            selected: table.getFilteredSelectedRowModel().rows.length,
+          })}
       </div>
       <div className="flex items-center space-x-6 lg:space-x-8">
         <div className="flex items-center space-x-2">
@@ -44,7 +45,7 @@ export function DataTablePagination<TData>({
           <Select
             disabled={disabled}
             value={`${table.getState().pagination.pageSize}`}
-            onValueChange={(value) => {
+            onValueChange={(value: string) => {
               table.setPageSize(Number(value));
             }}
           >
