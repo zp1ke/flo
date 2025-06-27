@@ -151,7 +151,7 @@ export const DataTable = <TData, TValue>({
   });
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 h-full flex flex-col">
       <div className="flex items-center">
         <AddItemButton
           title={addTitle}
@@ -167,7 +167,7 @@ export const DataTable = <TData, TValue>({
         textFilters={textFilters}
       />
       {isMobile || (
-        <div className="rounded-md border">
+        <div className="rounded-md border flex-grow">
           <Table>
             <TableHeader>
               {table.getHeaderGroups().map((headerGroup) => (
@@ -228,7 +228,7 @@ export const DataTable = <TData, TValue>({
         </div>
       )}
       {isMobile && (
-        <div className="rounded-md border">
+        <div className="rounded-md border flex-grow">
           {loading && (
             <div className="flex items-center justify-center space-x-2">
               <Loader2 className="h-4 w-4 animate-spin" />

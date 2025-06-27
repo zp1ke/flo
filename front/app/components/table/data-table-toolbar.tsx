@@ -66,8 +66,8 @@ export function DataTableToolbar<TData>({
   };
 
   return (
-    <div className="flex justify-between flex-col sm:flex-row">
-      <div className="flex flex-1 space-x-1 flex-col gap-2 sm:flex-row sm:items-center sm:gap-0">
+    <div className="flex justify-between items-end">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-1 items-center">
         {textFilters?.map((filter) => (
           <Input
             key={filter.column}
