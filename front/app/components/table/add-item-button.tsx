@@ -19,7 +19,7 @@ export type EditItemFormProps = {
 
 // biome-ignore lint/correctness/noEmptyPattern: empty destructuring pattern is intentional for generic component
 export const EditItemForm = ({}: EditItemFormProps) => {
-  return <></>;
+  return <div />;
 };
 
 interface AddItemButtonProps<T> {
@@ -48,7 +48,7 @@ export default function AddItemButton<T>({
       </DialogTrigger>
       <DialogContent
         className={cn('sm:max-w-[425px]', processing && '[&>button]:hidden')}
-        onInteractOutside={(e) => {
+        onInteractOutside={(e: Event) => {
           if (processing) {
             e.preventDefault();
           }

@@ -342,7 +342,6 @@ function Calendar({
       }}
       components={{
         Chevron: PickerChevron,
-        // biome-ignore lint/nursery/noNestedComponentDefinitions: MonthCaption component is used only within Calendar component
         MonthCaption: ({ calendarMonth }) => {
           return (
             <div className="inline-flex gap-2">
