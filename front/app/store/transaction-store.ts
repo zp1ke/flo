@@ -1,21 +1,11 @@
 import { create } from 'zustand';
 import type { ApiError } from '~/api/client';
 import { fetchTransactions } from '~/api/transactions';
+import { mapTransactions } from '~/routes/transactions/data-mapper';
 import type { DataPage } from '~/types/page';
 import type { Transaction } from '~/types/transaction';
 import type { DataItem, DataTableStore } from './data-table-store';
 import useUserStore from './user-store';
-
-const mapTransactions = (
-  transactions: Transaction[],
-): DataItem<Transaction>[] => {
-  return transactions.map((transaction) => ({
-    // biome-ignore lint/style/noNonNullAssertion: transaction id is guaranteed to exist from API
-    id: transaction.code!,
-    item: transaction,
-    render: () => <span>{transaction.description}</span>,
-  }));
-};
 
 const useTransactionStore = create<DataTableStore<Transaction>>()(
   (set, get) => ({

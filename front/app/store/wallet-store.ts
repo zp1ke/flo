@@ -1,19 +1,11 @@
 import { create } from 'zustand';
 import type { ApiError } from '~/api/client';
 import { fetchWallets } from '~/api/wallets';
+import { mapWallets } from '~/routes/wallets/data-mapper';
 import type { DataPage } from '~/types/page';
 import type { Wallet } from '~/types/wallet';
 import type { DataItem, DataTableStore } from './data-table-store';
 import useUserStore from './user-store';
-
-const mapWallets = (wallets: Wallet[]): DataItem<Wallet>[] => {
-  return wallets.map((wallet) => ({
-    // biome-ignore lint/style/noNonNullAssertion: wallet id is guaranteed to exist from API
-    id: wallet.code!,
-    item: wallet,
-    render: () => <span>{wallet.name}</span>,
-  }));
-};
 
 const useWalletStore = create<DataTableStore<Wallet>>()((set, get) => ({
   page: { data: [], total: 0 } as DataPage<DataItem<Wallet>>,

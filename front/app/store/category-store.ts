@@ -1,19 +1,11 @@
 import { create } from 'zustand';
 import { fetchCategories } from '~/api/categories';
 import type { ApiError } from '~/api/client';
+import { mapCategories } from '~/routes/categories/data-mapper';
 import type { Category } from '~/types/category';
 import type { DataPage } from '~/types/page';
 import type { DataItem, DataTableStore } from './data-table-store';
 import useUserStore from './user-store';
-
-const mapCategories = (categories: Category[]): DataItem<Category>[] => {
-  return categories.map((category) => ({
-    // biome-ignore lint/style/noNonNullAssertion: category code is guaranteed to exist from API
-    id: category.code!,
-    item: category,
-    render: () => <span>{category.name}</span>,
-  }));
-};
 
 const useCategoryStore = create<DataTableStore<Category>>()((set, get) => ({
   page: { data: [], total: 0 } as DataPage<DataItem<Category>>,
