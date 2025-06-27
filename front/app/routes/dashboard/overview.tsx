@@ -4,6 +4,8 @@ import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from 'recharts';
 import {
   type ChartConfig,
   ChartContainer,
+  ChartLegend,
+  ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
 } from '~/components/ui/chart';
@@ -35,11 +37,11 @@ export function Overview({ stats }: OverviewProps) {
     return {
       income: {
         label: t('dashboard.income'),
-        color: `var(--${moneyClassName(1, 'color')})`,
+        color: `var(--${moneyClassName(1)})`,
       },
       outcome: {
         label: t('dashboard.expenses'),
-        color: `var(--${moneyClassName(-1, 'color')})`,
+        color: `var(--${moneyClassName(-1)})`,
       },
     } satisfies ChartConfig;
   }, [t]);
@@ -67,7 +69,7 @@ export function Overview({ stats }: OverviewProps) {
       <div className="flex items-center justify-end">
         <Select
           value={chartType}
-          onValueChange={(value) => {
+          onValueChange={(value: string) => {
             setChartType(value as ChartType);
           }}
         >
@@ -107,6 +109,7 @@ export function Overview({ stats }: OverviewProps) {
           <Bar dataKey="outcome" fill="var(--color-outcome)" radius={4} />
         </BarChart>
       </ChartContainer>
+      <ChartLegend content={<ChartLegendContent />} />
     </div>
   );
 }
