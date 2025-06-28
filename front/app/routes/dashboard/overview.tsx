@@ -16,7 +16,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '~/components/ui/select';
-import { formatMoney, moneyClassName } from '~/lib/utils';
+import { formatMoney } from '~/lib/utils';
 import type { TransactionsStats } from '~/types/transaction';
 
 interface OverviewProps {
@@ -28,6 +28,16 @@ enum ChartType {
   wallets = 'wallets',
 }
 
+const valueColor = (value: number) => {
+  if (value > 0) {
+    return 'money-income';
+  }
+  if (value < 0) {
+    return 'money-expense';
+  }
+  return 'money-balance';
+};
+
 export function Overview({ stats }: OverviewProps) {
   const { t, i18n } = useTranslation();
 
@@ -37,11 +47,11 @@ export function Overview({ stats }: OverviewProps) {
     return {
       income: {
         label: t('dashboard.income'),
-        color: `var(--${moneyClassName(1)})`,
+        color: `var(--${valueColor(1)})`,
       },
       outcome: {
         label: t('dashboard.expenses'),
-        color: `var(--${moneyClassName(-1)})`,
+        color: `var(--${valueColor(-1)})`,
       },
     } satisfies ChartConfig;
   }, [t]);

@@ -19,13 +19,16 @@ export function TransactionsList({ data }: TransactionsListProps) {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-2">
       {data.map((transaction) => {
         const isIncome = transaction.amount >= 0;
         const colorClassName = moneyClassName(transaction.amount);
 
         return (
-          <div className="flex items-center" key={transaction.code}>
+          <div
+            className="flex items-center border-t-2 border-t-muted pt-2"
+            key={transaction.code}
+          >
             {isIncome || (
               <TrendingDownIcon className={cn('h-8 w-8', colorClassName)} />
             )}

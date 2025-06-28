@@ -57,10 +57,10 @@ export const formatDate = (date?: Date | string, language?: string) => {
 
 export const moneyClassName = (value: number) => {
   if (value > 0) {
-    return 'chart-income';
+    return 'text-income';
   }
   if (value < 0) {
-    return 'chart-expense';
+    return 'text-expense';
   }
-  return 'chart-balance';
+  return 'text-foreground';
 };
