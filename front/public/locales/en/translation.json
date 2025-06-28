@@ -141,6 +141,23 @@
     "validEmail": "Please enter a valid email address.",
     "validPassword": "Password must contain at least one letter and one number."
   },
+  "settings": {
+    "email": "Email",
+    "emailDescription": "Enter your email address",
+    "emailMax255": "Email must be at most 255 characters long.",
+    "emailPlaceholder": "example@mail.com",
+    "emailVerified": "Your email has been verified",
+    "emailNotVerified": "Your email has NOT been verified",
+    "changePassword": "Change Password",
+    "passwordDescription": "Enter your password",
+    "passwordPlaceholder": "Your super secret password",
+    "passwordSize": "Password must be at least 8 characters long and max 100 characters long.",
+    "processing": "Processing...",
+    "saveChanges": "Save Changes",
+    "sendVerificationEmail": "Send Verification Email",
+    "subtitle": "Manage your settings",
+    "title": "Settings"
+  },
   "sidebar": {
     "description": "Displays the mobile sidebar",
     "title": "Sidebar",
