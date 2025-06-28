@@ -10,6 +10,7 @@ import {
   getSortedRowModel,
   type PaginationState,
   type SortingState,
+  type Table as TanStackTable,
   useReactTable,
   type VisibilityState,
 } from '@tanstack/react-table';
@@ -54,6 +55,11 @@ interface DataTableProps<TData, TValue> extends HTMLAttributes<HTMLDivElement> {
 
 const pageKey = 'page';
 const pageSizeKey = 'pageSize';
+
+export interface DataTableRowActionsProps<TData> {
+  data: TData;
+  table: TanStackTable<TData>;
+}
 
 export const DataTable = <TData, TValue>({
   columns,
@@ -228,7 +234,7 @@ export const DataTable = <TData, TValue>({
         </div>
       )}
       {isMobile && (
-        <div className="rounded-md border flex-grow">
+        <div className="flex-grow space-y-1">
           {loading && (
             <div className="flex items-center justify-center space-x-2">
               <Loader2 className="h-4 w-4 animate-spin" />
@@ -236,7 +242,9 @@ export const DataTable = <TData, TValue>({
             </div>
           )}
           {loading ||
-            page.data.map((item) => <div key={item.id}>{item.render()}</div>)}
+            page.data.map((item) => (
+              <div key={item.id}>{item.render(table)}</div>
+            ))}
           {!loading && page.data.length === 0 && (
             <div className="p-4 align-middle text-center text-sm">
               {t(filters.length ? 'table.noResults' : 'table.noData')}

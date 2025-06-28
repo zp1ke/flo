@@ -1,7 +1,7 @@
 import type { ColumnDef } from '@tanstack/react-table';
 import { DataTableColumnHeader } from '~/components/table/data-table-column-header';
 
-import type { Wallet } from '~/types/wallet';
+import { type Wallet, walletSchema } from '~/types/wallet';
 import { DataTableRowActions } from './table-row-actions';
 
 export const tableColumns = ({
@@ -43,6 +43,11 @@ export const tableColumns = ({
   },
   {
     id: 'actions',
-    cell: ({ row, table }) => <DataTableRowActions row={row} table={table} />,
+    cell: ({ row, table }) => (
+      <DataTableRowActions
+        data={walletSchema.parse(row.original)}
+        table={table}
+      />
+    ),
   },
 ];

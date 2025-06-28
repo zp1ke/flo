@@ -1,7 +1,7 @@
 import type { ColumnDef } from '@tanstack/react-table';
 import { DataTableColumnHeader } from '~/components/table/data-table-column-header';
 import { cn, formatDateTime, formatMoney, moneyClassName } from '~/lib/utils';
-import type { Transaction } from '~/types/transaction';
+import { type Transaction, transactionSchema } from '~/types/transaction';
 import { DataTableRowActions } from './table-row-actions';
 
 export const tableColumns = ({
@@ -97,6 +97,11 @@ export const tableColumns = ({
   },
   {
     id: 'actions',
-    cell: ({ row, table }) => <DataTableRowActions row={row} table={table} />,
+    cell: ({ row, table }) => (
+      <DataTableRowActions
+        data={transactionSchema.parse(row.original)}
+        table={table}
+      />
+    ),
   },
 ];

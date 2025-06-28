@@ -1,8 +1,8 @@
-import type { Row, Table } from '@tanstack/react-table';
 import { Loader2, MoreHorizontal } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { deleteTransaction } from '~/api/transactions';
+import type { DataTableRowActionsProps } from '~/components/table/data-table';
 import { Button } from '~/components/ui/button';
 import {
   Dialog,
@@ -19,26 +19,19 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '~/components/ui/dropdown-menu';
-
 import { cn } from '~/lib/utils';
 import useUserStore from '~/store/user-store';
-import { transactionSchema } from '~/types/transaction';
+import type { Transaction } from '~/types/transaction';
 import { EditTransactionForm } from './edit-transaction-form';
 
-interface DataTableRowActionsProps<TData> {
-  row: Row<TData>;
-  table: Table<TData>;
-}
-
-export function DataTableRowActions<TData>({
-  row,
+export function DataTableRowActions({
+  data,
   table,
-}: DataTableRowActionsProps<TData>) {
+}: DataTableRowActionsProps<Transaction>) {
   const profile = useUserStore((state) => state.profile);
 
   const { t } = useTranslation();
 
-  const transaction = transactionSchema.parse(row.original);
   const loading = () => table.options?.meta?.loading() ?? false;
 
   const [editOpen, setEditOpen] = useState<boolean>(false);
@@ -58,7 +51,7 @@ export function DataTableRowActions<TData>({
   const onDelete = async () => {
     setDeleting(true);
 
-    await deleteTransaction(profile?.code ?? '-', transaction);
+    await deleteTransaction(profile?.code ?? '-', data);
     table.options.meta?.fetch();
 
     setDeleteOpen(false);
@@ -120,14 +113,14 @@ export function DataTableRowActions<TData>({
                 ? 'transactions.editDescription'
                 : 'transactions.confirmDeleteMessage',
               {
-                name: transaction.description || transaction.code || '-',
+                name: data.description || data.code || '-',
               },
             )}
           </DialogDescription>
         </DialogHeader>
         {editOpen && (
           <EditTransactionForm
-            transaction={transaction}
+            transaction={data}
             onDone={onDoneTransaction}
             onProcessing={setEditing}
           />
@@ -140,7 +133,6 @@ export function DataTableRowActions<TData>({
               </Button>
             </DialogClose>
             <Button
-              className="ml-auto flex"
               variant="destructive"
               disabled={deleting}
               onClick={onDelete}
