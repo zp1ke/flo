@@ -37,6 +37,7 @@ export default function Transactions() {
       column: 'from',
       render: ({ onChange, value, disabled }) => (
         <DatePicker
+          key="from-date-filter"
           placeholder={t('transactions.fromDate')}
           value={value ? new Date(value) : undefined}
           minDate={
@@ -63,6 +64,7 @@ export default function Transactions() {
       column: 'to',
       render: ({ onChange, value, disabled }) => (
         <DatePicker
+          key="to-date-filter"
           placeholder={t('transactions.toDate')}
           value={value ? new Date(value) : undefined}
           minDate={

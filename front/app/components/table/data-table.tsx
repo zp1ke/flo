@@ -157,7 +157,7 @@ export const DataTable = <TData, TValue>({
   });
 
   return (
-    <div className="space-y-4 h-full flex flex-col">
+    <div className="space-y-4 h-full flex flex-col overflow-y-hidden">
       <div className="flex items-center">
         <AddItemButton
           title={addTitle}
@@ -172,86 +172,90 @@ export const DataTable = <TData, TValue>({
         table={table}
         textFilters={textFilters}
       />
-      {isMobile || (
-        <div className="rounded-md border flex-grow">
-          <Table>
-            <TableHeader>
-              {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => {
-                    return (
-                      <TableHead key={header.id} colSpan={header.colSpan}>
-                        {header.isPlaceholder
-                          ? null
-                          : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext(),
-                            )}
-                      </TableHead>
-                    );
-                  })}
-                </TableRow>
-              ))}
-            </TableHeader>
-            <TableBody>
-              {table.getRowModel().rows?.length ? (
-                table.getRowModel().rows.map((row) => (
-                  <TableRow
-                    key={row.id}
-                    data-state={row.getIsSelected() && 'selected'}
-                  >
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext(),
-                        )}
-                      </TableCell>
-                    ))}
+      <div className="flex-1 flex flex-col overflow-y-auto">
+        {isMobile || (
+          <div className="rounded-md border">
+            <Table>
+              <TableHeader>
+                {table.getHeaderGroups().map((headerGroup) => (
+                  <TableRow key={headerGroup.id}>
+                    {headerGroup.headers.map((header) => {
+                      return (
+                        <TableHead key={header.id} colSpan={header.colSpan}>
+                          {header.isPlaceholder
+                            ? null
+                            : flexRender(
+                                header.column.columnDef.header,
+                                header.getContext(),
+                              )}
+                        </TableHead>
+                      );
+                    })}
                   </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell
-                    colSpan={columns.length}
-                    className="h-24 text-center"
-                  >
-                    {loading ? (
-                      <div className="flex items-center justify-center space-x-2">
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                        <span>{t('table.loading')}</span>
-                      </div>
-                    ) : (
-                      <span>
-                        {t(filters.length ? 'table.noResults' : 'table.noData')}
-                      </span>
-                    )}
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </div>
-      )}
-      {isMobile && (
-        <div className="flex-grow space-y-1">
-          {loading && (
-            <div className="flex items-center justify-center space-x-2">
-              <Loader2 className="h-4 w-4 animate-spin" />
-              <span>{t('table.loading')}</span>
-            </div>
-          )}
-          {loading ||
-            page.data.map((item) => (
-              <div key={item.id}>{item.render(table)}</div>
-            ))}
-          {!loading && page.data.length === 0 && (
-            <div className="p-4 align-middle text-center text-sm">
-              {t(filters.length ? 'table.noResults' : 'table.noData')}
-            </div>
-          )}
-        </div>
-      )}
+                ))}
+              </TableHeader>
+              <TableBody>
+                {table.getRowModel().rows?.length ? (
+                  table.getRowModel().rows.map((row) => (
+                    <TableRow
+                      key={row.id}
+                      data-state={row.getIsSelected() && 'selected'}
+                    >
+                      {row.getVisibleCells().map((cell) => (
+                        <TableCell key={cell.id}>
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext(),
+                          )}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell
+                      colSpan={columns.length}
+                      className="h-24 text-center"
+                    >
+                      {loading ? (
+                        <div className="flex items-center justify-center space-x-2">
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                          <span>{t('table.loading')}</span>
+                        </div>
+                      ) : (
+                        <span>
+                          {t(
+                            filters.length ? 'table.noResults' : 'table.noData',
+                          )}
+                        </span>
+                      )}
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </div>
+        )}
+        {isMobile && (
+          <div className="space-y-1">
+            {loading && (
+              <div className="flex items-center justify-center space-x-2">
+                <Loader2 className="h-4 w-4 animate-spin" />
+                <span>{t('table.loading')}</span>
+              </div>
+            )}
+            {loading ||
+              page.data.map((item) => (
+                <div key={item.id}>{item.render(table)}</div>
+              ))}
+            {!loading && page.data.length === 0 && (
+              <div className="p-4 align-middle text-center text-sm">
+                {t(filters.length ? 'table.noResults' : 'table.noData')}
+              </div>
+            )}
+          </div>
+        )}
+      </div>
       <DataTablePagination
         disabled={loading}
         pageSizes={Array.from(
