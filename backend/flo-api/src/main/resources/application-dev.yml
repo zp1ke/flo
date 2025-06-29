@@ -21,6 +21,9 @@ org.jobrunr:
   dashboard:
     port: 8081
 
+web:
+  baseUrl: http://localhost:3000
+
 logging:
   level:
     com.zp1ke.flo: DEBUG
