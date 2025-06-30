@@ -32,6 +32,9 @@ public class NotificationService {
     @Value("${web.baseUrl:}")
     private String webBaseUrl;
 
+    @Value("${web.logoImageUrl:}")
+    private String logoImageUrl;
+
     public void sendVerificationLink(@Nonnull User user, @Nonnull Profile profile) {
         jobScheduler.enqueue(() -> doSendVerificationLink(user, profile));
     }
@@ -85,7 +88,8 @@ public class NotificationService {
             .message(templateCode + "-subject", new String[] {profile.getName()}, locale);
         var data = new HashMap<>(Map.<String, Object>of(
             "user", user,
-            "profile", profile
+            "profile", profile,
+            "logoImageUrl", logoImageUrl
         ));
         if (actionLinkKey != null) {
             data.put("actionLink", String.format("%s/%s/%s", webBaseUrl, actionLinkKey, user.getVerifyCode()));
