@@ -1,7 +1,5 @@
 import {
   Body,
-  Button,
-  CodeInline,
   Container,
   Head,
   Heading,
@@ -17,14 +15,12 @@ const texts = {
   lang: 'en',
   hello: 'Hello',
   orCopyAndPaste: 'or copy and paste this URL into your browser:',
-  preview: 'Hello ${profile.name}, please verify your email address.',
-  thatsIt: "That's it! Nice to have you onboard.",
-  thisVerification: 'This verification was intended for',
+  preview: 'Hello ${profile.name}, this is your verification code.',
+  thatsIt: "That's it! Nice to have you with us.",
+  thisVerification: 'This verification code was intended for',
   thisVerificationDescription:
-    "If you were not expecting this verification, you can ignore this email. If you are concerned about your account's safety, please reply to this email to get in touch with us.",
-  welcome: 'Welcome aboard.',
-  verifyEmail: 'Please verify your email address.',
-  verifyNow: 'Verify now',
+    "If you were not expecting this verification code, you can ignore this email. If you are concerned about your account's safety, please reply to this email to get in touch with us.",
+  yourCode: 'Your verification code is:',
 };
 
 export const UserVerification = () => {
@@ -47,18 +43,7 @@ export const UserVerification = () => {
               {texts.hello} <strong>{'${profile.name}'}</strong>,
             </Heading>
             <Text className="text-[16px] text-black leading-[24px]">
-              {texts.welcome} {texts.verifyEmail}
-            </Text>
-            <Text className="text-[14px] text-black leading-[24px]">
-              <Button
-                href="${actionLink}"
-                className="p-[10px_20px] bg-blue-400 text-white rounded"
-              >
-                {texts.verifyNow}
-              </Button>
-            </Text>
-            <Text className="text-[14px] text-black leading-[24px]">
-              {texts.orCopyAndPaste} <CodeInline>{'${actionLink}'}</CodeInline>
+              {texts.yourCode} <strong>{'${user.verifyCode}'}</strong>
             </Text>
             <Text className="text-[12px] text-black leading-[24px]">
               {texts.thatsIt}

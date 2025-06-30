@@ -39,7 +39,7 @@ export const UserRecovery = () => {
         <Body className="mx-auto my-auto bg-white px-2 font-sans">
           <Container className="mx-auto my-[40px] max-w-[465px] rounded border border-gray-200 border-solid p-[20px]">
             <Img
-              src="https://reactrouter.com/_brand/React%20Router%20Brand%20Assets/React%20Router%20Lockup/Light.svg"
+              src={'${logoImageUrl}'}
               height="24"
               alt="Flo"
               className="mx-auto my-0"
