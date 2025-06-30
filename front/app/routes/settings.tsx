@@ -36,9 +36,7 @@ export default function Settings() {
   const [processing, setProcessing] = useState(false);
 
   const formSchema = z.object({
-    emailVerifyCode: z
-      .string()
-      .optional(),
+    emailVerifyCode: z.string().optional(),
     email: z
       .string()
       .email(t('settings.validEmail'))
@@ -137,22 +135,25 @@ export default function Settings() {
                 return <div />;
               }
 
-              return (<FormItem className="grid gap-2">
-                <FormLabel>{t('settings.emailVerifyCode')}</FormLabel>
-                <FormControl>
-                  <div className="flex items-center gap-4">
-                    <Input
-                      placeholder={t('settings.emailVerifyCodePlaceholder')}
-                      type="text"
-                      required={emailChanged}
-                      disabled={processing}
-                      {...field}
-                    />
-                  </div>
-                </FormControl>
-                <FormDescription>{t('settings.emailVerifyCodeDescription')}</FormDescription>
-                <FormMessage />
-              </FormItem>
+              return (
+                <FormItem className="grid gap-2">
+                  <FormLabel>{t('settings.emailVerifyCode')}</FormLabel>
+                  <FormControl>
+                    <div className="flex items-center gap-4">
+                      <Input
+                        placeholder={t('settings.emailVerifyCodePlaceholder')}
+                        type="text"
+                        required={emailChanged}
+                        disabled={processing}
+                        {...field}
+                      />
+                    </div>
+                  </FormControl>
+                  <FormDescription>
+                    {t('settings.emailVerifyCodeDescription')}
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
               );
             }}
           />
@@ -179,7 +180,7 @@ export default function Settings() {
             )}
           />
           <div className="flex gap-2">
-            {(user?.verified || !needsVerifyCode()) || (
+            {user?.verified || !needsVerifyCode() || (
               <Button type="button" variant="outline" disabled={processing}>
                 {processing && <Loader2 className="animate-spin" />}
                 {processing && t('settings.processing')}
