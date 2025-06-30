@@ -5,9 +5,9 @@ import com.zp1ke.flo.data.domain.User;
 import jakarta.annotation.Nonnull;
 import jakarta.validation.constraints.NotBlank;
 
-public record UserRequest(@NotBlank(message = "user.invalid-email") String email,
-                          @NotBlank(message = "user.invalid-name") String name,
-                          @NotBlank(message = "user.password-empty") String password) {
+public record UserCreateRequest(@NotBlank(message = "user.invalid-email") String email,
+                                @NotBlank(message = "user.invalid-name") String name,
+                                @NotBlank(message = "user.password-empty") String password) {
 
     @Nonnull
     public User toUser() {

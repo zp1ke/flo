@@ -2,7 +2,7 @@ package com.zp1ke.flo.api;
 
 import com.intuit.karate.junit5.Karate;
 import com.zp1ke.flo.api.controller.v1.AuthController;
-import com.zp1ke.flo.api.model.UserRequest;
+import com.zp1ke.flo.api.model.UserCreateRequest;
 import com.zp1ke.flo.data.domain.Category;
 import com.zp1ke.flo.data.domain.Wallet;
 import com.zp1ke.flo.data.service.CategoryService;
@@ -42,7 +42,7 @@ public class KarateRunnerTest {
     @Karate.Test
     Karate testFeatures() {
         var username = "karate-user";
-        var userRequest = new UserRequest(username + "@mail.com", username, "12345678");
+        var userRequest = new UserCreateRequest(username + "@mail.com", username, "12345678");
         var user = userService.create(userRequest.toUser(), userRequest.toProfile());
         userService.verifyUserByCode(user.getVerifyCode());
 

@@ -3,10 +3,12 @@ package com.zp1ke.flo.data.service;
 import com.zp1ke.flo.data.domain.Profile;
 import com.zp1ke.flo.data.domain.User;
 import com.zp1ke.flo.data.domain.UserToken;
+import com.zp1ke.flo.data.model.NotificationType;
 import com.zp1ke.flo.data.repository.UserRepository;
 import com.zp1ke.flo.data.repository.UserTokenRepository;
 import com.zp1ke.flo.utils.StringUtils;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.transaction.Transactional;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
@@ -75,9 +77,35 @@ public class UserService {
         var savedProfile = profileService.save(profile);
         settingService.saveDefaultSettings(saved);
 
-        notificationService.sendVerificationEmail(saved, savedProfile);
+        sendVerification(saved, savedProfile, NotificationType.VERIFICATION_LINK);
 
         return saved;
+    }
+
+    @Nonnull
+    public User save(@Nonnull User user, @Nullable String password) {
+        var violations = validator.validate(user);
+        if (!violations.isEmpty()) {
+            throw new ConstraintViolationException("user.invalid", violations);
+        }
+
+        if (StringUtils.isNotEmail(user.getEmail())) {
+            throw new IllegalArgumentException("user.invalid_email");
+        }
+
+        if (userRepository.existsByEmailAndEnabledTrue(user.getEmail())) {
+            throw new IllegalArgumentException("user.email_already_exists");
+        }
+
+        if (userRepository.existsByUsernameAndEnabledTrue(user.getUsername())) {
+            throw new IllegalArgumentException("user.username_already_exists");
+        }
+
+        if (StringUtils.isNotBlank(password)) {
+            user.setPassword(passwordEncoder.encode(password));
+        }
+
+        return userRepository.save(user);
     }
 
     public User findByEmailOrUsername(String emailOrUsername) {
@@ -152,7 +180,7 @@ public class UserService {
             var saved = userRepository.save(user);
 
             profileService.firstProfileOfUser(saved)
-                .ifPresent(profile -> notificationService.sendRecoveryEmail(saved, profile));
+                .ifPresent(profile -> notificationService.sendRecoveryLink(saved, profile));
         }
     }
 
@@ -173,5 +201,27 @@ public class UserService {
         user.setVerifiedAt(OffsetDateTime.now());
         user.setPassword(passwordEncoder.encode(password));
         userRepository.save(user);
+    }
+
+    @Nonnull
+    public User sendVerification(@Nonnull User user, @Nonnull NotificationType notificationType) {
+        var profile = profileService.firstProfileOfUser(user)
+            .orElseThrow(() -> new IllegalArgumentException("user.profile_not_found"));
+
+        user.setVerifyCode(StringUtils.generateRandomCode(6));
+        var saved = userRepository.save(user);
+
+        sendVerification(saved, profile, notificationType);
+        return saved;
+    }
+
+    private void sendVerification(@Nonnull User user,
+                                  @Nonnull Profile profile,
+                                  @Nonnull NotificationType notificationType) {
+        if (notificationType == NotificationType.VERIFICATION_LINK) {
+            notificationService.sendVerificationLink(user, profile);
+        } else if (notificationType == NotificationType.VERIFICATION_CODE) {
+            notificationService.sendVerificationCode(user, profile);
+        }
     }
 }

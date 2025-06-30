@@ -8,6 +8,7 @@ import com.zp1ke.flo.tools.handler.EmailSender;
 import com.zp1ke.flo.tools.model.Contact;
 import com.zp1ke.flo.tools.model.EmailNotification;
 import jakarta.annotation.Nonnull;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -31,16 +32,20 @@ public class NotificationService {
     @Value("${web.baseUrl:}")
     private String webBaseUrl;
 
-    public void sendVerificationEmail(@Nonnull User user, @Nonnull Profile profile) {
-        jobScheduler.enqueue(() -> doSendVerificationEmail(user, profile));
+    public void sendVerificationLink(@Nonnull User user, @Nonnull Profile profile) {
+        jobScheduler.enqueue(() -> doSendVerificationLink(user, profile));
     }
 
-    public void sendRecoveryEmail(@Nonnull User user, @Nonnull Profile profile) {
-        jobScheduler.enqueue(() -> doSendRecoveryEmail(user, profile));
+    public void sendRecoveryLink(@Nonnull User user, @Nonnull Profile profile) {
+        jobScheduler.enqueue(() -> doSendRecoveryLink(user, profile));
+    }
+
+    public void sendVerificationCode(@Nonnull User user, @Nonnull Profile profile) {
+        jobScheduler.enqueue(() -> doSendVerificationCode(user, profile));
     }
 
     @Job
-    public void doSendVerificationEmail(@Nonnull User user, @Nonnull Profile profile) throws EmailException {
+    public void doSendVerificationLink(@Nonnull User user, @Nonnull Profile profile) throws EmailException {
         try {
             var templateCode = "user-verification-email";
             var actionLinkKey = "verify";
@@ -51,7 +56,7 @@ public class NotificationService {
     }
 
     @Job
-    public void doSendRecoveryEmail(@Nonnull User user, @Nonnull Profile profile) throws EmailException {
+    public void doSendRecoveryLink(@Nonnull User user, @Nonnull Profile profile) throws EmailException {
         try {
             var templateCode = "user-recovery-email";
             var actionLinkKey = "recovery";
@@ -61,18 +66,30 @@ public class NotificationService {
         }
     }
 
+    @Job
+    public void doSendVerificationCode(@Nonnull User user, @Nonnull Profile profile) throws EmailException {
+        try {
+            var templateCode = "user-verification-code-email";
+            sendUserActionEmail(user, profile, templateCode, null);
+        } catch (Exception e) {
+            throw new EmailException("Error sending verification code email to " + user.getEmail(), e);
+        }
+    }
+
     private void sendUserActionEmail(@Nonnull User user,
                                      @Nonnull Profile profile,
                                      @Nonnull String templateCode,
-                                     @Nonnull String actionLinkKey) throws EmailException, TemplateException {
+                                     String actionLinkKey) throws EmailException, TemplateException {
         var locale = profile.getLocale();
         var subject = messageService
             .message(templateCode + "-subject", new String[] {profile.getName()}, locale);
-        var data = Map.<String, Object>of(
+        var data = new HashMap<>(Map.<String, Object>of(
             "user", user,
-            "profile", profile,
-            "actionLink", String.format("%s/%s/%s", webBaseUrl, actionLinkKey, user.getVerifyCode())
-        );
+            "profile", profile
+        ));
+        if (actionLinkKey != null) {
+            data.put("actionLink", String.format("%s/%s/%s", webBaseUrl, actionLinkKey, user.getVerifyCode()));
+        }
         var recipient = Contact.builder()
             .email(user.getEmail())
             .name(profile.getName())

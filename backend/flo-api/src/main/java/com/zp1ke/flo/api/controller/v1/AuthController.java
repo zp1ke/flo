@@ -4,7 +4,7 @@ import com.zp1ke.flo.api.dto.UserDto;
 import com.zp1ke.flo.api.model.AuthRequest;
 import com.zp1ke.flo.api.model.AuthResponse;
 import com.zp1ke.flo.api.model.EmailRequest;
-import com.zp1ke.flo.api.model.UserRequest;
+import com.zp1ke.flo.api.model.UserCreateRequest;
 import com.zp1ke.flo.api.security.JwtTokenProvider;
 import com.zp1ke.flo.api.utils.RequestUtils;
 import com.zp1ke.flo.data.domain.User;
@@ -38,7 +38,7 @@ public class AuthController {
 
     @PostMapping("/sign-up")
     @Operation(summary = "Create a new user")
-    public ResponseEntity<AuthResponse> signUp(@Valid @RequestBody UserRequest request,
+    public ResponseEntity<AuthResponse> signUp(@Valid @RequestBody UserCreateRequest request,
                                                Locale locale) {
         var profile = request.toProfile().toBuilder()
             .language(locale.toLanguageTag())

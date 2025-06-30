@@ -5,7 +5,7 @@ import com.zp1ke.flo.api.TestcontainersConfig;
 import com.zp1ke.flo.api.dto.UserDto;
 import com.zp1ke.flo.api.model.AuthRequest;
 import com.zp1ke.flo.api.model.AuthResponse;
-import com.zp1ke.flo.api.model.UserRequest;
+import com.zp1ke.flo.api.model.UserCreateRequest;
 import com.zp1ke.flo.data.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +36,7 @@ class AuthControllerTests {
 
     @Test
     void signup_returnsAuthResponse_whenRegistrationIsSuccessful() throws Exception {
-        var userRequest = new UserRequest("newuser@example.com", "New User", "password123");
+        var userRequest = new UserCreateRequest("newuser@example.com", "New User", "password123");
         var requestBody = objectMapper.writeValueAsString(userRequest);
 
         var result = mockMvc.perform(post("/api/v1/auth/sign-up")
@@ -55,7 +55,7 @@ class AuthControllerTests {
 
     @Test
     void signup_returnsBadRequest_whenEmailAlreadyExists() throws Exception {
-        var existingUser = new UserRequest("existing@example.com", "ExistingUser", "password123");
+        var existingUser = new UserCreateRequest("existing@example.com", "ExistingUser", "password123");
         userService.create(existingUser.toUser(), existingUser.toProfile());
 
         var userDto = UserDto.builder()
@@ -73,7 +73,7 @@ class AuthControllerTests {
     @Test
     void signin_returnsAuthResponse_whenCredentialsAreValid() throws Exception {
         var password = "password123";
-        var userRequest = new UserRequest("user@example.com", "Test User", password);
+        var userRequest = new UserCreateRequest("user@example.com", "Test User", password);
         userService.create(userRequest.toUser(), userRequest.toProfile());
 
         var authRequest = new AuthRequest(userRequest.email(), password);
@@ -103,7 +103,7 @@ class AuthControllerTests {
 
     @Test
     void signin_returnsBadRequest_whenPasswordIsIncorrect() throws Exception {
-        var userRequest = new UserRequest("user2@example.com", "User Two", "correctpassword");
+        var userRequest = new UserCreateRequest("user2@example.com", "User Two", "correctpassword");
         userService.create(userRequest.toUser(), userRequest.toProfile());
 
         var authRequest = new AuthRequest(userRequest.email(), "wrongpassword");

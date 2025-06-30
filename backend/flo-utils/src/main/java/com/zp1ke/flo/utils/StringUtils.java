@@ -91,4 +91,26 @@ public class StringUtils {
         String emailRegex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
         return !email.matches(emailRegex);
     }
+
+    /**
+     * Checks if two strings don't match.
+     * <p>
+     * Returns true if both strings are null or if they are not equal.
+     * If both strings are null, they are considered to match.
+     * If one string is null and the other is not, they are considered not to match.
+     * </p>
+     *
+     * @param string1 the first string to compare, may be null
+     * @param string2 the second string to compare, may be null
+     * @return true if the strings do not match, false if they match
+     */
+    public static boolean notMatch(String string1, String string2) {
+        if (string1 == null && string2 == null) {
+            return false;
+        }
+        if (string1 != null) {
+            return !string1.equals(string2);
+        }
+        return true;
+    }
 }

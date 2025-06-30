@@ -20,7 +20,7 @@ import lombok.*;
 })
 @Getter
 @Setter
-@Builder
+@Builder(toBuilder = true)
 @AllArgsConstructor
 @NoArgsConstructor
 public class User extends Auditable {

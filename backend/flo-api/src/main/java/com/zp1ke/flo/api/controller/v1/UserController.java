@@ -2,8 +2,12 @@ package com.zp1ke.flo.api.controller.v1;
 
 import com.zp1ke.flo.api.dto.UserDto;
 import com.zp1ke.flo.api.model.AuthResponse;
+import com.zp1ke.flo.api.model.CodeResponse;
+import com.zp1ke.flo.api.model.UserSaveRequest;
+import com.zp1ke.flo.api.security.UserIsVerified;
 import com.zp1ke.flo.api.utils.RequestUtils;
 import com.zp1ke.flo.data.domain.User;
+import com.zp1ke.flo.data.model.NotificationType;
 import com.zp1ke.flo.data.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -13,10 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/user")
@@ -30,10 +31,31 @@ public class UserController {
     private HttpServletRequest httpRequest;
 
     @GetMapping("/me")
-    @Operation(summary = "Get current user")
+    @Operation(summary = "Get session user")
     public ResponseEntity<UserDto> me(@AuthenticationPrincipal User user) {
         var dto = UserDto.fromUser(user);
         return ResponseEntity.ok(dto);
+    }
+
+    @PutMapping
+    @Operation(summary = "Update session user data")
+    @UserIsVerified
+    public ResponseEntity<UserDto> update(@AuthenticationPrincipal User user,
+                                          @RequestBody UserSaveRequest request) {
+        if (request.needsVerifyAndHasInvalidCode(user)) {
+            throw new IllegalArgumentException("user.invalid_verification_code");
+        }
+        var saved = userService.save(request.toUser(user), request.password());
+        var dto = UserDto.fromUser(saved);
+        return ResponseEntity.ok(dto);
+    }
+
+    @PostMapping("/send-verification/{type}")
+    @Operation(summary = "Send verification to session user")
+    public ResponseEntity<CodeResponse> sendVerification(@AuthenticationPrincipal User user,
+                                                         @RequestParam NotificationType type) {
+        var saved = userService.sendVerification(user, type);
+        return ResponseEntity.ok(new CodeResponse(saved.getVerifyCode()));
     }
 
     @PostMapping("/sign-out")
