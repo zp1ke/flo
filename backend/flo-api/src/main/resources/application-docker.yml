@@ -21,3 +21,6 @@ mail:
 org.jobrunr:
   dashboard:
     port: 8081
+
+web:
+  baseUrl: ${WEB_BASE_URL}
