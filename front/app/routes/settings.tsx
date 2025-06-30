@@ -13,6 +13,7 @@ import { Button } from '~/components/ui/button';
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -35,6 +36,9 @@ export default function Settings() {
   const [processing, setProcessing] = useState(false);
 
   const formSchema = z.object({
+    emailVerifyCode: z
+      .string()
+      .optional(),
     email: z
       .string()
       .email(t('settings.validEmail'))
@@ -42,7 +46,8 @@ export default function Settings() {
     password: z
       .string()
       .min(3, t('settings.passwordSize'))
-      .max(100, t('settings.passwordSize')),
+      .max(100, t('settings.passwordSize'))
+      .optional(),
   });
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -50,6 +55,7 @@ export default function Settings() {
     defaultValues: {
       email: user?.email || '',
       password: '',
+      emailVerifyCode: '',
     },
   });
 
@@ -64,6 +70,14 @@ export default function Settings() {
       ),
     });
   }
+
+  const emailIsChanged = () => {
+    return user?.email !== form.getValues('email');
+  };
+
+  const needsVerifyCode = () => {
+    return emailIsChanged() && !form.getValues('emailVerifyCode');
+  };
 
   return (
     <PageContent title={t('settings.title')} subtitle={t('settings.subtitle')}>
@@ -116,6 +130,34 @@ export default function Settings() {
           />
           <FormField
             control={form.control}
+            name="email"
+            render={({ field }) => {
+              const emailChanged = emailIsChanged();
+              if (!emailChanged) {
+                return <div />;
+              }
+
+              return (<FormItem className="grid gap-2">
+                <FormLabel>{t('settings.emailVerifyCode')}</FormLabel>
+                <FormControl>
+                  <div className="flex items-center gap-4">
+                    <Input
+                      placeholder={t('settings.emailVerifyCodePlaceholder')}
+                      type="text"
+                      required={emailChanged}
+                      disabled={processing}
+                      {...field}
+                    />
+                  </div>
+                </FormControl>
+                <FormDescription>{t('settings.emailVerifyCodeDescription')}</FormDescription>
+                <FormMessage />
+              </FormItem>
+              );
+            }}
+          />
+          <FormField
+            control={form.control}
             name="password"
             render={({ field }) => (
               <FormItem className="grid gap-2">
@@ -137,14 +179,14 @@ export default function Settings() {
             )}
           />
           <div className="flex gap-2">
-            {user?.verified || (
+            {(user?.verified || !needsVerifyCode()) || (
               <Button type="button" variant="outline" disabled={processing}>
                 {processing && <Loader2 className="animate-spin" />}
                 {processing && t('settings.processing')}
                 {!processing && t('settings.sendVerificationEmail')}
               </Button>
             )}
-            <Button type="submit" disabled={processing}>
+            <Button type="submit" disabled={processing || needsVerifyCode()}>
               {processing && <Loader2 className="animate-spin" />}
               {processing && t('settings.processing')}
               {!processing && t('settings.saveChanges')}
