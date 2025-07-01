@@ -33,6 +33,8 @@ export default function Settings() {
 
   const user = useUserStore((state) => state.user);
 
+  const [emailIsChanged, setEmailIsChanged] = useState(false);
+  const [hasVerifyCode, setHasVerifyCode] = useState(false);
   const [processing, setProcessing] = useState(false);
 
   const formSchema = z.object({
@@ -69,12 +71,8 @@ export default function Settings() {
     });
   }
 
-  const emailIsChanged = () => {
-    return user?.email !== form.getValues('email');
-  };
-
   const needsVerifyCode = () => {
-    return emailIsChanged() && !form.getValues('emailVerifyCode');
+    return emailIsChanged && !hasVerifyCode;
   };
 
   return (
@@ -82,7 +80,7 @@ export default function Settings() {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="w-2/3 space-y-6 pt-2 md:pt-4"
+          className="w-full md:w-2/3 space-y-6 pt-2 md:pt-4 max-w-[500px]"
         >
           <FormField
             control={form.control}
@@ -98,6 +96,10 @@ export default function Settings() {
                       required
                       disabled={processing}
                       {...field}
+                      onChange={(e) => {
+                        field.onChange(e);
+                        setEmailIsChanged(e.target.value !== user?.email);
+                      }}
                     />
                     <Tooltip>
                       <TooltipTrigger asChild>
@@ -128,10 +130,9 @@ export default function Settings() {
           />
           <FormField
             control={form.control}
-            name="email"
+            name="emailVerifyCode"
             render={({ field }) => {
-              const emailChanged = emailIsChanged();
-              if (!emailChanged) {
+              if (!emailIsChanged) {
                 return <div />;
               }
 
@@ -143,9 +144,13 @@ export default function Settings() {
                       <Input
                         placeholder={t('settings.emailVerifyCodePlaceholder')}
                         type="text"
-                        required={emailChanged}
+                        required={emailIsChanged}
                         disabled={processing}
                         {...field}
+                        onChange={(e) => {
+                          field.onChange(e);
+                          setHasVerifyCode(e.target.value.length > 0);
+                        }}
                       />
                     </div>
                   </FormControl>
@@ -180,7 +185,7 @@ export default function Settings() {
             )}
           />
           <div className="flex gap-2">
-            {user?.verified || !needsVerifyCode() || (
+            {(!user?.verified || needsVerifyCode()) && (
               <Button type="button" variant="outline" disabled={processing}>
                 {processing && <Loader2 className="animate-spin" />}
                 {processing && t('settings.processing')}
