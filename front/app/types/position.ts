@@ -1,1 +1,1 @@
-export type HorizontalPosition = 'left' | 'center' | 'right';
+export type HorizontalPosition = 'left' | 'center' | 'right' | 'none';

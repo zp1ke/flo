@@ -6,6 +6,7 @@ import {
 } from '@react-router/dev/routes';
 
 export default [
+  route('privacy-policy', 'routes/privacy.tsx'),
   layout('components/layout/anon-layout.tsx', [
     index('routes/home.tsx'),
     route('recover', 'routes/recover.tsx'),

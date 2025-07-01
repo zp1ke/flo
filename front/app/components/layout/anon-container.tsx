@@ -1,10 +1,10 @@
-import { GalleryVerticalEnd } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
 import { LanguageSelector } from '~/components/layout/language-selector';
 import { ThemeModeSelector } from '~/components/layout/theme-mode-selector';
 import type { HorizontalPosition } from '~/types/position';
+import AppLogo from '../app-logo';
 
 export default function AnonContainer({
   placeholderPosition,
@@ -17,7 +17,7 @@ export default function AnonContainer({
 
   return (
     <div className="grid min-h-svh lg:grid-cols-2">
-      {placeholderPosition !== 'right' && (
+      {placeholderPosition === 'left' && (
         <div className="relative hidden bg-muted lg:block transition ease-in delay-100 duration-100">
           <img
             src="/images/placeholder.svg"
@@ -30,9 +30,7 @@ export default function AnonContainer({
         <div className="flex items-center justify-between">
           <div className="flex justify-center gap-2 md:justify-start">
             <Link to="/" className="flex items-center gap-2 font-medium">
-              <div className="flex h-6 w-6 items-center justify-center rounded-md bg-primary text-primary-foreground">
-                <GalleryVerticalEnd className="size-4" />
-              </div>
+              <AppLogo className="size-4" />
               {t('app.name')}
             </Link>
           </div>

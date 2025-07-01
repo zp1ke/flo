@@ -6,7 +6,7 @@ export default function PageContent({
   headerEnd,
   children,
 }: {
-  title: string;
+  title: string | ReactNode;
   subtitle?: string;
   headerEnd?: ReactNode;
   children?: ReactNode;
