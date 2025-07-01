@@ -20,7 +20,7 @@ export default function AnonContainer({
       {placeholderPosition !== 'right' && (
         <div className="relative hidden bg-muted lg:block transition ease-in delay-100 duration-100">
           <img
-            src="/placeholder.svg"
+            src="/images/placeholder.svg"
             alt={t('app.title')}
             className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
           />
@@ -48,7 +48,7 @@ export default function AnonContainer({
       {placeholderPosition === 'right' && (
         <div className="relative hidden bg-muted lg:block transition ease-in delay-100 duration-100">
           <img
-            src="/placeholder.svg"
+            src="/images/placeholder.svg"
             alt={t('app.title')}
             className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
           />

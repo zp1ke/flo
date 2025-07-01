@@ -23,7 +23,7 @@ org.jobrunr:
 
 web:
   baseUrl: http://localhost:3000
-  logoImageUrl: http://localhost:3000/logo-light.png
+  logoImageUrl: http://localhost:3000/images/logo-light.png
 
 logging:
   level:

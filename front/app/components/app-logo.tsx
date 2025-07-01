@@ -14,14 +14,14 @@ const AppLogo = ({ className }: AppLogoProps) => {
     <>
       {theme === 'light' && (
         <img
-          src="/apple-touch-icon-light.png"
+          src="/images/apple-touch-icon-light.png"
           alt={t('app.name')}
           className={cn('object-cover', className)}
         />
       )}
       {theme === 'dark' && (
         <img
-          src="/apple-touch-icon-dark.png"
+          src="/images/apple-touch-icon-dark.png"
           alt={t('app.name')}
           className={cn('object-cover', className)}
         />
@@ -29,14 +29,14 @@ const AppLogo = ({ className }: AppLogoProps) => {
       {theme === 'system' && (
         <picture className={cn('object-cover', className)}>
           <source
-            srcSet="/apple-touch-icon-dark.png"
+            srcSet="/images/apple-touch-icon-dark.png"
             media="(prefers-color-scheme: dark)"
           />
           <source
-            srcSet="/apple-touch-icon-light.png"
+            srcSet="/images/apple-touch-icon-light.png"
             media="(prefers-color-scheme: light), (prefers-color-scheme: no-preference)"
           />
-          <img src="/apple-touch-icon-light.png" alt={t('app.name')} />
+          <img src="/images/apple-touch-icon-light.png" alt={t('app.name')} />
         </picture>
       )}
     </>

@@ -24,4 +24,4 @@ org.jobrunr:
 
 web:
   baseUrl: ${WEB_BASE_URL}
-  logoImageUrl: ${WEB_BASE_URL}/logo-light.png
+  logoImageUrl: ${WEB_BASE_URL}/images/logo-light.png
