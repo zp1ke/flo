@@ -3,7 +3,7 @@ import { Loader2 } from 'lucide-react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { toast } from 'sonner';
 import { z } from 'zod';
 import type { ApiError } from '~/api/client';
@@ -164,9 +164,9 @@ export default function SignUpForm() {
           </Form>
           <div className="text-muted-foreground *:[a]:hover:text-primary text-center text-xs text-balance *:[a]:underline *:[a]:underline-offset-4 mt-6">
             {t('signUp.termsParagraphPre')}{' '}
-            <a href="/terms">{t('signUp.termsParagraphLink1')}</a>{' '}
-            {t('signUp.termsParagraphAnd')}{' '}
-            <a href="/privacy">{t('signUp.termsParagraphLink2')}</a>.
+            <Link to="/privacy-policy" target="_blank" rel="noopener">
+              {t('signUp.termsParagraphLink2')}
+            </Link>
           </div>
         </CardContent>
       </Card>

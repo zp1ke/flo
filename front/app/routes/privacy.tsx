@@ -12,6 +12,11 @@ const sections = [
     id: 'privacy-policy',
   },
   {
+    title: 'privacy.usageData',
+    content: 'privacy.usageDataContent',
+    id: 'privacy-usage-data',
+  },
+  {
     title: 'privacy.informationUse',
     content: 'privacy.informationUseContent',
     id: 'privacy-information-use',
@@ -25,6 +30,11 @@ const sections = [
     title: 'privacy.informationRights',
     content: 'privacy.informationRightsContent',
     id: 'privacy-information-rights',
+  },
+  {
+    title: 'privacy.changes',
+    content: 'privacy.changesContent',
+    id: 'privacy-changes',
   },
   {
     title: 'privacy.contactUs',
