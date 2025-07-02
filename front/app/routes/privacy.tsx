@@ -75,9 +75,7 @@ export default function Privacy() {
                 <h2 className="text-xl font-semibold border-b pb-2">
                   {t(section.title)}
                 </h2>
-                <p className="leading-2 md:leading-4 lg:leading-6">
-                  {t(section.content)}
-                </p>
+                <p>{t(section.content)}</p>
               </div>
             ))}
           </div>
