@@ -1,3 +1,4 @@
+<#ftl output_format="HTML">
 <#-- @ftlvariable name="user" type="com.zp1ke.flo.data.domain.User" -->
 <#-- @ftlvariable name="profile" type="com.zp1ke.flo.data.domain.Profile" -->
 <#-- @ftlvariable name="logoImageUrl" type="java.lang.String" -->

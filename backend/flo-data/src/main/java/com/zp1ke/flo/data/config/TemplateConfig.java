@@ -14,6 +14,7 @@ public class TemplateConfig {
         var templateLoader = new ClassTemplateLoader(this.getClass(), "/templates");
         configuration.setTemplateLoader(templateLoader);
         configuration.setLocalizedLookup(true);
+        configuration.setRecognizeStandardFileExtensions(true);
         var freeMarkerConfigurer = new FreeMarkerConfigurer();
         freeMarkerConfigurer.setConfiguration(configuration);
         return freeMarkerConfigurer;

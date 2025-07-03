@@ -106,8 +106,7 @@ public class NotificationService {
                            @Nonnull String subject,
                            @Nonnull Contact recipient,
                            @Nonnull Map<String, Object> data) throws EmailException, TemplateException {
-        var body = messageService
-            .template(template + ".ftl", data, locale);
+        var body = messageService.template(template + ".ftlh", data, locale);
         var notification = EmailNotification.builder()
             .subject(subject)
             .body(body)
