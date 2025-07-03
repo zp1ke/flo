@@ -175,7 +175,8 @@
     "passwordSize": "Password must be at least 8 characters long and max 100 characters long.",
     "processing": "Processing...",
     "saveChanges": "Save Changes",
-    "sendVerificationEmail": "Send Verification Email",
+    "sendVerificationCode": "Send Verification code",
+    "sendVerificationAvailableIn": "Resend available in {{seconds}} seconds",
     "subtitle": "Manage your settings",
     "title": "Settings"
   },

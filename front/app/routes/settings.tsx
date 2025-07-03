@@ -2,7 +2,7 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CheckCircleIcon, Loader2 } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
@@ -36,6 +36,24 @@ export default function Settings() {
   const [emailIsChanged, setEmailIsChanged] = useState(false);
   const [hasVerifyCode, setHasVerifyCode] = useState(false);
   const [processing, setProcessing] = useState(false);
+  const [verifyAvailableAt, setVerifyAvailableAt] = useState<Date | null>(null);
+  const [secondsToVerify, setSecondsToVerify] = useState(0);
+
+  useEffect(() => {
+    if (verifyAvailableAt) {
+      setSecondsToVerify(secondsUntil(verifyAvailableAt));
+      const interval = setInterval(() => {
+        const seconds = secondsUntil(verifyAvailableAt);
+        setSecondsToVerify(seconds);
+        if (seconds <= 0) {
+          clearInterval(interval);
+          setVerifyAvailableAt(null);
+        }
+      }, 1000);
+      return () => clearInterval(interval);
+    }
+    setSecondsToVerify(0);
+  }, [verifyAvailableAt]);
 
   const formSchema = z.object({
     emailVerifyCode: z.string().optional(),
@@ -58,6 +76,17 @@ export default function Settings() {
       emailVerifyCode: '',
     },
   });
+
+  const sendVerification = async () => {
+    setProcessing(true);
+
+    await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate API call delay
+
+    const nextAvailableAt = new Date();
+    nextAvailableAt.setSeconds(nextAvailableAt.getSeconds() + 120); // Set available time to 120 seconds from now
+    setVerifyAvailableAt(nextAvailableAt);
+    setProcessing(false);
+  };
 
   function onSubmit(data: z.infer<typeof formSchema>) {
     setProcessing(true);
@@ -186,10 +215,21 @@ export default function Settings() {
           />
           <div className="flex gap-2">
             {(!user?.verified || needsVerifyCode()) && (
-              <Button type="button" variant="outline" disabled={processing}>
+              <Button
+                type="button"
+                variant="outline"
+                disabled={processing || secondsToVerify > 0}
+                onClick={sendVerification}
+              >
                 {processing && <Loader2 className="animate-spin" />}
                 {processing && t('settings.processing')}
-                {!processing && t('settings.sendVerificationEmail')}
+                {!processing &&
+                  !secondsToVerify &&
+                  t('settings.sendVerificationCode')}
+                {secondsToVerify > 0 &&
+                  t('settings.sendVerificationAvailableIn', {
+                    seconds: secondsToVerify,
+                  })}
               </Button>
             )}
             <Button type="submit" disabled={processing || needsVerifyCode()}>
@@ -203,3 +243,16 @@ export default function Settings() {
     </PageContent>
   );
 }
+
+const secondsUntil = (date: Date | null): number => {
+  if (!date) {
+    return 0;
+  }
+  const now = new Date();
+  const milliDiff = date.getTime() - now.getTime();
+  const secondsDiff = Math.floor(milliDiff / 1000);
+  if (secondsDiff <= 0) {
+    return 0;
+  }
+  return secondsDiff;
+};

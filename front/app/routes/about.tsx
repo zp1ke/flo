@@ -4,13 +4,13 @@ import { Link } from 'react-router';
 import AppLogo from '~/components/app-logo';
 
 const sections = [
-  {
-    key: 'helpfulLinks',
-    links: [
-      { key: 'contact', href: '/contact' },
-      { key: 'faqs', href: '/faqs' },
-    ],
-  },
+  // {
+  //   key: 'helpfulLinks',
+  //   links: [
+  //     { key: 'contact', href: '/contact' },
+  //     { key: 'faqs', href: '/faqs' },
+  //   ],
+  // },
   {
     key: 'legal',
     links: [{ key: 'privacyPolicy', href: '/privacy-policy' }],
