@@ -11,7 +11,7 @@ public class Contact {
 
     private final String email;
 
-    public boolean isNotValid() {
-        return StringUtils.isBlank(name) || StringUtils.isNotEmail(email);
+    public boolean isValid() {
+        return StringUtils.isNotBlank(name) && StringUtils.isEmail(email);
     }
 }

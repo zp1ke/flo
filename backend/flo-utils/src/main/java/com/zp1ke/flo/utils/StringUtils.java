@@ -76,20 +76,39 @@ public class StringUtils {
     }
 
     /**
-     * Checks if the provided email is not valid.
+     * Checks if a String is a valid email address.
      * <p>
-     * A valid email must not be blank and must match a simple regex pattern.
+     * A valid email address must match the following pattern:
+     * <ul>
+     *   <li>Starts with alphanumeric characters, dots, underscores, percent signs, plus signs, or hyphens</li>
+     *   <li>Followed by an '@' symbol</li>
+     *   <li>Contains a domain name with alphanumeric characters and hyphens</li>
+     *   <li>Ends with a top-level domain of at least two alphabetic characters</li>
+     * </ul>
      * </p>
      *
-     * @param email the email to check, may be null
-     * @return true if the email is not valid, false otherwise
+     * @param email the String to check, may be null
+     * @return true if the String is a valid email address, false otherwise
      */
-    public static boolean isNotEmail(String email) {
+    public static boolean isEmail(String email) {
         if (isBlank(email)) {
-            return true;
+            return false;
         }
         String emailRegex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
-        return !email.matches(emailRegex);
+        return email.matches(emailRegex);
+    }
+
+    /**
+     * Checks if a String is not a valid email address.
+     * <p>
+     * This is the negation of {@link #isEmail(String)}.
+     * </p>
+     *
+     * @param email the String to check, may be null
+     * @return true if the String is not a valid email address, false otherwise
+     */
+    public static boolean isNotEmail(String email) {
+        return !isEmail(email);
     }
 
     /**

@@ -10,6 +10,7 @@ dependencies {
     implementation project(':flo-utils')
     implementation libs.angus
     implementation libs.jakarta.annotation
+    implementation libs.mailgun
 
     testImplementation libs.junit.jupiter
 

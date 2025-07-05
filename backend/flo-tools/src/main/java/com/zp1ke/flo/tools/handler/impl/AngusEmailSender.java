@@ -23,11 +23,7 @@ public class AngusEmailSender implements EmailSender {
 
     private final Properties properties;
 
-    private final String username;
-
-    private final String password;
-
-    private final Contact sender;
+    private final EmailConfig config;
 
     public AngusEmailSender(@Nonnull EmailConfig config) {
         properties = new Properties();
@@ -40,16 +36,21 @@ public class AngusEmailSender implements EmailSender {
             properties.put("mail.smtp.user", config.getUsername());
             properties.put("mail.smtp.password", config.getPassword());
         }
-        username = config.getUsername();
-        password = config.getPassword();
-        sender = config.getSender();
+        this.config = config;
+    }
+
+    @Override
+    public boolean hasValidConfig() {
+        var host = properties.getProperty("mail.smtp.host");
+        var port = Integer.parseInt(properties.getProperty("mail.smtp.port", "0"));
+        return config.getSender() != null && config.getSender().isValid() && StringUtils.isNotBlank(host) && port > 0;
     }
 
     @Override
     public void sendEmail(@Nonnull EmailNotification notification) throws EmailException {
         try {
             var message = new MimeMessage(createSession());
-            message.setFrom(toInternetAddress(sender));
+            message.setFrom(toInternetAddress(config.getSender()));
             message.setRecipients(Message.RecipientType.TO,
                 new InternetAddress[] {toInternetAddress(notification.getRecipient())});
             message.setSubject(notification.getSubject());
@@ -75,11 +76,11 @@ public class AngusEmailSender implements EmailSender {
     @Nonnull
     private Session createSession() {
         Authenticator authenticator = null;
-        if (StringUtils.isNotBlank(username) && StringUtils.isNotBlank(password)) {
+        if (StringUtils.isNotBlank(config.getUsername()) && StringUtils.isNotBlank(config.getPassword())) {
             authenticator = new Authenticator() {
                 @Override
                 protected PasswordAuthentication getPasswordAuthentication() {
-                    return new PasswordAuthentication(username, password);
+                    return new PasswordAuthentication(config.getUsername(), config.getPassword());
                 }
             };
         }

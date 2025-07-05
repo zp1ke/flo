@@ -7,6 +7,11 @@ import jakarta.annotation.Nonnull;
 public class NoneEmailSender implements EmailSender {
 
     @Override
+    public boolean hasValidConfig() {
+        return true; // Always returns true since NoneEmailSender does not require configuration
+    }
+
+    @Override
     public void sendEmail(@Nonnull EmailNotification notification) {
         // No operation for NoneEmailSender
         // This is a placeholder implementation that does nothing

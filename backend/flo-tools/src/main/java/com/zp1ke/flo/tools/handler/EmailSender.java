@@ -23,16 +23,23 @@ public interface EmailSender {
      */
     @Nonnull
     static EmailSender create(@Nonnull EmailHandler handler, @Nonnull EmailConfig config) {
-        if (handler == null || config == null || config.isNotValid()) {
-            return new NoneEmailSender();
-        }
-
-        return switch (handler) {
+        var sender = switch (handler) {
             case NONE -> new NoneEmailSender();
             case SMTP -> new AngusEmailSender(config);
             case MAILGUN -> new MailgunEmailSender(config);
         };
+        if (!sender.hasValidConfig()) {
+            return new NoneEmailSender();
+        }
+        return sender;
     }
+
+    /**
+     * Checks if the email sender has a valid configuration.
+     *
+     * @return true if the configuration is valid, false otherwise
+     */
+    boolean hasValidConfig();
 
     /**
      * Sends an email notification.
