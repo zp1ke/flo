@@ -14,11 +14,13 @@ import jakarta.mail.internet.MimeMessage;
 import jakarta.mail.internet.MimeMultipart;
 import java.io.UnsupportedEncodingException;
 import java.util.Properties;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Implementation of {@link EmailSender} that uses the Angus Mail API to send emails.
  * This class is responsible for configuring the mail session and sending email notifications.
  */
+@Slf4j
 public class AngusEmailSender implements EmailSender {
 
     private final Properties properties;
@@ -48,6 +50,7 @@ public class AngusEmailSender implements EmailSender {
 
     @Override
     public void sendEmail(@Nonnull EmailNotification notification) throws EmailException {
+        log.debug("Sending email to: {} with ANGUS", notification.getRecipient());
         try {
             var message = new MimeMessage(createSession());
             message.setFrom(toInternetAddress(config.getSender()));
