@@ -17,6 +17,10 @@ mail:
   handler: ${MAIL_HANDLER:SMTP}
   useTLS: ${MAIL_USE_TLS:false}
   useSSL: ${MAIL_USE_SSL:false}
+  username: ${MAIL_USER:}
+  password: ${MAIL_PASSWORD:}
+  senderEmail: ${MAIL_FROM:}
+  sandbox: ${MAIL_SANDBOX:false}
 
 org.jobrunr:
   dashboard:
