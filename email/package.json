@@ -1,6 +1,6 @@
 {
-  "name": "react-email-starter",
-  "version": "1.1.0",
+  "name": "flo-email",
+  "version": "0.0.1",
   "private": true,
   "scripts": {
     "apply-updates": "npx npm-check-updates -u",
