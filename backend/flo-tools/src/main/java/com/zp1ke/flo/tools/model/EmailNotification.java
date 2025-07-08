@@ -10,5 +10,7 @@ public class EmailNotification {
 
     private final String body;
 
+    private final boolean html;
+
     private final Contact recipient;
 }

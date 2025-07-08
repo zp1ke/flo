@@ -110,6 +110,7 @@ public class NotificationService {
         var notification = EmailNotification.builder()
             .subject(subject)
             .body(body)
+            .html(true)
             .recipient(recipient)
             .build();
         emailSender.sendEmail(notification);

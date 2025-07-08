@@ -12,16 +12,10 @@ server:
   port: 8080
 
 mail:
-#  host: localhost
-#  port: 1025
-#  handler: SMTP
-#  useTLS: false
-  host: sandbox.smtp.mailtrap.io
-  port: 587
+  host: localhost
+  port: 1025
   handler: SMTP
-  useTLS: true
-  username: 7a283a2a5e281a
-  password: 0e18298fcafd7d
+  useTLS: false
 
 org.jobrunr:
   dashboard:

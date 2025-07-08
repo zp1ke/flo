@@ -59,7 +59,11 @@ public class AngusEmailSender implements EmailSender {
             message.setSubject(notification.getSubject());
 
             var mimeBodyPart = new MimeBodyPart();
-            mimeBodyPart.setContent(notification.getBody(), "text/html; charset=utf-8");
+            if (notification.isHtml()) {
+                mimeBodyPart.setContent(notification.getBody(), "text/html; charset=utf-8");
+            } else {
+                mimeBodyPart.setContent(notification.getBody(), "text/plain; charset=utf-8");
+            }
 
             var multipart = new MimeMultipart();
             multipart.addBodyPart(mimeBodyPart);

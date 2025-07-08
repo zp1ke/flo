@@ -42,6 +42,9 @@ public class MailConfig {
     @Value("${mail.senderName:Flo App}")
     private String senderName;
 
+    @Value("${mail.sandbox:false}")
+    private Boolean sandbox;
+
     @Bean
     public EmailSender emailSender() {
         var emailConfig = EmailConfig.builder()
@@ -51,6 +54,7 @@ public class MailConfig {
             .password(password)
             .useSSL(useSSL)
             .useTLS(useTLS)
+            .sandbox(sandbox != null && sandbox)
             .sender(Contact.builder()
                 .email(senderEmail)
                 .name(senderName)

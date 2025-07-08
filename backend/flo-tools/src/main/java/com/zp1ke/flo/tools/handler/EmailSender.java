@@ -2,6 +2,7 @@ package com.zp1ke.flo.tools.handler;
 
 import com.zp1ke.flo.tools.error.EmailException;
 import com.zp1ke.flo.tools.handler.impl.AngusEmailSender;
+import com.zp1ke.flo.tools.handler.impl.MailtrapEmailSender;
 import com.zp1ke.flo.tools.handler.impl.NoneEmailSender;
 import com.zp1ke.flo.tools.model.EmailConfig;
 import com.zp1ke.flo.tools.model.EmailHandler;
@@ -25,6 +26,7 @@ public interface EmailSender {
         var sender = switch (handler) {
             case NONE -> new NoneEmailSender();
             case SMTP -> new AngusEmailSender(config);
+            case MAILTRAP -> new MailtrapEmailSender(config);
         };
         if (!sender.hasValidConfig()) {
             return new NoneEmailSender();

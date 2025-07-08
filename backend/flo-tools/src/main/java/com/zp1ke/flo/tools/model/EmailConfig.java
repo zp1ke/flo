@@ -19,4 +19,6 @@ public class EmailConfig {
     private final boolean useTLS;
 
     private final Contact sender;
+
+    private boolean sandbox;
 }

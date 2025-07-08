@@ -6,6 +6,7 @@ jobrunr = "7.5.1"
 junit = "5.13.1"
 karate = "1.5.1"
 lombok = "1.18.38"
+mailtrap = "1.0.0"
 openapi = "2.8.9"
 preliquibase = "1.6.1"
 slf4j = "2.0.17"
@@ -22,6 +23,7 @@ junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher
 karate-junit = { module = "io.karatelabs:karate-junit5", version.ref = "karate" }
 liquibase = { module = "org.liquibase:liquibase-core" }
 lombok = { module = "org.projectlombok:lombok", version.ref = "lombok" }
+mailtrap = { module = "io.mailtrap:mailtrap-java", version.ref = "mailtrap" }
 openapi-ui = { module = "org.springdoc:springdoc-openapi-starter-webmvc-ui", version.ref = "openapi" }
 postgres = { module = "org.postgresql:postgresql" }
 preliquibase = { module = "net.lbruun.springboot:preliquibase-spring-boot-starter", version.ref = "preliquibase" }
