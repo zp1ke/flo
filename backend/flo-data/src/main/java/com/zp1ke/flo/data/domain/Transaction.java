@@ -1,11 +1,15 @@
 package com.zp1ke.flo.data.domain;
 
 import com.zp1ke.flo.data.domain.core.Auditable;
+import com.zp1ke.flo.tools.model.Mappable;
+import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.*;
 
 @Entity
@@ -21,7 +25,7 @@ import lombok.*;
 @Builder(toBuilder = true)
 @AllArgsConstructor
 @NoArgsConstructor
-public class Transaction extends Auditable {
+public class Transaction extends Auditable implements Mappable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -58,4 +62,30 @@ public class Transaction extends Auditable {
     @ManyToOne(optional = false)
     @JoinColumn(name = "wallet_id", referencedColumnName = "id")
     private Wallet wallet;
+
+    @Nonnull
+    @Override
+    public List<String> getProperties() {
+        var list = new ArrayList<>(super.getProperties());
+        list.addAll(List.of("code", "description", "datetime", "amount", "profile", "category", "wallet"));
+        return list;
+    }
+
+    @Override
+    public String getValue(@Nonnull String property) {
+        var value = super.getValue(property);
+        if (value == null) {
+            value = switch (property) {
+                case "code" -> code;
+                case "description" -> description;
+                case "datetime" -> datetime.toString();
+                case "amount" -> amount.toString();
+                case "profile" -> profile.getCode();
+                case "category" -> category.getCode();
+                case "wallet" -> wallet.getCode();
+                default -> null;
+            };
+        }
+        return value;
+    }
 }

@@ -22,5 +22,7 @@ public interface CategoryRepository extends JpaRepository<Category, Long>, JpaSp
 
     List<Category> findAllByProfileAndEnabledTrueAndCodeIn(@Nonnull Profile profile, @Nonnull List<String> codes);
 
+    List<Category> findAllByEnabledTrueAndProfileIn(@Nonnull List<Profile> profiles);
+
     boolean existsByProfileAndEnabledTrue(@Nonnull Profile profile);
 }

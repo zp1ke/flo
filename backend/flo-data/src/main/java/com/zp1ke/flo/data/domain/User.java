@@ -1,12 +1,16 @@
 package com.zp1ke.flo.data.domain;
 
 import com.zp1ke.flo.data.domain.core.Auditable;
+import com.zp1ke.flo.tools.model.Mappable;
 import com.zp1ke.flo.utils.StringUtils;
+import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.*;
 
 @Entity
@@ -23,7 +27,7 @@ import lombok.*;
 @Builder(toBuilder = true)
 @AllArgsConstructor
 @NoArgsConstructor
-public class User extends Auditable {
+public class User extends Auditable implements Mappable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -77,5 +81,27 @@ public class User extends Auditable {
     @Override
     public String toString() {
         return String.format("User{id=%d, email='%s'}", id, email);
+    }
+
+    @Nonnull
+    @Override
+    public List<String> getProperties() {
+        var list = new ArrayList<>(super.getProperties());
+        list.addAll(List.of("email", "username", "verifiedAt"));
+        return list;
+    }
+
+    @Override
+    public String getValue(@Nonnull String property) {
+        var value = super.getValue(property);
+        if (value == null) {
+            value = switch (property) {
+                case "email" -> email;
+                case "username" -> username;
+                case "verifiedAt" -> verifiedAt != null ? verifiedAt.toString() : null;
+                default -> null;
+            };
+        }
+        return value;
     }
 }

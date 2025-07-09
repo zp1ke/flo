@@ -22,5 +22,7 @@ public interface WalletRepository extends JpaRepository<Wallet, Long>, JpaSpecif
 
     List<Wallet> findAllByProfileAndCodeInAndEnabledTrue(@Nonnull Profile profile, @Nonnull List<String> codes);
 
+    List<Wallet> findAllByEnabledTrueAndProfileIn(@Nonnull List<Profile> profiles);
+
     boolean existsByProfileAndEnabledTrue(@Nonnull Profile profile);
 }

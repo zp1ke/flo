@@ -1,11 +1,15 @@
 package com.zp1ke.flo.data.domain;
 
 import com.zp1ke.flo.data.domain.core.Auditable;
+import com.zp1ke.flo.tools.model.Mappable;
 import com.zp1ke.flo.utils.StringUtils;
+import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import lombok.*;
 
@@ -22,7 +26,7 @@ import lombok.*;
 @Builder(toBuilder = true)
 @AllArgsConstructor
 @NoArgsConstructor
-public class Profile extends Auditable {
+public class Profile extends Auditable implements Mappable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -65,5 +69,27 @@ public class Profile extends Auditable {
     @Override
     public String toString() {
         return String.format("Profile{code=%s}", code);
+    }
+
+    @Nonnull
+    @Override
+    public List<String> getProperties() {
+        var list = new ArrayList<>(super.getProperties());
+        list.addAll(List.of("code", "name", "language"));
+        return list;
+    }
+
+    @Override
+    public String getValue(@Nonnull String property) {
+        var value = super.getValue(property);
+        if (value == null) {
+            value = switch (property) {
+                case "code" -> code;
+                case "name" -> name;
+                case "language" -> language;
+                default -> null;
+            };
+        }
+        return value;
     }
 }

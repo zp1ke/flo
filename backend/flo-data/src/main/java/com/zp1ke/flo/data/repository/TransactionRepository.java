@@ -26,4 +26,6 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long>,
     long countByWallet(@Nonnull Wallet wallet);
 
     boolean existsByProfile(@Nonnull Profile profile);
+
+    List<Transaction> findAllByProfileIn(@Nonnull List<Profile> profiles);
 }

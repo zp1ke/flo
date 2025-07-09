@@ -1,10 +1,14 @@
 package com.zp1ke.flo.data.domain;
 
 import com.zp1ke.flo.data.domain.core.Auditable;
+import com.zp1ke.flo.tools.model.Mappable;
+import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.*;
 
 @Entity
@@ -20,7 +24,7 @@ import lombok.*;
 @Builder(toBuilder = true)
 @AllArgsConstructor
 @NoArgsConstructor
-public class Category extends Auditable {
+public class Category extends Auditable implements Mappable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -48,4 +52,26 @@ public class Category extends Auditable {
     @Column
     @Builder.Default
     private boolean enabled = true;
+
+    @Nonnull
+    @Override
+    public List<String> getProperties() {
+        var list = new ArrayList<>(super.getProperties());
+        list.addAll(List.of("code", "name", "profile"));
+        return list;
+    }
+
+    @Override
+    public String getValue(@Nonnull String property) {
+        var value = super.getValue(property);
+        if (value == null) {
+            value = switch (property) {
+                case "code" -> code;
+                case "name" -> name;
+                case "profile" -> profile.getCode();
+                default -> null;
+            };
+        }
+        return value;
+    }
 }

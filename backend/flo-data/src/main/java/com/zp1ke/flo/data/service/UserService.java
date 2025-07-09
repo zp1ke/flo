@@ -3,10 +3,11 @@ package com.zp1ke.flo.data.service;
 import com.zp1ke.flo.data.domain.Profile;
 import com.zp1ke.flo.data.domain.User;
 import com.zp1ke.flo.data.domain.UserToken;
-import com.zp1ke.flo.data.model.ExportFormat;
 import com.zp1ke.flo.data.model.NotificationType;
-import com.zp1ke.flo.data.repository.UserRepository;
-import com.zp1ke.flo.data.repository.UserTokenRepository;
+import com.zp1ke.flo.data.repository.*;
+import com.zp1ke.flo.tools.handler.Exporter;
+import com.zp1ke.flo.tools.model.ExportFormat;
+import com.zp1ke.flo.tools.model.Mappables;
 import com.zp1ke.flo.utils.StringUtils;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -14,8 +15,10 @@ import jakarta.transaction.Transactional;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
 import java.time.OffsetDateTime;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.jobrunr.scheduling.JobScheduler;
+import org.springframework.context.ApplicationContext;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -38,6 +41,8 @@ public class UserService {
     private final NotificationService notificationService;
 
     private final JobScheduler jobScheduler;
+
+    private final ApplicationContext applicationContext;
 
     public User findByUsernameAndValidToken(@Nonnull String username,
                                             @Nonnull String token,
@@ -235,6 +240,24 @@ public class UserService {
     }
 
     private void exportData(@Nonnull User user, @Nonnull ExportFormat format) {
-        // TODO: Implement user data export logic based on the format
+        var mappables = new Mappables();
+        mappables.put("users", List.of(user));
+
+        var profileRepository = applicationContext.getBean(ProfileRepository.class);
+        var profiles = profileRepository.findAllByUserAndEnabledTrue(user);
+        mappables.put("profiles", profiles);
+
+        var categoryRepository = applicationContext.getBean(CategoryRepository.class);
+        mappables.put("categories", categoryRepository.findAllByEnabledTrueAndProfileIn(profiles));
+
+        var walletRepository = applicationContext.getBean(WalletRepository.class);
+        mappables.put("wallets", walletRepository.findAllByEnabledTrueAndProfileIn(profiles));
+
+        var transactionRepository = applicationContext.getBean(TransactionRepository.class);
+        mappables.put("transactions", transactionRepository.findAllByProfileIn(profiles));
+
+        var data = Exporter.export(mappables, format);
+
+        // TODO: save data and send it to the user
     }
 }
