@@ -9,6 +9,7 @@ import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import java.util.Optional;
+import org.jobrunr.scheduling.JobScheduler;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -36,7 +37,7 @@ class UserServiceTests {
         return new UserService(validator, userRepository,
             mock(UserTokenRepository.class), mock(PasswordEncoder.class),
             mock(ProfileService.class), mock(SettingService.class),
-            mock(NotificationService.class));
+            mock(NotificationService.class), mock(JobScheduler.class));
     }
 
     @Test

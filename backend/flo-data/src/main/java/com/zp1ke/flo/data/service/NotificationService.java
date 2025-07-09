@@ -13,8 +13,6 @@ import java.util.Locale;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.jobrunr.jobs.annotations.Job;
-import org.jobrunr.scheduling.JobScheduler;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -22,8 +20,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Slf4j
 public class NotificationService {
-
-    private final JobScheduler jobScheduler;
 
     private final EmailSender emailSender;
 
@@ -35,20 +31,7 @@ public class NotificationService {
     @Value("${web.logoImageUrl:}")
     private String logoImageUrl;
 
-    public void sendVerificationLink(@Nonnull User user, @Nonnull Profile profile) {
-        jobScheduler.enqueue(() -> doSendVerificationLink(user, profile));
-    }
-
-    public void sendRecoveryLink(@Nonnull User user, @Nonnull Profile profile) {
-        jobScheduler.enqueue(() -> doSendRecoveryLink(user, profile));
-    }
-
-    public void sendVerificationCode(@Nonnull User user, @Nonnull Profile profile) {
-        jobScheduler.enqueue(() -> doSendVerificationCode(user, profile));
-    }
-
-    @Job
-    public void doSendVerificationLink(@Nonnull User user, @Nonnull Profile profile) throws EmailException {
+    public void sendVerificationLink(@Nonnull User user, @Nonnull Profile profile) throws EmailException {
         try {
             var templateCode = "user-verification-email";
             var actionLinkKey = "verify";
@@ -58,8 +41,7 @@ public class NotificationService {
         }
     }
 
-    @Job
-    public void doSendRecoveryLink(@Nonnull User user, @Nonnull Profile profile) throws EmailException {
+    public void sendRecoveryLink(@Nonnull User user, @Nonnull Profile profile) throws EmailException {
         try {
             var templateCode = "user-recovery-email";
             var actionLinkKey = "recovery";
@@ -69,8 +51,7 @@ public class NotificationService {
         }
     }
 
-    @Job
-    public void doSendVerificationCode(@Nonnull User user, @Nonnull Profile profile) throws EmailException {
+    public void sendVerificationCode(@Nonnull User user, @Nonnull Profile profile) throws EmailException {
         try {
             var templateCode = "user-verification-code-email";
             sendUserActionEmail(user, profile, templateCode, null);

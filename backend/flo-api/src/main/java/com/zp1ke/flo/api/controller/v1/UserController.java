@@ -7,6 +7,7 @@ import com.zp1ke.flo.api.model.UserSaveRequest;
 import com.zp1ke.flo.api.security.UserIsVerified;
 import com.zp1ke.flo.api.utils.RequestUtils;
 import com.zp1ke.flo.data.domain.User;
+import com.zp1ke.flo.data.model.ExportFormat;
 import com.zp1ke.flo.data.model.NotificationType;
 import com.zp1ke.flo.data.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -64,6 +65,14 @@ public class UserController {
         if (auth != null && auth.getCredentials() instanceof String token) {
             userService.disableUserToken(token, RequestUtils.remoteAddress(httpRequest));
         }
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/export")
+    @Operation(summary = "Export session user data")
+    public ResponseEntity<Void> export(@AuthenticationPrincipal User user,
+                                       @RequestParam ExportFormat format) {
+        userService.exportUserData(user, format);
         return ResponseEntity.noContent().build();
     }
 }

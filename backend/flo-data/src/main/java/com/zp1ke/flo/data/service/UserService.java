@@ -3,6 +3,7 @@ package com.zp1ke.flo.data.service;
 import com.zp1ke.flo.data.domain.Profile;
 import com.zp1ke.flo.data.domain.User;
 import com.zp1ke.flo.data.domain.UserToken;
+import com.zp1ke.flo.data.model.ExportFormat;
 import com.zp1ke.flo.data.model.NotificationType;
 import com.zp1ke.flo.data.repository.UserRepository;
 import com.zp1ke.flo.data.repository.UserTokenRepository;
@@ -14,6 +15,7 @@ import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
 import java.time.OffsetDateTime;
 import lombok.RequiredArgsConstructor;
+import org.jobrunr.scheduling.JobScheduler;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +36,8 @@ public class UserService {
     private final SettingService settingService;
 
     private final NotificationService notificationService;
+
+    private final JobScheduler jobScheduler;
 
     public User findByUsernameAndValidToken(@Nonnull String username,
                                             @Nonnull String token,
@@ -180,7 +184,8 @@ public class UserService {
             var saved = userRepository.save(user);
 
             profileService.firstProfileOfUser(saved)
-                .ifPresent(profile -> notificationService.sendRecoveryLink(saved, profile));
+                .ifPresent(profile -> jobScheduler.enqueue(
+                    () -> notificationService.sendRecoveryLink(user, profile)));
         }
     }
 
@@ -219,9 +224,17 @@ public class UserService {
                                   @Nonnull Profile profile,
                                   @Nonnull NotificationType notificationType) {
         if (notificationType == NotificationType.VERIFICATION_LINK) {
-            notificationService.sendVerificationLink(user, profile);
+            jobScheduler.enqueue(() -> notificationService.sendVerificationLink(user, profile));
         } else if (notificationType == NotificationType.VERIFICATION_CODE) {
-            notificationService.sendVerificationCode(user, profile);
+            jobScheduler.enqueue(() -> notificationService.sendVerificationCode(user, profile));
         }
+    }
+
+    public void exportUserData(@Nonnull User user, @Nonnull ExportFormat format) {
+        jobScheduler.enqueue(() -> exportData(user, format));
+    }
+
+    private void exportData(@Nonnull User user, @Nonnull ExportFormat format) {
+        // TODO: Implement user data export logic based on the format
     }
 }
