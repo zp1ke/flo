@@ -2,7 +2,7 @@
 
 A comprehensive personal finance management platform built as a modern monorepo with a Java Spring Boot backend, React frontend, and email templates.
 
-[![Backend Test](https://github.com/zp1ke/flo/actions/workflows/backend-test.yml/badge.svg)](https://github.com/zp1ke/flo/actions/workflows/backend-test.yml)
+[![Backend Test](https://github.com/zp1ke/flo/actions/workflows/backend-test.yml/badge.svg)](https://github.com/zp1ke/flo/actions/workflows/backend-test.yml) &nbsp; [![Front Test](https://github.com/zp1ke/flo/actions/workflows/front-test.yml/badge.svg)](https://github.com/zp1ke/flo/actions/workflows/front-test.yml)
 
 ## 🏗️ Project Structure
 
