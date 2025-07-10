@@ -1,6 +1,7 @@
 package com.zp1ke.flo.data.service;
 
 import com.zp1ke.flo.data.domain.Profile;
+import com.zp1ke.flo.data.domain.StorageFile;
 import com.zp1ke.flo.data.domain.User;
 import com.zp1ke.flo.data.domain.UserToken;
 import com.zp1ke.flo.data.model.NotificationType;
@@ -257,7 +258,10 @@ public class UserService {
         mappables.put("transactions", transactionRepository.findAllByProfileIn(profiles));
 
         var data = Exporter.export(mappables, format);
-
-        // TODO: save data and send it to the user
+        var storageService = applicationContext.getBean(StorageService.class);
+        var filesCodes = storageService.saveFiles(user, data.getFiles()).stream()
+            .map(StorageFile::getCode)
+            .toList();
+        notificationService.sendData(user, filesCodes);
     }
 }

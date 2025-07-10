@@ -10,12 +10,6 @@ services:
       - 5432:5432
     # volumes:
     #   - ./data/postgres:/var/lib/postgresql/data
-    healthcheck:
-      test: [ "CMD-SHELL", "sh -c 'pg_isready -U postgres -d flo'" ]
-      interval: 10s
-      timeout: 10s
-      retries: 5
-      start_period: 5s
 
   maildev:
     image: maildev/maildev
@@ -26,3 +20,15 @@ services:
       - 1025:1025
     # volumes:
     #   - ./data/maildev:/home/maildev
+
+  minio:
+    image: quay.io/minio/minio
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    ports:
+      - 9000:9000
+      - 9001:9001
+    volumes:
+      - ./data/minio:/data

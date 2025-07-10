@@ -1,6 +1,7 @@
 package com.zp1ke.flo.tools.handler;
 
 import com.zp1ke.flo.tools.handler.impl.CsvHandler;
+import com.zp1ke.flo.tools.model.ExportData;
 import com.zp1ke.flo.tools.model.ExportFormat;
 import com.zp1ke.flo.tools.model.Mappables;
 import jakarta.annotation.Nonnull;
@@ -13,12 +14,13 @@ public interface Exporter {
      *
      * @param mappables the collection of mappables to export
      * @param format    the export format to use
-     * @return a map where keys are mappable names and values are their exported byte arrays
+     * @return an ExportData object containing the exported data
      */
     @Nonnull
-    static Map<String, byte[]> export(@Nonnull Mappables mappables, @Nonnull ExportFormat format) {
+    static ExportData export(@Nonnull Mappables mappables, @Nonnull ExportFormat format) {
         var exporter = exporterFor(format);
-        return exporter.export(mappables);
+        var data = exporter.export(mappables);
+        return new ExportData(data, format);
     }
 
     @Nonnull

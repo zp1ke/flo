@@ -9,6 +9,7 @@ import com.zp1ke.flo.tools.model.Contact;
 import com.zp1ke.flo.tools.model.EmailNotification;
 import jakarta.annotation.Nonnull;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -95,5 +96,9 @@ public class NotificationService {
             .recipient(recipient)
             .build();
         emailSender.sendEmail(notification);
+    }
+
+    public void sendData(User user, List<String> filesCodes) {
+        // TODO
     }
 }

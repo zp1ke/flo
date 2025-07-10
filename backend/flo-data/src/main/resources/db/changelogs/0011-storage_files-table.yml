@@ -1,0 +1,73 @@
+databaseChangeLog:
+  - changeSet:
+      id: flo-0011
+      author: zp1ke
+      changes:
+        - createTable:
+            tableName: storage_files
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp with time zone
+                  constraints:
+                    nullable: false
+              - column:
+                  name: code
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+        - createIndex:
+            columns:
+              - column:
+                  name: code
+            indexName: storage_files_unq_code
+            tableName: storage_files
+            unique: true
+        - createIndex:
+            columns:
+              - column:
+                  name: user_id
+            indexName: storage_files_idx_user_id
+            tableName: storage_files
+        - createIndex:
+            columns:
+              - column:
+                  descending: true
+                  name: created_at
+            indexName: storage_files_idx_created_at
+            tableName: storage_files
+        - createIndex:
+            columns:
+              - column:
+                  descending: true
+                  name: updated_at
+            indexName: storage_files_idx_updated_at
+            tableName: storage_files
+        - addForeignKeyConstraint:
+            baseColumnNames: user_id
+            baseTableName: storage_files
+            constraintName: storage_files_fx_user_id
+            referencedColumnNames: id
+            referencedTableName: users

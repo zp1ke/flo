@@ -17,6 +17,12 @@ mail:
   handler: SMTP
   useTLS: false
 
+storage:
+  endpoint: http://localhost:9000
+  accessKey: flo-access-key
+  secretKey: lykkBwDe0DabLQzpLouHj0Bwm6dlkj1ZHkmDC2oO
+  bucket: flo
+
 org.jobrunr:
   dashboard:
     port: 8081
