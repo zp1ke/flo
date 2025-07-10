@@ -1,0 +1,25 @@
+name: Front Test
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - front/**
+
+jobs:
+  build:
+    name: Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set Up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Run Checks
+        working-directory: ./front
+        run: npm ci && npm run typecheck
