@@ -9,6 +9,7 @@ dependencies {
 
     implementation project(':flo-utils')
     implementation libs.angus
+    implementation libs.aws.sdk.s3
     implementation libs.jakarta.annotation
     implementation libs.mailtrap
     implementation libs.slf4j.api

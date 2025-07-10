@@ -61,6 +61,14 @@ public class NotificationService {
         }
     }
 
+    public void sendData(@Nonnull User user, @Nonnull List<String> filesCodes) {
+        // TODO
+    }
+
+    public void sendDataError(@Nonnull User user) {
+        // TODO
+    }
+
     private void sendUserActionEmail(@Nonnull User user,
                                      @Nonnull Profile profile,
                                      @Nonnull String templateCode,
@@ -96,9 +104,5 @@ public class NotificationService {
             .recipient(recipient)
             .build();
         emailSender.sendEmail(notification);
-    }
-
-    public void sendData(User user, List<String> filesCodes) {
-        // TODO
     }
 }

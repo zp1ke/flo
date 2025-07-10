@@ -6,6 +6,7 @@ import com.zp1ke.flo.data.domain.User;
 import com.zp1ke.flo.data.domain.UserToken;
 import com.zp1ke.flo.data.model.NotificationType;
 import com.zp1ke.flo.data.repository.*;
+import com.zp1ke.flo.tools.error.StorageException;
 import com.zp1ke.flo.tools.handler.Exporter;
 import com.zp1ke.flo.tools.model.ExportFormat;
 import com.zp1ke.flo.tools.model.Mappables;
@@ -18,6 +19,7 @@ import jakarta.validation.Validator;
 import java.time.OffsetDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.jobrunr.scheduling.JobScheduler;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -25,6 +27,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserService {
 
     private final Validator validator;
@@ -259,9 +262,14 @@ public class UserService {
 
         var data = Exporter.export(mappables, format);
         var storageService = applicationContext.getBean(StorageService.class);
-        var filesCodes = storageService.saveFiles(user, data.getFiles()).stream()
-            .map(StorageFile::getCode)
-            .toList();
-        notificationService.sendData(user, filesCodes);
+        try {
+            var filesCodes = storageService.saveFiles(user, data.getFiles()).stream()
+                .map(StorageFile::getCode)
+                .toList();
+            notificationService.sendData(user, filesCodes);
+        } catch (StorageException e) {
+            log.error(e.getMessage(), e);
+            notificationService.sendDataError(user);
+        }
     }
 }

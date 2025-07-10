@@ -1,5 +1,6 @@
 [versions]
 angus = "2.0.3"
+aws = "2.27.21"
 jakarta-annotation = "3.0.0"
 jjwt = "0.12.6"
 jobrunr = "7.5.1"
@@ -13,6 +14,7 @@ slf4j = "2.0.17"
 
 [libraries]
 angus = { module = "org.eclipse.angus:angus-mail", version.ref = "angus" }
+aws-sdk-s3 = { module = "software.amazon.awssdk:s3", version.ref = "aws" }
 jakarta-annotation = { module = "jakarta.annotation:jakarta.annotation-api", version.ref = "jakarta-annotation" }
 jjwt-api = { module = "io.jsonwebtoken:jjwt-api", version.ref = "jjwt" }
 jjwt-impl = { module = "io.jsonwebtoken:jjwt-impl", version.ref = "jjwt" }
