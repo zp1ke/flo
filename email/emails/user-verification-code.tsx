@@ -23,6 +23,8 @@ const texts = {
   yourCode: 'Your verification code is:',
 };
 
+const leadingIcon = '🔑';
+
 export const UserVerification = () => {
   return (
     <Html lang={texts.lang}>
@@ -43,7 +45,8 @@ export const UserVerification = () => {
               {texts.hello} <strong>{'${profile.name}'}</strong>,
             </Heading>
             <Text className="text-[16px] text-black leading-[24px]">
-              {texts.yourCode} <strong>{'${user.verifyCode}'}</strong>
+              {leadingIcon} {texts.yourCode}{' '}
+              <strong>{'${user.verifyCode}'}</strong>
             </Text>
             <Text className="text-[12px] text-black leading-[24px]">
               {texts.thatsIt}

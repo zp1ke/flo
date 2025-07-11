@@ -1,7 +1,5 @@
 import {
   Body,
-  Button,
-  CodeInline,
   Container,
   Head,
   Heading,
@@ -16,20 +14,19 @@ import {
 const texts = {
   lang: 'en',
   hello: 'Hello',
-  orCopyAndPaste: 'or copy and paste this URL into your browser:',
-  preview: 'Hello ${profile.name}, please verify your email address.',
-  thatsIt: "That's it! Nice to have you onboard.",
-  thisVerification: 'This verification was intended for',
+  preview:
+    'Hello ${profile.name}, there was an error with your requested data.',
+  yourDataError:
+    'Your requested data could not be retrieved. Please try again later or contact support.',
+  thatsIt: "That's it! Nice to have you with us.",
+  thisVerification: 'This email is intended for',
   thisVerificationDescription:
-    "If you were not expecting this verification, you can ignore this email. If you are concerned about your account's safety, please reply to this email to get in touch with us.",
-  welcome: 'Welcome aboard.',
-  verifyEmail: 'Please verify your email address.',
-  verifyNow: 'Verify now',
+    "If you were not expecting this, you can ignore this email. If you are concerned about your account's safety, please reply to this email to get in touch with us.",
 };
 
-const leadingIcon = '👋🏼';
+const leadingIcon = '⚠️';
 
-export const UserVerification = () => {
+export const UserRecovery = () => {
   return (
     <Html lang={texts.lang}>
       <Head>
@@ -48,19 +45,8 @@ export const UserVerification = () => {
             <Heading className="mx-0 my-[30px] p-0 text-center font-normal text-[24px] text-black">
               {texts.hello} <strong>{'${profile.name}'}</strong>,
             </Heading>
-            <Text className="text-[16px] text-black leading-[24px]">
-              {leadingIcon} {texts.welcome} {texts.verifyEmail}
-            </Text>
-            <Text className="text-[14px] text-black leading-[24px]">
-              <Button
-                href="${actionLink}"
-                className="p-[10px_20px] bg-blue-400 text-white rounded"
-              >
-                {texts.verifyNow}
-              </Button>
-            </Text>
-            <Text className="text-[14px] text-black leading-[24px]">
-              {texts.orCopyAndPaste} <CodeInline>{'${actionLink}'}</CodeInline>
+            <Text className="text-[16px] text-red-500 leading-[24px]">
+              {leadingIcon} {texts.yourDataError}
             </Text>
             <Text className="text-[12px] text-black leading-[24px]">
               {texts.thatsIt}
@@ -78,4 +64,4 @@ export const UserVerification = () => {
   );
 };
 
-export default UserVerification;
+export default UserRecovery;

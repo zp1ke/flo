@@ -28,6 +28,8 @@ const texts = {
   welcome: 'Welcome back.',
 };
 
+const leadingIcon = '🔑';
+
 export const UserRecovery = () => {
   return (
     <Html lang={texts.lang}>
@@ -48,7 +50,7 @@ export const UserRecovery = () => {
               {texts.hello} <strong>{'${profile.name}'}</strong>,
             </Heading>
             <Text className="text-[16px] text-black leading-[24px]">
-              {texts.welcome} {texts.recoverAccount}
+              {leadingIcon} {texts.welcome} {texts.recoverAccount}
             </Text>
             <Text className="text-[14px] text-black leading-[24px]">
               <Button
