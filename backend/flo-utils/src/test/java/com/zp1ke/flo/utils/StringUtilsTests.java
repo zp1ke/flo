@@ -3,7 +3,8 @@ package com.zp1ke.flo.utils;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-class StringUtilsTest {
+class StringUtilsTests {
+
     @Test
     void isNotBlank_returnsFalse_whenStringIsNull() {
         assertFalse(StringUtils.isNotBlank(null));

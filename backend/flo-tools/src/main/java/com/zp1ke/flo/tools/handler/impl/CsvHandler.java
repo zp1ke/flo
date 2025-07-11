@@ -8,7 +8,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.jetbrains.annotations.NotNull;
 
 public class CsvHandler implements Exporter {
     private final static String SEPARATOR = ",";
@@ -16,7 +15,8 @@ public class CsvHandler implements Exporter {
     private final static String ESCAPE = "\"";
 
     @Override
-    public @NotNull Map<String, byte[]> export(@NotNull Mappables mappables) {
+    @Nonnull
+    public Map<String, byte[]> export(@Nonnull Mappables mappables) {
         var data = new HashMap<String, byte[]>();
 
         var keys = mappables.keySet();

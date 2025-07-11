@@ -1,12 +1,10 @@
 package com.zp1ke.flo.data.service;
 
 import com.zp1ke.flo.data.domain.Profile;
-import com.zp1ke.flo.data.domain.StorageFile;
 import com.zp1ke.flo.data.domain.User;
 import com.zp1ke.flo.data.domain.UserToken;
 import com.zp1ke.flo.data.model.NotificationType;
 import com.zp1ke.flo.data.repository.*;
-import com.zp1ke.flo.tools.error.StorageException;
 import com.zp1ke.flo.tools.handler.Exporter;
 import com.zp1ke.flo.tools.model.ExportFormat;
 import com.zp1ke.flo.tools.model.Mappables;
@@ -244,6 +242,9 @@ public class UserService {
     }
 
     private void exportData(@Nonnull User user, @Nonnull ExportFormat format) {
+        var profile = profileService.firstProfileOfUser(user)
+            .orElseThrow(() -> new IllegalArgumentException("user.profile_not_found"));
+
         var mappables = new Mappables();
         mappables.put("users", List.of(user));
 
@@ -262,14 +263,21 @@ public class UserService {
 
         var data = Exporter.export(mappables, format);
         var storageService = applicationContext.getBean(StorageService.class);
+        var sent = true;
         try {
-            var filesCodes = storageService.saveFiles(user, data.getFiles()).stream()
-                .map(StorageFile::getCode)
-                .toList();
-            notificationService.sendData(user, filesCodes);
-        } catch (StorageException e) {
+            var files = storageService.saveFiles(user, data.getFiles());
+            notificationService.sendData(user, profile, files);
+        } catch (Exception e) {
             log.error(e.getMessage(), e);
-            notificationService.sendDataError(user);
+            sent = false;
+        }
+
+        if (!sent) {
+            try {
+                notificationService.sendDataError(user, profile);
+            } catch (Exception e) {
+                log.error(e.getMessage(), e);
+            }
         }
     }
 }

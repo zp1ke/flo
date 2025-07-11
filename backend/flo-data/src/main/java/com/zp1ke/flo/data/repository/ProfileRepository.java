@@ -3,7 +3,6 @@ package com.zp1ke.flo.data.repository;
 import com.zp1ke.flo.data.domain.Profile;
 import com.zp1ke.flo.data.domain.User;
 import jakarta.annotation.Nonnull;
-import jakarta.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -19,7 +18,7 @@ public interface ProfileRepository extends JpaRepository<Profile, Long>, JpaSpec
 
     List<Profile> findAllByUserAndEnabledTrue(@Nonnull User user);
 
-    boolean existsByUserAndNameAndEnabledTrue(@NotNull User user, @Nonnull String name);
+    boolean existsByUserAndNameAndEnabledTrue(@Nonnull User user, @Nonnull String name);
 
     Integer countByUserAndEnabledTrue(@Nonnull User user);
 

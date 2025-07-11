@@ -4,13 +4,14 @@ import com.zp1ke.flo.tools.error.StorageException;
 import com.zp1ke.flo.tools.handler.StorageHandler;
 import com.zp1ke.flo.tools.model.FileContent;
 import com.zp1ke.flo.tools.model.S3Config;
+import com.zp1ke.flo.utils.IoUtils;
 import jakarta.annotation.Nonnull;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
+import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 // https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/home.html
@@ -30,7 +31,7 @@ public class S3StorageHandler implements StorageHandler {
     }
 
     @Override
-    public void deleteFile(@NotNull String code) {
+    public void deleteFile(@Nonnull String code) {
         var request = DeleteObjectRequest.builder()
             .bucket(bucket)
             .key(code)
@@ -43,7 +44,7 @@ public class S3StorageHandler implements StorageHandler {
     }
 
     @Override
-    public void saveFile(@NotNull String code, @NotNull FileContent fileContent) throws StorageException {
+    public void saveFile(@Nonnull String code, @Nonnull FileContent fileContent) throws StorageException {
         var request = PutObjectRequest.builder()
             .bucket(bucket)
             .key(code)
@@ -53,6 +54,21 @@ public class S3StorageHandler implements StorageHandler {
             .build();
         try {
             client.putObject(request, RequestBody.fromBytes(fileContent.content()));
+        } catch (Exception e) {
+            throw new StorageException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    @Nonnull
+    public byte[] contentOf(@Nonnull String code) throws StorageException {
+        var request = GetObjectRequest.builder()
+            .key(code)
+            .bucket(bucket)
+            .build();
+        try {
+            var response = client.getObject(request);
+            return IoUtils.toBytes(response);
         } catch (Exception e) {
             throw new StorageException(e.getMessage(), e);
         }

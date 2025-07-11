@@ -62,4 +62,16 @@ public class StorageService {
             .build();
         return storageFileRepository.save(file);
     }
+
+    /**
+     * Retrieves the content of a file by its code.
+     *
+     * @param file the file
+     * @return the content of the file as a byte array
+     * @throws StorageException if there is an error retrieving the file
+     */
+    @Nonnull
+    public byte[] contentOf(@Nonnull StorageFile file) throws StorageException {
+        return storageHandler.contentOf(file.getCode());
+    }
 }

@@ -1,7 +1,9 @@
 package com.zp1ke.flo.tools.handler.impl;
 
 import com.zp1ke.flo.tools.error.EmailException;
+import com.zp1ke.flo.tools.error.StorageException;
 import com.zp1ke.flo.tools.handler.EmailSender;
+import com.zp1ke.flo.tools.model.Attachment;
 import com.zp1ke.flo.tools.model.Contact;
 import com.zp1ke.flo.tools.model.EmailConfig;
 import com.zp1ke.flo.tools.model.EmailNotification;
@@ -10,10 +12,12 @@ import io.mailtrap.client.MailtrapClient;
 import io.mailtrap.config.MailtrapConfig;
 import io.mailtrap.factory.MailtrapClientFactory;
 import io.mailtrap.model.request.emails.Address;
+import io.mailtrap.model.request.emails.EmailAttachment;
 import io.mailtrap.model.request.emails.MailtrapMail;
 import jakarta.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
-import org.jetbrains.annotations.NotNull;
 
 public class MailtrapEmailSender implements EmailSender {
 
@@ -51,7 +55,7 @@ public class MailtrapEmailSender implements EmailSender {
     }
 
     @Override
-    public void sendEmail(@NotNull EmailNotification notification) throws EmailException {
+    public void sendEmail(@Nonnull EmailNotification notification) throws EmailException {
         var builder = MailtrapMail.builder()
             .from(toAddress(config.getSender()))
             .to(List.of(toAddress(notification.getRecipient())))
@@ -61,12 +65,30 @@ public class MailtrapEmailSender implements EmailSender {
         } else {
             builder.text(notification.getBody());
         }
-        var mail = builder.build();
         try {
-            client.send(mail);
+            if (notification.getAttachments() != null) {
+                var attachments = new ArrayList<EmailAttachment>();
+                for (var attachment : notification.getAttachments()) {
+                    attachments.add(toEmailAttachment(attachment));
+                }
+                builder.attachments(attachments);
+            }
+            client.send(builder.build());
         } catch (Exception e) {
             throw new EmailException(e.getMessage(), e);
         }
+    }
+
+    @Nonnull
+    private EmailAttachment toEmailAttachment(@Nonnull Attachment attachment) throws StorageException {
+        var disposition = attachment.isInline() ? "inline" : "attachment";
+        var content = Base64.getEncoder().encodeToString(attachment.getContent());
+        return EmailAttachment.builder()
+            .filename(attachment.getFilename())
+            .contentId(attachment.getId())
+            .disposition(disposition)
+            .content(content)
+            .build();
     }
 
     @Nonnull

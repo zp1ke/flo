@@ -3,8 +3,8 @@ package com.zp1ke.flo.tools.handler;
 import com.zp1ke.flo.tools.model.ExportFormat;
 import com.zp1ke.flo.tools.model.Mappable;
 import com.zp1ke.flo.tools.model.Mappables;
+import jakarta.annotation.Nonnull;
 import java.util.List;
-import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -73,13 +73,13 @@ public class ExporterTests {
 
         private final String property2;
 
-        private TestMappable(@NotNull String property1, @NotNull String property2) {
+        private TestMappable(@Nonnull String property1, @Nonnull String property2) {
             this.property1 = property1;
             this.property2 = property2;
         }
 
         @Override
-        public String getValue(@NotNull String property) {
+        public String getValue(@Nonnull String property) {
             if ("property1".equals(property)) {
                 return property1;
             }
@@ -87,7 +87,8 @@ public class ExporterTests {
         }
 
         @Override
-        public @NotNull List<String> getProperties() {
+        @Nonnull
+        public List<String> getProperties() {
             return List.of("property1", "property2");
         }
     }

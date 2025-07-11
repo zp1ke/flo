@@ -6,12 +6,14 @@ import com.zp1ke.flo.tools.model.Contact;
 import com.zp1ke.flo.tools.model.EmailConfig;
 import com.zp1ke.flo.tools.model.EmailNotification;
 import com.zp1ke.flo.utils.StringUtils;
+import jakarta.activation.DataHandler;
 import jakarta.annotation.Nonnull;
 import jakarta.mail.*;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeBodyPart;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.mail.internet.MimeMultipart;
+import jakarta.mail.util.ByteArrayDataSource;
 import java.io.UnsupportedEncodingException;
 import java.util.Properties;
 import lombok.extern.slf4j.Slf4j;
@@ -64,9 +66,18 @@ public class AngusEmailSender implements EmailSender {
             } else {
                 mimeBodyPart.setContent(notification.getBody(), "text/plain; charset=utf-8");
             }
-
             var multipart = new MimeMultipart();
             multipart.addBodyPart(mimeBodyPart);
+
+            if (notification.getAttachments() != null) {
+                for (var attachment : notification.getAttachments()) {
+                    var attachmentPart = new MimeBodyPart();
+                    attachmentPart.setFileName(attachment.getFilename());
+                    var source = new ByteArrayDataSource(attachment.getContent(), "application/octet-stream");
+                    attachmentPart.setDataHandler(new DataHandler(source));
+                    multipart.addBodyPart(attachmentPart);
+                }
+            }
 
             message.setContent(multipart);
             Transport.send(message);
