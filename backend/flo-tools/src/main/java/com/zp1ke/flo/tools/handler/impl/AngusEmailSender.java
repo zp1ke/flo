@@ -45,9 +45,8 @@ public class AngusEmailSender implements EmailSender {
 
     @Override
     public boolean hasValidConfig() {
-        var host = properties.getProperty("mail.smtp.host");
-        var port = Integer.parseInt(properties.getProperty("mail.smtp.port", "0"));
-        return config.getSender() != null && config.getSender().isValid() && StringUtils.isNotBlank(host) && port > 0;
+        return config.getSender() != null && config.getSender().isValid() &&
+            StringUtils.isNotBlank(config.getHost()) && config.getPort() > 0;
     }
 
     @Override

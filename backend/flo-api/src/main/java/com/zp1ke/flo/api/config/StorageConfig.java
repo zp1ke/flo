@@ -6,12 +6,14 @@ import com.zp1ke.flo.tools.handler.impl.S3StorageHandler;
 import com.zp1ke.flo.tools.model.S3Config;
 import com.zp1ke.flo.utils.StringUtils;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @Getter
+@Slf4j
 public class StorageConfig {
 
     @Value("${storage.endpoint:}")
@@ -31,6 +33,7 @@ public class StorageConfig {
 
     @Bean
     StorageHandler storageHandler() {
+        StorageHandler handler = null;
         if (StringUtils.isNotBlank(accessKey) && StringUtils.isNotBlank(secretKey) && StringUtils.isNotBlank(bucket)) {
             var s3Config = S3Config.builder()
                 .endpoint(endpoint)
@@ -39,8 +42,12 @@ public class StorageConfig {
                 .bucket(bucket)
                 .region(region)
                 .build();
-            return new S3StorageHandler(s3Config);
+            handler = new S3StorageHandler(s3Config);
         }
-        return new NoneStorageHandler();
+        if (handler == null) {
+            handler = new NoneStorageHandler();
+        }
+        log.debug(" ============ Storage Handler initialized: {}", handler.getClass().getSimpleName());
+        return handler;
     }
 }

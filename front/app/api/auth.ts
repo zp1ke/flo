@@ -37,6 +37,18 @@ export const verifyUser = async (code: string): Promise<void> => {
   await apiClient.postJson(`${authPath}/verify/${code}`);
 };
 
+export const sendVerifyEmail = async (
+  email: string,
+  type: 'link' | 'code',
+): Promise<void> => {
+  await apiClient.postJson<AuthResponse>(
+    `${userPath}/send-verification/VERIFICATION_${type.toUpperCase()}`,
+    {
+      email,
+    },
+  );
+};
+
 export const fetchUser = async (): Promise<User | null> => {
   return await apiClient.getJson<User>(`${userPath}/me`);
 };

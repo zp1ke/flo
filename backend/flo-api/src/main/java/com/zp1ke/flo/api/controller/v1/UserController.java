@@ -2,7 +2,6 @@ package com.zp1ke.flo.api.controller.v1;
 
 import com.zp1ke.flo.api.dto.UserDto;
 import com.zp1ke.flo.api.model.AuthResponse;
-import com.zp1ke.flo.api.model.CodeResponse;
 import com.zp1ke.flo.api.model.UserSaveRequest;
 import com.zp1ke.flo.api.security.UserIsVerified;
 import com.zp1ke.flo.api.utils.RequestUtils;
@@ -53,10 +52,11 @@ public class UserController {
 
     @PostMapping("/send-verification/{type}")
     @Operation(summary = "Send verification to session user")
-    public ResponseEntity<CodeResponse> sendVerification(@AuthenticationPrincipal User user,
-                                                         @RequestParam NotificationType type) {
-        var saved = userService.sendVerification(user, type);
-        return ResponseEntity.ok(new CodeResponse(saved.getVerifyCode()));
+    @UserIsVerified
+    public ResponseEntity<Void> sendVerification(@AuthenticationPrincipal User user,
+                                                 @PathVariable NotificationType type) {
+        userService.sendVerification(user, type);
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/sign-out")
@@ -68,10 +68,11 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/export")
+    @PostMapping("/export/{format}")
     @Operation(summary = "Export session user data")
+    @UserIsVerified
     public ResponseEntity<Void> export(@AuthenticationPrincipal User user,
-                                       @RequestParam ExportFormat format) {
+                                       @PathVariable ExportFormat format) {
         userService.exportUserData(user, format);
         return ResponseEntity.noContent().build();
     }

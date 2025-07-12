@@ -171,6 +171,7 @@
     "emailVerifyCodeDescription": "To verify your email, press send verification code and enter the code sent to your email address.",
     "emailVerifyCodePlaceholder": "Enter the verification code sent to your email address",
     "exportData": "Export Data",
+    "exportDataDescription": "Export your data in a machine-readable format.",
     "exporting": "Exporting...",
     "passwordDescription": "Enter your password",
     "passwordPlaceholder": "Your super secret password",
@@ -178,6 +179,7 @@
     "processing": "Processing...",
     "saveChanges": "Save Changes",
     "sendVerificationCode": "Send Verification code",
+    "sendVerificationLink": "Send Verification link",
     "sendVerificationAvailableIn": "Resend available in {{seconds}} seconds",
     "subtitle": "Manage your settings",
     "title": "Settings"

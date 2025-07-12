@@ -7,6 +7,7 @@ import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { z } from 'zod';
+import { sendVerifyEmail } from '~/api/auth';
 import PageContent from '~/components/layout/page-content';
 
 import { Button } from '~/components/ui/button';
@@ -21,10 +22,20 @@ import {
 } from '~/components/ui/form';
 import { Input } from '~/components/ui/input';
 import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from '~/components/ui/select';
+import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from '~/components/ui/tooltip';
+import config from '~/config';
 import { cn } from '~/lib/utils';
 import useUserStore from '~/store/user-store';
 
@@ -72,18 +83,19 @@ export default function Settings() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       email: user?.email || '',
-      password: '',
       emailVerifyCode: '',
     },
   });
 
-  const sendVerification = async () => {
+  const sendVerification = async (type: 'link' | 'code') => {
     setProcessing(true);
 
-    await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate API call delay
+    await sendVerifyEmail(form.getValues('email'), type);
 
     const nextAvailableAt = new Date();
-    nextAvailableAt.setSeconds(nextAvailableAt.getSeconds() + 120); // Set available time to 120 seconds from now
+    nextAvailableAt.setSeconds(
+      nextAvailableAt.getSeconds() + config.secondsToReenableEmailVerification,
+    );
     setVerifyAvailableAt(nextAvailableAt);
     setProcessing(false);
   };
@@ -123,7 +135,7 @@ export default function Settings() {
                       placeholder={t('settings.emailPlaceholder')}
                       type="email"
                       required
-                      disabled={processing || exporting}
+                      disabled={processing || exporting || !user?.verified}
                       {...field}
                       onChange={(e) => {
                         field.onChange(e);
@@ -203,8 +215,7 @@ export default function Settings() {
                   <Input
                     placeholder={t('settings.passwordPlaceholder')}
                     type="password"
-                    required
-                    disabled={processing || exporting}
+                    disabled={processing || exporting || !user?.verified}
                     autoComplete="settings-password"
                     {...field}
                   />
@@ -214,12 +225,38 @@ export default function Settings() {
             )}
           />
           <div className="flex gap-2">
-            {(!user?.verified || needsVerifyCode()) && (
+            <Button
+              type="submit"
+              disabled={processing || exporting || needsVerifyCode()}
+            >
+              {processing && <Loader2 className="animate-spin" />}
+              {processing && t('settings.processing')}
+              {!processing && t('settings.saveChanges')}
+            </Button>
+            {!user?.verified && (
               <Button
                 type="button"
                 variant="outline"
                 disabled={processing || exporting || secondsToVerify > 0}
-                onClick={sendVerification}
+                onClick={() => sendVerification('link')}
+              >
+                {processing && <Loader2 className="animate-spin" />}
+                {processing && t('settings.processing')}
+                {!processing &&
+                  !secondsToVerify &&
+                  t('settings.sendVerificationLink')}
+                {secondsToVerify > 0 &&
+                  t('settings.sendVerificationAvailableIn', {
+                    seconds: secondsToVerify,
+                  })}
+              </Button>
+            )}
+            {needsVerifyCode() && (
+              <Button
+                type="button"
+                variant="outline"
+                disabled={processing || exporting || secondsToVerify > 0}
+                onClick={() => sendVerification('code')}
               >
                 {processing && <Loader2 className="animate-spin" />}
                 {processing && t('settings.processing')}
@@ -232,27 +269,41 @@ export default function Settings() {
                   })}
               </Button>
             )}
-            <Button
-              type="submit"
-              disabled={processing || exporting || needsVerifyCode()}
-            >
-              {processing && <Loader2 className="animate-spin" />}
-              {processing && t('settings.processing')}
-              {!processing && t('settings.saveChanges')}
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              disabled={processing || exporting}
-              onClick={() => setExporting(true)}
-            >
-              {exporting && <Loader2 className="animate-spin" />}
-              {exporting && t('settings.exporting')}
-              {!exporting && t('settings.exportData')}
-            </Button>
           </div>
         </form>
       </Form>
+      <hr className="mt-6 mb-4" />
+      <div>
+        <h2 className="text-xl font-semibold tracking-tight">
+          {t('settings.exportData')}
+        </h2>
+        <p className="text-muted-foreground mb-4">
+          {t('settings.exportDataDescription')}
+        </p>
+        <div className="flex items-center gap-2 justify-start">
+          <Select>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Select a fruit" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectLabel>Fruits</SelectLabel>
+                <SelectItem value="apple">Apple</SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+          <Button
+            type="button"
+            variant="outline"
+            disabled={processing || exporting}
+            onClick={() => setExporting(true)}
+          >
+            {exporting && <Loader2 className="animate-spin" />}
+            {exporting && t('settings.exporting')}
+            {!exporting && t('settings.exportData')}
+          </Button>
+        </div>
+      </div>
     </PageContent>
   );
 }

@@ -61,7 +61,7 @@ public class MailConfig {
                 .build())
             .build();
         var emailSender = EmailSender.create(handler, emailConfig);
-        log.debug("Email Sender initialized: {}", emailSender.getClass().getSimpleName());
+        log.debug(" ============ Email Sender initialized: {}", emailSender.getClass().getSimpleName());
         return emailSender;
     }
 }
