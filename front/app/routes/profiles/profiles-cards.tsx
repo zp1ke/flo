@@ -119,7 +119,7 @@ export const ProfilesCards = () => {
                 profile={profile}
                 onDone={(canceled: boolean) => {
                   if (!canceled) {
-                    refreshProfiles();
+                    refreshProfiles().then();
                   }
                   setEditOpen(false);
                 }}

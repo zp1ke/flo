@@ -9,11 +9,7 @@ export const fetchCategories = async (
   pageFilters: PageFilters,
 ): Promise<DataPage<Category>> => {
   console.debug('Fetching categories with filters:', pageFilters);
-  const data = await apiClient.getPage<Category>(
-    basePath(profileCode),
-    pageFilters,
-  );
-  return data;
+  return await apiClient.getPage<Category>(basePath(profileCode), pageFilters);
 };
 
 export const addCategory = async (
@@ -21,11 +17,7 @@ export const addCategory = async (
   category: Category,
 ): Promise<Category> => {
   console.debug('Adding category:', category);
-  const saved = await apiClient.postJson<Category>(
-    basePath(profileCode),
-    category,
-  );
-  return saved;
+  return await apiClient.postJson<Category>(basePath(profileCode), category);
 };
 
 export const updateCategory = async (
@@ -33,11 +25,10 @@ export const updateCategory = async (
   category: Category,
 ): Promise<Category> => {
   console.debug('Updating category:', category);
-  const saved = await apiClient.putJson<Category>(
+  return await apiClient.putJson<Category>(
     `${basePath(profileCode)}/${category.code}`,
     category,
   );
-  return saved;
 };
 
 export const deleteCategory = async (

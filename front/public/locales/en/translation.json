@@ -160,6 +160,7 @@
     "validPassword": "Password must contain at least one letter and one number."
   },
   "settings": {
+    "changePassword": "Change Password",
     "email": "Email",
     "emailDescription": "Enter your email address",
     "emailMax255": "Email must be at most 255 characters long.",
@@ -169,7 +170,8 @@
     "emailVerifyCode": "Email verification code",
     "emailVerifyCodeDescription": "To verify your email, press send verification code and enter the code sent to your email address.",
     "emailVerifyCodePlaceholder": "Enter the verification code sent to your email address",
-    "changePassword": "Change Password",
+    "exportData": "Export Data",
+    "exporting": "Exporting...",
     "passwordDescription": "Enter your password",
     "passwordPlaceholder": "Your super secret password",
     "passwordSize": "Password must be at least 8 characters long and max 100 characters long.",

@@ -32,10 +32,7 @@ export default function RecoveryForm({ code }: { code: string }) {
   const [saved, setSaved] = useState(false);
 
   const formSchema = z.object({
-    email: z
-      .string()
-      .email(t('recover.validEmail'))
-      .max(255, t('recover.emailMax255')),
+    email: z.email(t('recover.validEmail')).max(255, t('recover.emailMax255')),
     password: z
       .string()
       .min(3, t('signUp.passwordSize'))

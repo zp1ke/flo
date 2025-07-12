@@ -10,11 +10,7 @@ export const fetchWallets = async (
   pageFilters: PageFilters,
 ): Promise<DataPage<Wallet>> => {
   console.debug('Fetching wallets with filters:', pageFilters);
-  const data = await apiClient.getPage<Wallet>(
-    basePath(profileCode),
-    pageFilters,
-  );
-  return data;
+  return await apiClient.getPage<Wallet>(basePath(profileCode), pageFilters);
 };
 
 export const addWallet = async (
@@ -22,8 +18,7 @@ export const addWallet = async (
   wallet: Wallet,
 ): Promise<Wallet> => {
   console.debug('Adding wallet:', wallet);
-  const saved = await apiClient.postJson<Wallet>(basePath(profileCode), wallet);
-  return saved;
+  return await apiClient.postJson<Wallet>(basePath(profileCode), wallet);
 };
 
 export const updateWallet = async (
@@ -31,11 +26,10 @@ export const updateWallet = async (
   wallet: Wallet,
 ): Promise<Wallet> => {
   console.debug('Updating wallet:', wallet);
-  const saved = await apiClient.putJson<Wallet>(
+  return await apiClient.putJson<Wallet>(
     `${basePath(profileCode)}/${wallet.code}`,
     wallet,
   );
-  return saved;
 };
 
 export const deleteWallet = async (

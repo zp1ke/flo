@@ -10,23 +10,20 @@ export const fetchProfiles = async (): Promise<DataPage<Profile>> => {
     page: 0,
     size: 100,
   };
-  const data = await apiClient.getPage<Profile>(basePath, pageFilters);
-  return data;
+  return await apiClient.getPage<Profile>(basePath, pageFilters);
 };
 
 export const addProfile = async (profile: Profile): Promise<Profile> => {
   console.debug('Adding profile:', profile);
-  const saved = await apiClient.postJson<Profile>(basePath, profile);
-  return saved;
+  return await apiClient.postJson<Profile>(basePath, profile);
 };
 
 export const updateProfile = async (profile: Profile): Promise<Profile> => {
   console.debug('Updating profile:', profile);
-  const saved = await apiClient.putJson<Profile>(
+  return await apiClient.putJson<Profile>(
     `${basePath}/${profile.code}`,
     profile,
   );
-  return saved;
 };
 
 export const deleteProfile = async (profile: Profile): Promise<void> => {

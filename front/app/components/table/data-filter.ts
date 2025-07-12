@@ -1,3 +1,5 @@
+import type { ReactNode } from 'react';
+
 export interface DataTableFilter {
   title: string;
   column: string;
@@ -15,5 +17,5 @@ export interface DataTableCustomFilterRenderProps {
 
 export interface DataTableCustomFilter {
   column: string;
-  render: (props: DataTableCustomFilterRenderProps) => React.ReactNode;
+  render: (props: DataTableCustomFilterRenderProps) => ReactNode;
 }

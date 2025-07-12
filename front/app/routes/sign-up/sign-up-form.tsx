@@ -35,10 +35,7 @@ export default function SignUpForm() {
   const [processing, setProcessing] = useState(false);
 
   const formSchema = z.object({
-    email: z
-      .string()
-      .email(t('signUp.validEmail'))
-      .max(255, t('signUp.emailMax255')),
+    email: z.email(t('signUp.validEmail')).max(255, t('signUp.emailMax255')),
     name: z
       .string()
       .min(3, t('signUp.nameSize'))

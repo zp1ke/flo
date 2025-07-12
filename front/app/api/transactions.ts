@@ -11,11 +11,10 @@ export const fetchTransactions = async (
   pageFilters: PageFilters,
 ): Promise<DataPage<Transaction>> => {
   console.debug('Fetching transactions with filters:', pageFilters);
-  const data = await apiClient.getPage<Transaction>(
+  return await apiClient.getPage<Transaction>(
     basePath(profileCode),
     pageFilters,
   );
-  return data;
 };
 
 export const fetchStats = async (
@@ -24,11 +23,10 @@ export const fetchStats = async (
   to?: Date,
 ): Promise<TransactionsStats> => {
   const toDate = to ? new Date(to) : from;
-  const data = await apiClient.getJson<TransactionsStats>(
+  return await apiClient.getJson<TransactionsStats>(
     `${basePath(profileCode)}/stats`,
     { from: toApiDate(from), to: toApiDate(toDate) },
   );
-  return data;
 };
 
 export const addTransaction = async (
@@ -36,11 +34,10 @@ export const addTransaction = async (
   transaction: Transaction,
 ): Promise<Transaction> => {
   console.debug('Adding transaction:', transaction);
-  const saved = await apiClient.postJson<Transaction>(
+  return await apiClient.postJson<Transaction>(
     basePath(profileCode),
     transaction,
   );
-  return saved;
 };
 
 export const updateTransaction = async (
@@ -48,11 +45,10 @@ export const updateTransaction = async (
   transaction: Transaction,
 ): Promise<Transaction> => {
   console.debug('Updating transaction:', transaction);
-  const saved = await apiClient.putJson<Transaction>(
+  return await apiClient.putJson<Transaction>(
     `${basePath(profileCode)}/${transaction.code}`,
     transaction,
   );
-  return saved;
 };
 
 export const deleteTransaction = async (

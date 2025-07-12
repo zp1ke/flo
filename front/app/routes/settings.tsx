@@ -36,6 +36,7 @@ export default function Settings() {
   const [emailIsChanged, setEmailIsChanged] = useState(false);
   const [hasVerifyCode, setHasVerifyCode] = useState(false);
   const [processing, setProcessing] = useState(false);
+  const [exporting, setExporting] = useState(false);
   const [verifyAvailableAt, setVerifyAvailableAt] = useState<Date | null>(null);
   const [secondsToVerify, setSecondsToVerify] = useState(0);
 
@@ -58,7 +59,6 @@ export default function Settings() {
   const formSchema = z.object({
     emailVerifyCode: z.string().optional(),
     email: z
-      .string()
       .email(t('settings.validEmail'))
       .max(255, t('settings.emailMax255')),
     password: z
@@ -123,7 +123,7 @@ export default function Settings() {
                       placeholder={t('settings.emailPlaceholder')}
                       type="email"
                       required
-                      disabled={processing}
+                      disabled={processing || exporting}
                       {...field}
                       onChange={(e) => {
                         field.onChange(e);
@@ -174,7 +174,7 @@ export default function Settings() {
                         placeholder={t('settings.emailVerifyCodePlaceholder')}
                         type="text"
                         required={emailIsChanged}
-                        disabled={processing}
+                        disabled={processing || exporting}
                         {...field}
                         onChange={(e) => {
                           field.onChange(e);
@@ -204,7 +204,7 @@ export default function Settings() {
                     placeholder={t('settings.passwordPlaceholder')}
                     type="password"
                     required
-                    disabled={processing}
+                    disabled={processing || exporting}
                     autoComplete="settings-password"
                     {...field}
                   />
@@ -218,7 +218,7 @@ export default function Settings() {
               <Button
                 type="button"
                 variant="outline"
-                disabled={processing || secondsToVerify > 0}
+                disabled={processing || exporting || secondsToVerify > 0}
                 onClick={sendVerification}
               >
                 {processing && <Loader2 className="animate-spin" />}
@@ -232,10 +232,23 @@ export default function Settings() {
                   })}
               </Button>
             )}
-            <Button type="submit" disabled={processing || needsVerifyCode()}>
+            <Button
+              type="submit"
+              disabled={processing || exporting || needsVerifyCode()}
+            >
               {processing && <Loader2 className="animate-spin" />}
               {processing && t('settings.processing')}
               {!processing && t('settings.saveChanges')}
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              disabled={processing || exporting}
+              onClick={() => setExporting(true)}
+            >
+              {exporting && <Loader2 className="animate-spin" />}
+              {exporting && t('settings.exporting')}
+              {!exporting && t('settings.exportData')}
             </Button>
           </div>
         </form>

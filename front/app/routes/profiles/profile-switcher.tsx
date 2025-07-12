@@ -152,7 +152,7 @@ export function ProfileSwitcher() {
             <EditProfileForm
               onDone={(canceled: boolean) => {
                 if (!canceled) {
-                  refreshProfiles();
+                  refreshProfiles().then();
                 }
                 setAddOpen(false);
               }}

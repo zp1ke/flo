@@ -35,10 +35,7 @@ export default function SignInForm() {
   const [processing, setProcessing] = useState(false);
 
   const formSchema = z.object({
-    email: z
-      .string()
-      .email(t('signIn.validEmail'))
-      .max(255, t('signIn.emailMax255')),
+    email: z.email(t('signIn.validEmail')).max(255, t('signIn.emailMax255')),
     password: z
       .string()
       .min(3, t('signIn.passwordSize'))

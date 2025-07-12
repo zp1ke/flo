@@ -34,7 +34,7 @@ function isValidHour(value: string) {
 }
 
 /**
- * regular expression to check for valid 12 hour format (01-12)
+ * regular expression to check for valid 12-hour format (01-12)
  */
 function isValid12Hour(value: string) {
   return /^(0[1-9]|1[0-2])$/.test(value);

@@ -32,10 +32,7 @@ export default function RecoverForm() {
   const [sent, setSent] = useState(false);
 
   const formSchema = z.object({
-    email: z
-      .string()
-      .email(t('recover.validEmail'))
-      .max(255, t('recover.emailMax255')),
+    email: z.email(t('recover.validEmail')).max(255, t('recover.emailMax255')),
   });
 
   const form = useForm<z.infer<typeof formSchema>>({

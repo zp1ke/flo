@@ -13,7 +13,8 @@ i18next
     lowerCaseLng: true,
     returnObjects: true,
     supportedLngs: ['en'],
-  });
+  })
+  .then();
 
 export function saveLanguage(language: string) {
   localStorage.setItem('language', language);

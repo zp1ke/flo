@@ -126,8 +126,8 @@ export function EditTransactionForm({
 
   useEffect(() => {
     if (profile?.code) {
-      getCategories();
-      getWallets();
+      getCategories().then();
+      getWallets().then();
     }
   }, [profile, getCategories, getWallets]);
 

@@ -60,7 +60,7 @@ export default function AddProfileButton() {
           onProcessing={setProcessing}
           onDone={(canceled: boolean) => {
             if (!canceled) {
-              refreshProfiles();
+              refreshProfiles().then();
             }
             setAddOpen(false);
           }}
