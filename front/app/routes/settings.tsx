@@ -31,6 +31,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '~/components/ui/select';
+import { Separator } from '~/components/ui/separator';
 import {
   Tooltip,
   TooltipContent,
@@ -52,6 +53,7 @@ export default function Settings() {
   const [exporting, setExporting] = useState(false);
   const [verifyAvailableAt, setVerifyAvailableAt] = useState<Date | null>(null);
   const [secondsToVerify, setSecondsToVerify] = useState(0);
+  const [exportFormat, setExportFormat] = useState('csv');
 
   useEffect(() => {
     if (verifyAvailableAt) {
@@ -285,7 +287,7 @@ export default function Settings() {
           </div>
         </form>
       </Form>
-      <hr className="mt-6 mb-4" />
+      <Separator className="mt-6 mb-4" />
       <div>
         <h2 className="text-xl font-semibold tracking-tight">
           {t('settings.exportData')}
@@ -294,21 +296,25 @@ export default function Settings() {
           {t('settings.exportDataDescription')}
         </p>
         <div className="flex items-center gap-2 justify-start">
-          <Select>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Select a fruit" />
+          <Select value={exportFormat} onValueChange={setExportFormat}>
+            <SelectTrigger>
+              <SelectValue placeholder={t('settings.selectExportFormat')} />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                <SelectLabel>Fruits</SelectLabel>
-                <SelectItem value="apple">Apple</SelectItem>
+                <SelectLabel>{t('settings.exportFormats')}</SelectLabel>
+                <SelectItem value="csv">
+                  {t('settings.exportFormatCsv')}
+                </SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>
           <Button
             type="button"
             variant="outline"
-            disabled={processing || exporting}
+            disabled={
+              processing || exporting || !exportFormat || !user?.verified
+            }
             onClick={() => setExporting(true)}
           >
             {exporting && <Loader2 className="animate-spin" />}

@@ -1,4 +1,9 @@
-import type { AuthRequest, AuthResponse, SignUpRequest, UpdateRequest } from '~/types/auth';
+import type {
+  AuthRequest,
+  AuthResponse,
+  SignUpRequest,
+  UpdateRequest,
+} from '~/types/auth';
 import type { User } from '~/types/user';
 import apiClient from './client';
 

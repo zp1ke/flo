@@ -2,7 +2,11 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { fetchUser, signIn, signOut, signUp, update } from '~/api/auth';
 import { fetchProfiles } from '~/api/profiles';
-import type { AuthRequest as SignInRequest, SignUpRequest, UpdateRequest } from '~/types/auth';
+import type {
+  AuthRequest as SignInRequest,
+  SignUpRequest,
+  UpdateRequest,
+} from '~/types/auth';
 import type { Profile } from '~/types/profile';
 import type { User } from '~/types/user';
 
