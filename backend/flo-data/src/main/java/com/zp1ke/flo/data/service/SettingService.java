@@ -21,6 +21,8 @@ public class SettingService {
 
     private static final String DEFAULT_USER_MAX_TRANSACTIONS_PER_DAY = "20";
 
+    private static final String DEFAULT_USER_MAX_EXPORTS_PER_MONTH = "1";
+
     private final SettingRepository settingRepository;
 
     public void saveDefaultSettings(@Nonnull User user) {
@@ -28,7 +30,8 @@ public class SettingService {
             SettingCode.USER_MAX_PROFILES, DEFAULT_USER_MAX_PROFILES,
             SettingCode.USER_MAX_CATEGORIES, DEFAULT_USER_MAX_CATEGORIES,
             SettingCode.USER_MAX_WALLETS, DEFAULT_USER_MAX_WALLETS,
-            SettingCode.USER_MAX_TRANSACTIONS_PER_DAY, DEFAULT_USER_MAX_TRANSACTIONS_PER_DAY
+            SettingCode.USER_MAX_TRANSACTIONS_PER_DAY, DEFAULT_USER_MAX_TRANSACTIONS_PER_DAY,
+            SettingCode.USER_MAX_EXPORTS_PER_MONTH, DEFAULT_USER_MAX_EXPORTS_PER_MONTH
         );
         defaultSettings.forEach((code, value) -> {
             if (!settingRepository.existsByCodeAndUserAndEnabledTrue(code, user)) {

@@ -4,6 +4,7 @@ import com.zp1ke.flo.data.domain.Profile;
 import com.zp1ke.flo.data.domain.User;
 import com.zp1ke.flo.data.domain.UserToken;
 import com.zp1ke.flo.data.model.NotificationType;
+import com.zp1ke.flo.data.model.SettingCode;
 import com.zp1ke.flo.data.repository.*;
 import com.zp1ke.flo.tools.handler.Exporter;
 import com.zp1ke.flo.tools.model.ExportFormat;
@@ -238,6 +239,12 @@ public class UserService {
     }
 
     public void exportUserData(@Nonnull User user, @Nonnull ExportFormat format) {
+        var maxExports = settingService
+            .getIntegerValue(user, SettingCode.USER_MAX_EXPORTS_PER_MONTH);
+        var userMonthExports = 0; // TODO: Implement logic to count user's exports in the current month
+        if (maxExports != null && userMonthExports >= maxExports) {
+            throw new IllegalArgumentException("user.month_export_limit_reached");
+        }
         jobScheduler.enqueue(() -> exportData(user, format));
     }
 
