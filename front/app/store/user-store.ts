@@ -1,8 +1,8 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { fetchUser, signIn, signOut, signUp } from '~/api/auth';
+import { fetchUser, signIn, signOut, signUp, update } from '~/api/auth';
 import { fetchProfiles } from '~/api/profiles';
-import type { AuthRequest as SignInRequest, SignUpRequest } from '~/types/auth';
+import type { AuthRequest as SignInRequest, SignUpRequest, UpdateRequest } from '~/types/auth';
 import type { Profile } from '~/types/profile';
 import type { User } from '~/types/user';
 
@@ -15,6 +15,7 @@ interface UserStore {
 
   signUp: (request: SignUpRequest) => Promise<void>;
   signIn: (request: SignInRequest) => Promise<void>;
+  update: (request: UpdateRequest) => Promise<void>;
   signOut: () => Promise<void>;
   clean: () => void;
 
@@ -54,6 +55,11 @@ const useUserStore = create<UserStore>()(
       signIn: async (request: SignInRequest) => {
         const authResponse = await signIn(request);
         set({ token: authResponse.token, user: authResponse.user });
+      },
+      update: async (request: UpdateRequest) => {
+        set({ loading: true });
+        const user = await update(request);
+        set({ user, loading: false });
       },
       signOut: async () => {
         await signOut();

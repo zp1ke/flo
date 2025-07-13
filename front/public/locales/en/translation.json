@@ -182,7 +182,10 @@
     "sendVerificationLink": "Send Verification link",
     "sendVerificationAvailableIn": "Resend available in {{seconds}} seconds",
     "subtitle": "Manage your settings",
-    "title": "Settings"
+    "title": "Settings",
+    "updateError": "Could not update your settings.",
+    "updateSuccess": "Settings updated successfully.",
+    "updateSuccessDescription": "Your settings have been updated successfully."
   },
   "sidebar": {
     "description": "Displays the mobile sidebar",

@@ -1,4 +1,4 @@
-import type { AuthRequest, AuthResponse, SignUpRequest } from '~/types/auth';
+import type { AuthRequest, AuthResponse, SignUpRequest, UpdateRequest } from '~/types/auth';
 import type { User } from '~/types/user';
 import apiClient from './client';
 
@@ -47,6 +47,10 @@ export const sendVerifyEmail = async (
       email,
     },
   );
+};
+
+export const update = async (data: UpdateRequest): Promise<User> => {
+  return apiClient.putJson<User>(userPath, { ...data });
 };
 
 export const fetchUser = async (): Promise<User | null> => {

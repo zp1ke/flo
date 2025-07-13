@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { z } from 'zod';
 import { sendVerifyEmail } from '~/api/auth';
+import type { ApiError } from '~/api/client';
 import PageContent from '~/components/layout/page-content';
 
 import { Button } from '~/components/ui/button';
@@ -43,6 +44,7 @@ export default function Settings() {
   const { t } = useTranslation();
 
   const user = useUserStore((state) => state.user);
+  const updateUser = useUserStore((state) => state.update);
 
   const [emailIsChanged, setEmailIsChanged] = useState(false);
   const [hasVerifyCode, setHasVerifyCode] = useState(false);
@@ -100,17 +102,28 @@ export default function Settings() {
     setProcessing(false);
   };
 
-  function onSubmit(data: z.infer<typeof formSchema>) {
+  const onSubmit = async (data: z.infer<typeof formSchema>) => {
     setProcessing(true);
 
-    toast('TODO: api call. You submitted the following values', {
-      description: (
-        <pre className="mt-2 w-[320px] rounded-md bg-neutral-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
-  }
+    try {
+      await updateUser({
+        email: data.email,
+        verifyCode: data.emailVerifyCode,
+        password: data.password || '',
+      });
+      toast.success(t('settings.updateSuccess'), {
+        description: t('settings.updateSuccessDescription'),
+        closeButton: true,
+      });
+    } catch (e) {
+      toast.error(t('settings.updateError'), {
+        description: t((e as ApiError).message),
+        closeButton: true,
+      });
+    } finally {
+      setProcessing(false);
+    }
+  };
 
   const needsVerifyCode = () => {
     return emailIsChanged && !hasVerifyCode;
