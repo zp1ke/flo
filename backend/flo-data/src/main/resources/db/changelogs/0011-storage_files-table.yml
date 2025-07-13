@@ -38,6 +38,11 @@ databaseChangeLog:
                   type: bigint
                   constraints:
                     nullable: false
+              - column:
+                  name: size_in_bytes
+                  type: bigint
+                  constraints:
+                    nullable: false
         - createIndex:
             columns:
               - column:

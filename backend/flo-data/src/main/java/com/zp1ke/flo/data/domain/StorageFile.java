@@ -40,4 +40,8 @@ public class StorageFile extends Auditable {
     @ManyToOne(optional = false)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
+
+    @NotNull(message = "storage_file.size-required")
+    @Column(name = "size_in_bytes", nullable = false)
+    private Long sizeInBytes;
 }

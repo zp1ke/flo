@@ -59,6 +59,7 @@ public class StorageService {
             .code(code)
             .name(fileContent.name())
             .user(user)
+            .sizeInBytes((long) fileContent.content().length)
             .build();
         return storageFileRepository.save(file);
     }
