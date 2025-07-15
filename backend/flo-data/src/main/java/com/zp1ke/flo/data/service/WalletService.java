@@ -51,10 +51,11 @@ public class WalletService {
                 throw new IllegalArgumentException("wallet.name-duplicate");
             }
 
-            var maxWallets = settingService.getIntegerValue(wallet.getProfile().getUser(),
+            var maxWallets = settingService.getIntegerValue(
+                wallet.getProfile().getUser(),
                 SettingCode.USER_MAX_WALLETS);
             var profiles = profileService.profilesOfUser(wallet.getProfile().getUser());
-            if (maxWallets != null && walletRepository.countByEnabledTrueAndProfileIn(profiles) >= maxWallets) {
+            if (walletRepository.countByEnabledTrueAndProfileIn(profiles) >= maxWallets) {
                 throw new IllegalArgumentException("wallet.max-wallets-reached");
             }
         } else {

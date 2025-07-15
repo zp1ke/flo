@@ -46,13 +46,13 @@ public class TransactionService {
                 .generateRandomCode((code) -> transactionRepository.existsByProfileAndCode(transaction.getProfile(), code)));
         }
 
-        var maxTransactions = settingService
-            .getIntegerValue(transaction.getProfile().getUser(), SettingCode.USER_MAX_TRANSACTIONS_PER_DAY);
+        var maxTransactions = settingService.getIntegerValue(
+            transaction.getProfile().getUser(),
+            SettingCode.USER_MAX_TRANSACTIONS_PER_DAY);
         var profiles = profileService.profilesOfUser(transaction.getProfile().getUser());
         var from = DateTimeUtils.toOffsetDateTime(LocalDate.now());
         var to = DateTimeUtils.toOffsetDateTime(LocalDate.now().atTime(LocalTime.MAX));
-        if (maxTransactions != null && transactionRepository
-            .countByCreatedAtBetweenAndProfileIn(from, to, profiles) >= maxTransactions) {
+        if (transactionRepository.countByCreatedAtBetweenAndProfileIn(from, to, profiles) >= maxTransactions) {
             throw new IllegalArgumentException("transaction.max-transactions-per-day-reached");
         }
 

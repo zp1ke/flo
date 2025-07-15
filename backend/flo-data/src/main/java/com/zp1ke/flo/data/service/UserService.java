@@ -1,8 +1,6 @@
 package com.zp1ke.flo.data.service;
 
-import com.zp1ke.flo.data.domain.Profile;
-import com.zp1ke.flo.data.domain.User;
-import com.zp1ke.flo.data.domain.UserToken;
+import com.zp1ke.flo.data.domain.*;
 import com.zp1ke.flo.data.model.NotificationType;
 import com.zp1ke.flo.data.model.SettingCode;
 import com.zp1ke.flo.data.repository.*;
@@ -34,6 +32,8 @@ public class UserService {
     private final UserRepository userRepository;
 
     private final UserTokenRepository userTokenRepository;
+
+    private final UserExportRepository userExportRepository;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -216,8 +216,8 @@ public class UserService {
         userRepository.save(user);
     }
 
-    @Nonnull
-    public User sendVerification(@Nonnull User user, @Nonnull NotificationType notificationType) {
+    public void sendVerification(@Nonnull User user,
+                                 @Nonnull NotificationType notificationType) {
         var profile = profileService.firstProfileOfUser(user)
             .orElseThrow(() -> new IllegalArgumentException("user.profile_not_found"));
 
@@ -225,7 +225,6 @@ public class UserService {
         var saved = userRepository.save(user);
 
         sendVerification(saved, profile, notificationType);
-        return saved;
     }
 
     private void sendVerification(@Nonnull User user,
@@ -239,10 +238,13 @@ public class UserService {
     }
 
     public void exportUserData(@Nonnull User user, @Nonnull ExportFormat format) {
-        var maxExports = settingService
-            .getIntegerValue(user, SettingCode.USER_MAX_EXPORTS_PER_MONTH);
-        var userMonthExports = 0; // TODO: Implement logic to count user's exports in the current month
-        if (maxExports != null && userMonthExports >= maxExports) {
+        var maxExports = settingService.getIntegerValue(
+            user,
+            SettingCode.USER_MAX_EXPORTS_PER_MONTH);
+        var userMonthExports = userExportRepository.countDistinctCodeByUserIdAndCreatedAtBetween(user,
+            OffsetDateTime.now().withDayOfMonth(1),
+            OffsetDateTime.now().plusMonths(1).withDayOfMonth(1));
+        if (userMonthExports >= maxExports) {
             throw new IllegalArgumentException("user.month_export_limit_reached");
         }
         jobScheduler.enqueue(() -> exportData(user, format));
@@ -252,6 +254,49 @@ public class UserService {
         var profile = profileService.firstProfileOfUser(user)
             .orElseThrow(() -> new IllegalArgumentException("user.profile_not_found"));
 
+        var mappables = mappablesOf(user);
+        var data = Exporter.export(mappables, format);
+        var storageService = applicationContext.getBean(StorageService.class);
+        var sent = true;
+        try {
+            var exportsDtl = settingService.getIntegerValue(
+                user,
+                SettingCode.USER_EXPORTS_FILES_DAYS_TO_LIVE);
+            var expiresAt = OffsetDateTime.now().plusDays(exportsDtl);
+            var files = storageService.saveFiles(user, expiresAt, data.getFiles());
+            saveExports(user, expiresAt, files);
+            notificationService.sendData(user, profile, files);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            sent = false;
+        }
+
+        if (!sent) {
+            try {
+                notificationService.sendDataError(user, profile);
+            } catch (Exception e) {
+                log.error(e.getMessage(), e);
+            }
+        }
+    }
+
+    private void saveExports(@Nonnull User user,
+                             @Nonnull OffsetDateTime expiresAt,
+                             @Nonnull List<StorageFile> files) {
+        var code = StringUtils.generateRandomCode(6);
+        for (var file : files) {
+            var userExport = UserExport.builder()
+                .user(user)
+                .code(code)
+                .file(file)
+                .expiresAt(expiresAt)
+                .build();
+            userExportRepository.save(userExport);
+        }
+    }
+
+    @Nonnull
+    private Mappables mappablesOf(@Nonnull User user) {
         var mappables = new Mappables();
         mappables.put("users", List.of(user));
 
@@ -268,23 +313,6 @@ public class UserService {
         var transactionRepository = applicationContext.getBean(TransactionRepository.class);
         mappables.put("transactions", transactionRepository.findAllByProfileIn(profiles));
 
-        var data = Exporter.export(mappables, format);
-        var storageService = applicationContext.getBean(StorageService.class);
-        var sent = true;
-        try {
-            var files = storageService.saveFiles(user, data.getFiles());
-            notificationService.sendData(user, profile, files);
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-            sent = false;
-        }
-
-        if (!sent) {
-            try {
-                notificationService.sendDataError(user, profile);
-            } catch (Exception e) {
-                log.error(e.getMessage(), e);
-            }
-        }
+        return mappables;
     }
 }

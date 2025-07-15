@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import java.time.OffsetDateTime;
 import lombok.*;
 
 @Entity
@@ -13,6 +14,7 @@ import lombok.*;
     @Index(name = "storage_files_idx_user_id", columnList = "user_id"),
     @Index(name = "storage_files_idx_created_at", columnList = "created_at"),
     @Index(name = "storage_files_idx_updated_at", columnList = "updated_at"),
+    @Index(name = "storage_files_idx_expires_at", columnList = "expires_at"),
 })
 @Getter
 @Setter
@@ -44,4 +46,8 @@ public class StorageFile extends Auditable {
     @NotNull(message = "storage_file.size-required")
     @Column(name = "size_in_bytes", nullable = false)
     private Long sizeInBytes;
+
+    @NotNull(message = "storage_file.expires_at-required")
+    @Column(name = "expires_at", nullable = false)
+    private OffsetDateTime expiresAt;
 }

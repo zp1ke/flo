@@ -51,9 +51,11 @@ public class CategoryService {
                 throw new IllegalArgumentException("category.name-duplicate");
             }
 
-            var maxCategories = settingService.getIntegerValue(category.getProfile().getUser(), SettingCode.USER_MAX_CATEGORIES);
+            var maxCategories = settingService.getIntegerValue(
+                category.getProfile().getUser(),
+                SettingCode.USER_MAX_CATEGORIES);
             var profiles = profileService.profilesOfUser(category.getProfile().getUser());
-            if (maxCategories != null && categoryRepository.countByEnabledTrueAndProfileIn(profiles) >= maxCategories) {
+            if (categoryRepository.countByEnabledTrueAndProfileIn(profiles) >= maxCategories) {
                 throw new IllegalArgumentException("category.max-categories-reached");
             }
         } else {

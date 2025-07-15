@@ -2,6 +2,7 @@ package com.zp1ke.flo.data.service;
 
 import com.zp1ke.flo.data.domain.Profile;
 import com.zp1ke.flo.data.domain.User;
+import com.zp1ke.flo.data.repository.UserExportRepository;
 import com.zp1ke.flo.data.repository.UserRepository;
 import com.zp1ke.flo.data.repository.UserTokenRepository;
 import jakarta.annotation.Nonnull;
@@ -36,10 +37,10 @@ class UserServiceTests {
 
     private UserService createUserService(UserRepository userRepository) {
         return new UserService(validator, userRepository,
-            mock(UserTokenRepository.class), mock(PasswordEncoder.class),
-            mock(ProfileService.class), mock(SettingService.class),
-            mock(NotificationService.class), mock(JobScheduler.class),
-            mock(ApplicationContext.class));
+            mock(UserTokenRepository.class), mock(UserExportRepository.class),
+            mock(PasswordEncoder.class), mock(ProfileService.class),
+            mock(SettingService.class), mock(NotificationService.class),
+            mock(JobScheduler.class), mock(ApplicationContext.class));
     }
 
     @Test

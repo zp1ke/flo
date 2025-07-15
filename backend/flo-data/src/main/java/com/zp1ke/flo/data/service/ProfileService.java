@@ -51,8 +51,10 @@ public class ProfileService {
                 throw new IllegalArgumentException("profile.name-duplicate");
             }
 
-            var maxProfiles = settingService.getIntegerValue(profile.getUser(), SettingCode.USER_MAX_PROFILES);
-            if (maxProfiles != null && profileRepository.countByUserAndEnabledTrue(profile.getUser()) >= maxProfiles) {
+            var maxProfiles = settingService.getIntegerValue(
+                profile.getUser(),
+                SettingCode.USER_MAX_PROFILES);
+            if (profileRepository.countByUserAndEnabledTrue(profile.getUser()) >= maxProfiles) {
                 throw new IllegalArgumentException("profile.max_profiles_reached");
             }
         } else {
