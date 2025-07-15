@@ -21,5 +21,10 @@ dependencies {
 
     testImplementation libs.spring.security.test
 
+    testImplementation libs.spring.testcontainers
+    testImplementation libs.testcontainers.junit
+    testImplementation libs.testcontainers.postgres
+
     testRuntimeOnly libs.junit.platform.launcher
+    testRuntimeOnly libs.postgres
 }

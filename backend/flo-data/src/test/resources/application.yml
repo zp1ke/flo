@@ -1,4 +1,24 @@
 spring:
+  application:
+    name: flo-data
+  datasource:
+    driverClassName: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddlAuto: validate
   liquibase:
     changeLog: classpath:db/changelog.yml
     enabled: true
+    liquibaseSchema: liquibase
+  output:
+    ansi:
+      enabled: always
+
+org.jobrunr:
+  background-job-server:
+    enabled: false
+  dashboard:
+    enabled: false
+  jobs:
+    metrics:
+      enabled: false
