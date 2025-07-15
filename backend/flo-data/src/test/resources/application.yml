@@ -21,7 +21,7 @@ spring:
     ansi:
       enabled: always
 
-org.jobrunr:
+jobrunr:
   background-job-server:
     enabled: false
   dashboard:

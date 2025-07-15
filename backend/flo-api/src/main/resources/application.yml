@@ -12,11 +12,6 @@ spring:
       ddlAuto: validate
       formatSql: true
     openInView: false
-    showSql: true
-    properties:
-      hibernate:
-        formatSql: true
-        showSql: true
   liquibase:
     changeLog: classpath:db/changelog.yml
     enabled: true
@@ -37,7 +32,7 @@ management:
       exposure:
         include: info,health
 
-org.jobrunr:
+jobrunr:
   background-job-server:
     enabled: true
   dashboard:

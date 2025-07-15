@@ -3,6 +3,14 @@ spring:
     url: ${DATASOURCE_URL}
     username: ${DATASOURCE_USER}
     password: ${DATASOURCE_PASSWORD}
+  devtools:
+    addProperties: false
+  jpa:
+    showSql: ${DATABASE_SHOW_SQL:false}
+    properties:
+      hibernate:
+        formatSql: true
+        showSql: ${DATABASE_SHOW_SQL:false}
 
 jwt:
   secret: ${JWT_SECRET}
@@ -22,7 +30,7 @@ mail:
   senderEmail: ${MAIL_FROM:}
   sandbox: ${MAIL_SANDBOX:false}
 
-org.jobrunr:
+jobrunr:
   dashboard:
     port: 8081
 
