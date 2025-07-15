@@ -241,7 +241,7 @@ public class UserService {
         var maxExports = settingService.getIntegerValue(
             user,
             SettingCode.USER_MAX_EXPORTS_PER_MONTH);
-        var userMonthExports = userExportRepository.countDistinctCodeByUserIdAndCreatedAtBetween(user,
+        var userMonthExports = userExportRepository.countDistinctCodeByUserAndCreatedAtBetween(user,
             OffsetDateTime.now().withDayOfMonth(1),
             OffsetDateTime.now().plusMonths(1).withDayOfMonth(1));
         if (userMonthExports >= maxExports) {

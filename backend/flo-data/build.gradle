@@ -21,6 +21,8 @@ dependencies {
 
     testImplementation libs.spring.security.test
 
+    testImplementation libs.liquibase
+    testImplementation libs.preliquibase
     testImplementation libs.spring.testcontainers
     testImplementation libs.testcontainers.junit
     testImplementation libs.testcontainers.postgres

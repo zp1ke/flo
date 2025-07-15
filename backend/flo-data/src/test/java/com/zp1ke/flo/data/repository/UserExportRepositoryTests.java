@@ -26,7 +26,7 @@ public class UserExportRepositoryTests {
     StorageFileRepository storageFileRepository;
 
     @Test
-    void testCountDistinctCodeByUserIdAndCreatedAtBetween() {
+    void testCountDistinctCodeByUserAndCreatedAtBetween() {
         var user = User.builder()
             .email("test@mail.com")
             .username("testUser")
@@ -42,6 +42,7 @@ public class UserExportRepositoryTests {
         var files = new ArrayList<StorageFile>();
         for (var index = 0; index < filesCount; index++) {
             var file = StorageFile.builder()
+                .code("fileCode-" + index)
                 .user(user)
                 .name("file-" + index)
                 .expiresAt(expiresAt)
@@ -61,7 +62,7 @@ public class UserExportRepositoryTests {
             userExportRepository.save(userExport);
         }
 
-        var count = userExportRepository.countDistinctCodeByUserIdAndCreatedAtBetween(
+        var count = userExportRepository.countDistinctCodeByUserAndCreatedAtBetween(
             user,
             OffsetDateTime.now().withDayOfMonth(1),
             OffsetDateTime.now().plusMonths(1).withDayOfMonth(1));

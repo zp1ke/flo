@@ -6,6 +6,13 @@ spring:
   jpa:
     hibernate:
       ddlAuto: validate
+      formatSql: true
+    openInView: false
+    showSql: true
+    properties:
+      hibernate:
+        formatSql: true
+        showSql: true
   liquibase:
     changeLog: classpath:db/changelog.yml
     enabled: true
