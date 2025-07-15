@@ -1,10 +1,10 @@
 [versions]
 angus = "2.0.3"
-aws = "2.27.21"
+aws = "2.31.78"
 jakarta-annotation = "3.0.0"
 jjwt = "0.12.6"
-jobrunr = "7.5.3"
-junit = "5.13.1"
+jobrunr = "8.0.0"
+junit = "5.13.3"
 karate = "1.5.1"
 lombok = "1.18.38"
 mailtrap = "1.0.0"
