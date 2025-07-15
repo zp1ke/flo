@@ -1,11 +1,11 @@
-name: Backend API Build & Release
+name: Front Build & Release
 
 on:
   workflow_dispatch:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}-api
+  IMAGE_NAME: ${{ github.repository }}-app
 
 jobs:
   build:
@@ -20,21 +20,20 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Extract Version from gradle.properties
-        working-directory: ./backend
+      - name: Extract Version from package.json
+        working-directory: ./front
         run: |
-          version=$(grep '^version=' gradle.properties | cut -d '=' -f 2 | tr -d '\r')
+          version=$(grep '^  "version": ' package.json | cut -d '"' -f 4)
           echo "VERSION=$version" >> $GITHUB_ENV
 
-      - name: Set Up Java
-        uses: actions/setup-java@v4
+      - name: Set Up Node
+        uses: actions/setup-node@v4
         with:
-          distribution: "temurin"
-          java-version: "21"
+          node-version: 22
 
-      - name: Build JAR
-        working-directory: ./backend
-        run: ./gradlew flo-api:bootJar
+      - name: Build
+        working-directory: ./front
+        run: npm ci && npm run build
 
       - name: LogIn to Container Registry
         uses: docker/login-action@v3
@@ -50,7 +49,7 @@ jobs:
         id: push
         uses: docker/build-push-action@v6
         with:
-          context: "./backend/flo-api"
+          context: "./front"
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest,${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
 
@@ -64,9 +63,9 @@ jobs:
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: API
+          name: APP
           path: |
-            backend/flo-api/build/libs/flo-api-*.jar
+            build/client/*
 
       - name: Check if Version Tag exists
         run: |
@@ -85,5 +84,5 @@ jobs:
       - name: Create Release
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "backend/flo-api/build/libs/flo-api-*.jar"
-          tag: ${{ env.VERSION }}-api
+          artifacts: "build/client/*"
+          tag: ${{ env.VERSION }}-app
