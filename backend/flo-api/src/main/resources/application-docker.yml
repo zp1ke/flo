@@ -30,6 +30,12 @@ mail:
   senderEmail: ${MAIL_FROM:}
   sandbox: ${MAIL_SANDBOX:false}
 
+storage:
+  endpoint: ${STORAGE_HOST}
+  accessKey: ${STORAGE_ACCESS_KEY}
+  secretKey: ${STORAGE_SECRET_KEY}
+  bucket: ${STORAGE_BUCKET}
+
 jobrunr:
   dashboard:
     port: 8081
