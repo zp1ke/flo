@@ -2,7 +2,7 @@
   "name": "flo",
   "private": true,
   "type": "module",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "scripts": {
     "apply-updates": "npx npm-check-updates -u",
     "build": "react-router build",
