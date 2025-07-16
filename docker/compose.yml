@@ -19,7 +19,7 @@ services:
     env_file: api.env
     environment:
       DATASOURCE_URL: jdbc:postgresql://postgres:5432/flo
-      WEB_BASE_URL: http://flo-web
+      WEB_BASE_URL: http://flo-app
       SPRING_PROFILES_ACTIVE: docker
     ports:
       - 8080:8080
@@ -33,7 +33,7 @@ services:
       retries: 5
       start_period: 5s
 
-  flo-web:
+  flo-app:
     image: ghcr.io/zp1ke/flo-app:latest
     environment:
       VITE_API_BASE_URL: http://flo-api:8080/api/v1

@@ -20,8 +20,8 @@ server:
   port: 8080
 
 mail:
-  host: ${MAIL_HOST}
-  port: ${MAIL_PORT}
+  host: ${MAIL_HOST:}
+  port: ${MAIL_PORT:}
   handler: ${MAIL_HANDLER:SMTP}
   useTLS: ${MAIL_USE_TLS:false}
   useSSL: ${MAIL_USE_SSL:false}
@@ -31,7 +31,7 @@ mail:
   sandbox: ${MAIL_SANDBOX:false}
 
 storage:
-  endpoint: ${STORAGE_HOST}
+  endpoint: ${STORAGE_HOST:}
   accessKey: ${STORAGE_ACCESS_KEY}
   secretKey: ${STORAGE_SECRET_KEY}
   bucket: ${STORAGE_BUCKET}
