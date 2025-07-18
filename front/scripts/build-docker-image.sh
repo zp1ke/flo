@@ -2,4 +2,4 @@
 
 cd "$(dirname "$0")/.."
 
-docker build -t zp1ke/flo-web:latest .
+docker buildx build -t ghcr.io/zp1ke/flo-app:latest .

@@ -7,4 +7,4 @@ jenv local
 ./gradlew flo-api:bootJar
 
 cd flo-api
-docker build -t zp1ke/flo-api:latest .
+docker buildx build -t ghcr.io/zp1ke/flo-api:latest .

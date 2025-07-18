@@ -52,6 +52,15 @@ jobs:
         working-directory: ./front
         run: npm ci && npm run build
 
+      - name: Compress APP build
+        uses: somaz94/compress-decompress@v1
+        with:
+          command: compress
+          source: front/build/client
+          format: zip
+          dest: front/build
+          destfilename: app.zip
+
       - name: LogIn to Container Registry
         uses: docker/login-action@v3
         with:
@@ -98,7 +107,7 @@ jobs:
           name: Release
           path: |
             backend/flo-api/build/libs/flo-api-*.jar
-            front/build/client/*
+            front/build/app.zip
 
       - name: Check if Version Tag exists
         run: |
@@ -118,6 +127,6 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           artifacts: |
-            backend/flo-api/build/libs/flo-api-*.jar
-            front/build/client/*
+              backend/flo-api/build/libs/flo-api-*.jar
+              front/build/app.zip
           tag: ${{ env.APP_VERSION }}
