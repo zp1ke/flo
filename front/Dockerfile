@@ -8,15 +8,13 @@ COPY ./package.json package-lock.json /app/
 WORKDIR /app
 RUN npm ci --omit=dev
 
-# Set environment variables placeholders
-ENV VITE_API_BASE_URL=ENV_API_BASE_URL
-
 FROM node:20-alpine AS build-env
 COPY . /app/
 COPY --from=development-dependencies-env /app/node_modules /app/node_modules
 WORKDIR /app
 RUN npm ci
 RUN npm install @react-router/dev --save-dev
+ENV VITE_API_BASE_URL=ENV_API_BASE_URL
 RUN npm run build
 
 FROM node:20-alpine AS build
