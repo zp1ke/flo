@@ -47,11 +47,7 @@ export const tableColumns = ({
         row.getValue('datetime'),
         language,
       );
-      return (
-        <div className="truncate font-medium">
-          {formattedDatetime}
-        </div>
-      );
+      return <div className="truncate font-medium">{formattedDatetime}</div>;
     },
     enableSorting: true,
     enableHiding: false,
@@ -98,9 +94,7 @@ export const tableColumns = ({
       />
     ),
     cell: ({ row }) => (
-      <div className="truncate font-medium">
-        {row.getValue('description')}
-      </div>
+      <div className="truncate font-medium">{row.getValue('description')}</div>
     ),
     enableSorting: false,
     enableHiding: true,
