@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Loop through environment variables placeholders
-for var in $(env | grep ENV_); do
+for var in $(env | grep FLO_); do
   key=$(echo "$var" | cut -d '=' -f 1)
   value=$(echo "$var" | cut -d '=' -f 2-)
 
