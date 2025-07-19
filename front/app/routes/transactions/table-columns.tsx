@@ -14,6 +14,9 @@ export const tableColumns = ({
   {
     id: 'code',
     accessorKey: 'code',
+    maxSize: 100,
+    minSize: 50,
+    size: 75,
     header: ({ column, table }) => (
       <DataTableColumnHeader
         column={column}
@@ -22,13 +25,16 @@ export const tableColumns = ({
         className="hidden sm:flex"
       />
     ),
-    cell: ({ row }) => <div className="w-[80px]">{row.getValue('code')}</div>,
+    cell: ({ row }) => <div className="truncate">{row.getValue('code')}</div>,
     enableSorting: false,
     enableHiding: true,
   },
   {
     id: 'datetime',
     accessorKey: 'datetime',
+    maxSize: 500,
+    minSize: 200,
+    size: 250,
     header: ({ column, table }) => (
       <DataTableColumnHeader
         column={column}
@@ -42,7 +48,7 @@ export const tableColumns = ({
         language,
       );
       return (
-        <div className="max-w-[500px] truncate font-medium">
+        <div className="truncate font-medium">
           {formattedDatetime}
         </div>
       );
@@ -53,6 +59,9 @@ export const tableColumns = ({
   {
     id: 'amount',
     accessorKey: 'amount',
+    maxSize: 200,
+    minSize: 100,
+    size: 100,
     header: ({ column, table }) => (
       <DataTableColumnHeader
         column={column}
@@ -66,7 +75,7 @@ export const tableColumns = ({
       return (
         <div
           className={cn(
-            'max-w-[500px] truncate font-medium',
+            'truncate font-medium text-right text-lg',
             moneyClassName(amount),
           )}
         >
@@ -80,6 +89,7 @@ export const tableColumns = ({
   {
     id: 'description',
     accessorKey: 'description',
+    minSize: 150,
     header: ({ column, table }) => (
       <DataTableColumnHeader
         column={column}
@@ -88,7 +98,7 @@ export const tableColumns = ({
       />
     ),
     cell: ({ row }) => (
-      <div className="max-w-[500px] truncate font-medium">
+      <div className="truncate font-medium">
         {row.getValue('description')}
       </div>
     ),
