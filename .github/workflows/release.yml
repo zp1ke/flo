@@ -1,4 +1,4 @@
-name: Build & Release
+name: Containerize & Release
 
 on:
   workflow_dispatch:
@@ -53,13 +53,15 @@ jobs:
         run: npm ci && npm run build
 
       - name: Compress APP build
+        id: zip-app
         uses: somaz94/compress-decompress@v1
         with:
           command: compress
           source: front/build/client
           format: zip
           dest: front/build
-          destfilename: app.zip
+          destfilename: app
+          includeRoot: false
 
       - name: LogIn to Container Registry
         uses: docker/login-action@v3
@@ -107,7 +109,7 @@ jobs:
           name: Release
           path: |
             backend/flo-api/build/libs/flo-api-*.jar
-            front/build/app.zip
+            ${{ steps.zip-app.outputs.file_path }}
 
       - name: Check if Version Tag exists
         run: |
@@ -128,5 +130,5 @@ jobs:
         with:
           artifacts: |
               backend/flo-api/build/libs/flo-api-*.jar
-              front/build/app.zip
+              ${{ steps.zip-app.outputs.file_path }}
           tag: ${{ env.APP_VERSION }}
