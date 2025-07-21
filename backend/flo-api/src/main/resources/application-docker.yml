@@ -1,4 +1,6 @@
 spring:
+  application:
+    timezone: ${TIMEZONE:UTC}
   datasource:
     url: ${DATASOURCE_URL}
     username: ${DATASOURCE_USER}

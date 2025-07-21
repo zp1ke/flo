@@ -3,6 +3,9 @@ services:
   postgres:
     image: postgres
     env_file: postgres.env
+    environment:
+      TZ: GMT-5
+      PGTZ: GMT-5
     ports:
       - 5432:5432
     volumes:
@@ -20,6 +23,7 @@ services:
     environment:
       DATASOURCE_URL: jdbc:postgresql://postgres:5432/flo
       SPRING_PROFILES_ACTIVE: docker
+      TIMEZONE: GMT-5
     ports:
       - 8080:8080
     depends_on:
