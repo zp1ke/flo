@@ -28,4 +28,10 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long>,
     boolean existsByProfile(@Nonnull Profile profile);
 
     List<Transaction> findAllByProfileIn(@Nonnull List<Profile> profiles);
+
+    Optional<Transaction> findTopByWalletAndDatetimeBeforeAndWalletBalanceAfterNotNullAndEnabledTrueOrderByDatetimeDesc(@Nonnull Wallet wallet,
+                                                                                                                        @Nonnull OffsetDateTime datetime);
+
+    List<Transaction> findAllByWalletAndDatetimeAfterAndEnabledTrueOrderByDatetimeAsc(@Nonnull Wallet wallet,
+                                                                                      @Nonnull OffsetDateTime datetime);
 }

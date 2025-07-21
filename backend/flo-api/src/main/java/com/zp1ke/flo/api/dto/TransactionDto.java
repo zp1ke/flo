@@ -34,6 +34,8 @@ public class TransactionDto {
     @NotNull(message = "transaction.wallet-required")
     private String walletCode;
 
+    private BigDecimal walletBalanceAfter;
+
     @Nonnull
     public static TransactionDto fromTransaction(@Nonnull Transaction transaction) {
         return TransactionDto.builder()
@@ -43,6 +45,7 @@ public class TransactionDto {
             .amount(transaction.getAmount())
             .categoryCode(transaction.getCategory().getCode())
             .walletCode(transaction.getWallet().getCode())
+            .walletBalanceAfter(transaction.getWalletBalanceAfter())
             .build();
     }
 

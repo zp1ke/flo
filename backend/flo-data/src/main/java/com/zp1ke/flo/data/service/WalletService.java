@@ -11,6 +11,7 @@ import com.zp1ke.flo.utils.StringUtils;
 import jakarta.annotation.Nonnull;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +39,10 @@ public class WalletService {
             wallet.setCode(DomainUtils
                 .generateRandomCode((code) -> walletRepository
                     .existsByProfileAndCodeAndEnabledTrue(wallet.getProfile(), code)));
+        }
+
+        if (wallet.getBalance() == null) {
+            wallet.setBalance(BigDecimal.ZERO);
         }
 
         var violations = validator.validate(wallet);

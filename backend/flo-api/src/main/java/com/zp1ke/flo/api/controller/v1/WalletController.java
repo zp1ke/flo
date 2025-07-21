@@ -4,6 +4,7 @@ import com.zp1ke.flo.api.dto.PageDto;
 import com.zp1ke.flo.api.dto.WalletDto;
 import com.zp1ke.flo.api.security.UserIsVerified;
 import com.zp1ke.flo.data.domain.User;
+import com.zp1ke.flo.data.domain.Wallet;
 import com.zp1ke.flo.data.service.ProfileService;
 import com.zp1ke.flo.data.service.WalletService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -50,7 +51,13 @@ public class WalletController {
                                                @RequestBody WalletDto request) {
         var profile = profileService.profileOfUserByCode(user, profileCode);
         if (profile.isPresent()) {
-            var wallet = request.toWallet(profile.get());
+            var wallet = Wallet.builder()
+                .code(request.getCode())
+                .name(request.getName())
+                .profile(profile.get())
+                .balance(request.getBalance())
+                .balanceVisible(request.getBalanceVisible())
+                .build();
             var saved = walletService.save(wallet);
             var dto = WalletDto.fromWallet(saved);
             return ResponseEntity.status(HttpStatus.CREATED).body(dto);
@@ -71,6 +78,7 @@ public class WalletController {
             if (wallet.isPresent()) {
                 var walletToUpdate = wallet.get().toBuilder()
                     .name(request.getName())
+                    .balanceVisible(request.getBalanceVisible())
                     .build();
                 var saved = walletService.save(walletToUpdate);
                 var dto = WalletDto.fromWallet(saved);

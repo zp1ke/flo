@@ -18,6 +18,7 @@ import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.jobrunr.scheduling.JobScheduler;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -38,6 +39,8 @@ public class TransactionService {
     private final ProfileService profileService;
 
     private final SettingService settingService;
+
+    private final JobScheduler jobScheduler;
 
     @Nonnull
     public Transaction save(@Nonnull Transaction transaction) {
@@ -61,7 +64,9 @@ public class TransactionService {
             throw new ConstraintViolationException("transaction.invalid", violations);
         }
 
-        return transactionRepository.save(transaction);
+        var saved = transactionRepository.save(transaction);
+        jobScheduler.enqueue(() -> updateWalletBalance(saved));
+        return saved;
     }
 
     @Nonnull
@@ -115,5 +120,28 @@ public class TransactionService {
     public Optional<Transaction> transactionOfProfileByCode(@Nonnull Profile profile,
                                                             @Nonnull String code) {
         return transactionRepository.findByProfileAndCode(profile, code);
+    }
+
+    private void updateWalletBalance(@Nonnull Transaction transaction) {
+        var previousTransaction = transactionRepository
+            .findTopByWalletAndDatetimeBeforeAndWalletBalanceAfterNotNullAndEnabledTrueOrderByDatetimeDesc(
+                transaction.getWallet(), transaction.getDatetime());
+        var previousWalletBalance = previousTransaction.isEmpty()
+            ? transaction.getWallet().getBalance()
+            : previousTransaction.get().getWalletBalanceAfter();
+
+        transaction.setWalletBalanceAfter(previousWalletBalance.add(transaction.getAmount()));
+        var saved = transactionRepository.save(transaction);
+        updateWalletBalanceFrom(saved);
+    }
+
+    private void updateWalletBalanceFrom(@Nonnull Transaction transaction) {
+        var transactions = transactionRepository.findAllByWalletAndDatetimeAfterAndEnabledTrueOrderByDatetimeAsc(
+            transaction.getWallet(), transaction.getDatetime());
+        var previous = transaction;
+        for (var t : transactions) {
+            t.setWalletBalanceAfter(previous.getWalletBalanceAfter().add(transaction.getAmount()));
+            previous = transactionRepository.save(t);
+        }
     }
 }

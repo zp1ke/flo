@@ -63,11 +63,16 @@ public class Transaction extends Auditable implements Mappable {
     @JoinColumn(name = "wallet_id", referencedColumnName = "id")
     private Wallet wallet;
 
+    @Column(name = "wallet_balance_after", precision = 10, scale = 2)
+    private BigDecimal walletBalanceAfter;
+
     @Nonnull
     @Override
     public List<String> getProperties() {
         var list = new ArrayList<>(super.getProperties());
-        list.addAll(List.of("code", "description", "datetime", "amount", "profile", "category", "wallet"));
+        list.addAll(List.of(
+            "code", "description", "datetime", "amount", "profile",
+            "category", "wallet", "wallet_balance_after"));
         return list;
     }
 
@@ -83,6 +88,7 @@ public class Transaction extends Auditable implements Mappable {
                 case "profile" -> profile.getCode();
                 case "category" -> category.getCode();
                 case "wallet" -> wallet.getCode();
+                case "wallet_balance_after" -> walletBalanceAfter != null ? walletBalanceAfter.toString() : null;
                 default -> null;
             };
         }
