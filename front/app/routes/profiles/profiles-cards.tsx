@@ -176,7 +176,6 @@ export const ProfilesCards = () => {
                   </Button>
                 </DialogClose>
                 <Button
-                  className="ml-auto flex"
                   variant="destructive"
                   disabled={processing}
                   onClick={() => onDelete(profile)}

@@ -105,7 +105,6 @@ export function NavUser() {
               </DialogClose>
               <Button
                 aria-label="sign-out-confirm"
-                className="ml-auto flex"
                 variant="destructive"
                 disabled={signingOut}
                 onClick={() => {
