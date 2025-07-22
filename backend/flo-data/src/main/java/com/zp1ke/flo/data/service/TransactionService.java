@@ -124,8 +124,7 @@ public class TransactionService {
 
     private void updateWalletBalance(@Nonnull Transaction transaction) {
         var previousTransaction = transactionRepository
-            .findTopByWalletAndDatetimeBeforeAndWalletBalanceAfterNotNullAndEnabledTrueOrderByDatetimeDesc(
-                transaction.getWallet(), transaction.getDatetime());
+            .findTopByWalletAndDatetimeBeforeOrderByDatetimeDesc(transaction.getWallet(), transaction.getDatetime());
         var previousWalletBalance = previousTransaction.isEmpty()
             ? transaction.getWallet().getBalance()
             : previousTransaction.get().getWalletBalanceAfter();
@@ -136,7 +135,7 @@ public class TransactionService {
     }
 
     private void updateWalletBalanceFrom(@Nonnull Transaction transaction) {
-        var transactions = transactionRepository.findAllByWalletAndDatetimeAfterAndEnabledTrueOrderByDatetimeAsc(
+        var transactions = transactionRepository.findAllByWalletAndDatetimeAfterOrderByDatetimeAsc(
             transaction.getWallet(), transaction.getDatetime());
         var previous = transaction;
         for (var t : transactions) {

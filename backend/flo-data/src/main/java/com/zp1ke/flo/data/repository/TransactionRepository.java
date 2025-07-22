@@ -29,9 +29,9 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long>,
 
     List<Transaction> findAllByProfileIn(@Nonnull List<Profile> profiles);
 
-    Optional<Transaction> findTopByWalletAndDatetimeBeforeAndWalletBalanceAfterNotNullAndEnabledTrueOrderByDatetimeDesc(@Nonnull Wallet wallet,
-                                                                                                                        @Nonnull OffsetDateTime datetime);
+    Optional<Transaction> findTopByWalletAndDatetimeBeforeOrderByDatetimeDesc(@Nonnull Wallet wallet,
+                                                                              @Nonnull OffsetDateTime datetime);
 
-    List<Transaction> findAllByWalletAndDatetimeAfterAndEnabledTrueOrderByDatetimeAsc(@Nonnull Wallet wallet,
-                                                                                      @Nonnull OffsetDateTime datetime);
+    List<Transaction> findAllByWalletAndDatetimeAfterOrderByDatetimeAsc(@Nonnull Wallet wallet,
+                                                                        @Nonnull OffsetDateTime datetime);
 }

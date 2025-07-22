@@ -35,4 +35,8 @@ public class WalletDto {
         }
         return builder.build();
     }
+
+    public boolean getBalanceVisible() {
+        return balanceVisible == null || balanceVisible;
+    }
 }

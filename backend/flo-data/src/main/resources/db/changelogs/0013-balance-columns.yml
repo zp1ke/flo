@@ -1,0 +1,30 @@
+databaseChangeLog:
+  - changeSet:
+      id: flo-0013
+      author: zp1ke
+      changes:
+        - addColumn:
+            tableName: transactions
+            columns:
+              - column:
+                  name: wallet_balance_after
+                  type: decimal(10, 2)
+                  constraints:
+                    nullable: false
+        - addColumn:
+            tableName: wallets
+            columns:
+              - column:
+                  name: last_transaction_at
+                  type: timestamp with time zone
+              - column:
+                  name: balance
+                  type: decimal(10, 2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: balance_visible
+                  type: boolean
+                  defaultValue: true
+                  constraints:
+                    nullable: false
