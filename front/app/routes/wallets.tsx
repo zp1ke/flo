@@ -8,9 +8,12 @@ import useWalletStore from '~/store/wallet-store';
 import { EditWalletForm } from './wallets/edit-wallet-form';
 
 export default function Wallets() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
-  const columns = useMemo(() => tableColumns({ t }), [t]);
+  const columns = useMemo(
+    () => tableColumns({ t, language: i18n.language }),
+    [t, i18n],
+  );
 
   const errorMessage = useWalletStore((state) => state.errorMessage);
 

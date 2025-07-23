@@ -9,6 +9,7 @@ import type { ApiError } from '~/api/client';
 import { addWallet, updateWallet } from '~/api/wallets';
 import type { EditItemFormProps } from '~/components/table/add-item-button';
 import { Button } from '~/components/ui/button';
+import { Checkbox } from '~/components/ui/checkbox';
 import {
   Form,
   FormControl,
@@ -39,17 +40,22 @@ export function EditWalletForm({
   const [processing, setProcessing] = useState(false);
 
   const formSchema = z.object({
+    code: walletSchema.shape.code,
     name: walletSchema.shape.name.refine(
       walletNameIsValid,
       t('wallets.nameSize'),
     ),
-    setDefault: z.boolean().default(true).optional(),
+    balance: walletSchema.shape.balance,
+    balanceVisible: walletSchema.shape.balanceVisible,
   });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      code: wallet?.code,
       name: wallet?.name || '',
+      balance: wallet?.balance || 0,
+      balanceVisible: wallet?.balanceVisible,
     },
   });
 
@@ -61,12 +67,12 @@ export function EditWalletForm({
   const onSave = async (data: z.infer<typeof formSchema>) => {
     toggleProcessing(true);
 
-    const { name } = data;
-
     const walletData: Wallet = {
-      code: wallet?.code,
-      name,
+      ...data,
     };
+    if (!walletData.code) {
+      walletData.code = wallet?.code;
+    }
     try {
       wallet
         ? await updateWallet(profile?.code ?? '-', walletData)
@@ -89,6 +95,24 @@ export function EditWalletForm({
         <div className="flex flex-col gap-6">
           <FormField
             control={form.control}
+            name="code"
+            render={({ field }) => (
+              <FormItem className="grid gap-2">
+                <FormLabel>{t('wallets.code')}</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder={t('wallets.codePlaceholder')}
+                    type="text"
+                    disabled={processing || !!wallet}
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
             name="name"
             render={({ field }) => (
               <FormItem className="grid gap-2">
@@ -103,6 +127,49 @@ export function EditWalletForm({
                   />
                 </FormControl>
                 <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="balance"
+            render={({ field }) => (
+              <FormItem className="grid gap-2">
+                <FormLabel htmlFor="balance">{t('wallets.balance')}</FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    placeholder={t('wallets.balancePlaceholder')}
+                    type="number"
+                    disabled={processing || !!wallet}
+                    value={field.value || ''}
+                    onChange={(e) => {
+                      const value = e.target.value
+                        ? Number.parseFloat(e.target.value)
+                        : 0;
+                      field.onChange(value);
+                    }}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="balanceVisible"
+            render={({ field }) => (
+              <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow">
+                <FormControl>
+                  <Checkbox
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                    disabled={processing}
+                  />
+                </FormControl>
+                <div className="space-y-1 leading-none">
+                  <FormLabel>{t('wallets.balanceVisible')}</FormLabel>
+                </div>
               </FormItem>
             )}
           />

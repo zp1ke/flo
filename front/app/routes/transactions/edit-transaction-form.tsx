@@ -139,12 +139,10 @@ export function EditTransactionForm({
   const onSave = async (data: z.infer<typeof formSchema>) => {
     toggleProcessing(true);
 
-    const { description, datetime, amount, category, wallet } = data;
+    const { category, wallet } = data;
     const transactionData: Transaction = {
+      ...data,
       code: transaction?.code,
-      description,
-      datetime,
-      amount,
       categoryCode: category.code ?? '',
       walletCode: wallet.code ?? '',
     };

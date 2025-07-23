@@ -100,6 +100,40 @@ export const tableColumns = ({
     enableHiding: true,
   },
   {
+    id: 'walletBalanceAfter',
+    accessorKey: 'walletBalanceAfter',
+    maxSize: 200,
+    minSize: 100,
+    size: 100,
+    header: ({ column, table }) => (
+      <DataTableColumnHeader
+        column={column}
+        table={table}
+        title={t('transactions.walletBalanceAfter')}
+      />
+    ),
+    cell: ({ row }) => {
+      const amount = Number.parseFloat(row.getValue('walletBalanceAfter'));
+      if (Number.isNaN(amount)) {
+        return <div className="truncate font-medium text-right text-lg">-</div>;
+      }
+
+      const formattedAmount = formatMoney(amount, language);
+      return (
+        <div
+          className={cn(
+            'truncate font-medium text-right text-lg',
+            moneyClassName(amount),
+          )}
+        >
+          {formattedAmount}
+        </div>
+      );
+    },
+    enableSorting: false,
+    enableHiding: true,
+  },
+  {
     id: 'actions',
     cell: ({ row, table }) => (
       <DataTableRowActions

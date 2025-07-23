@@ -47,7 +47,6 @@ export function EditCategoryForm({
       categoryNameIsValid,
       t('categories.nameSize'),
     ),
-    setDefault: z.boolean().default(true).optional(),
   });
 
   const form = useForm<z.infer<typeof formSchema>>({

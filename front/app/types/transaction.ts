@@ -24,6 +24,7 @@ export const transactionSchema = z.object({
   amount: z.number(),
   categoryCode: z.string(),
   walletCode: z.string(),
+  walletBalanceAfter: z.number().optional(),
 });
 
 export type Transaction = z.infer<typeof transactionSchema>;
