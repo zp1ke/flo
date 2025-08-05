@@ -1,6 +1,6 @@
 [versions]
 angus = "2.0.3"
-aws = "2.32.4"
+aws = "2.32.15"
 jakarta-annotation = "3.0.0"
 jjwt = "0.12.6"
 jobrunr = "8.0.1"
