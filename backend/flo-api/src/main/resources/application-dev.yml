@@ -26,7 +26,7 @@ mail:
 storage:
   endpoint: http://localhost:9000
   accessKey: flo-access-key
-  secretKey: lykkBwDe0DabLQzpLouHj0Bwm6dlkj1ZHkmDC2oO
+  secretKey: flo-secret-key
   bucket: flo
 
 jobrunr:
