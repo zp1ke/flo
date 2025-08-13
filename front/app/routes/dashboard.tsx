@@ -27,7 +27,9 @@ export default function Dashboard() {
 
   const profile = useUserStore((state) => state.profile);
 
-  const [fromDate, setFromDate] = useState<Date | undefined>(firstDateOfMonth());
+  const [fromDate, setFromDate] = useState<Date | undefined>(
+    firstDateOfMonth(),
+  );
   const [toDate, setToDate] = useState<Date | undefined>(new Date());
 
   const [loading, setLoading] = useState<boolean>(false);
@@ -51,7 +53,7 @@ export default function Dashboard() {
   }, [t, profile, fromDate, toDate]);
 
   useEffect(() => {
-    loadData().then(() => { });
+    loadData().then(() => {});
   }, [loadData]);
 
   return (

@@ -46,7 +46,10 @@ export const formatNumber = (
  * @param language - The locale to use for formatting.
  * @returns The formatted date string.
  */
-export const formatDateTime = (date?: Date | string, language?: string): string => {
+export const formatDateTime = (
+  date?: Date | string,
+  language?: string,
+): string => {
   if (!date) {
     return '';
   }
