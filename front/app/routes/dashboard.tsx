@@ -15,6 +15,7 @@ import {
 } from '~/components/ui/card';
 import { DatePicker } from '~/components/ui/date-picker';
 import Loading from '~/components/ui/loading';
+import { firstDateOfMonth } from '~/lib/utils';
 import { Overview } from '~/routes/dashboard/overview';
 import { SectionCards } from '~/routes/dashboard/section-cards';
 import { TransactionsList } from '~/routes/dashboard/transactions-list';
@@ -26,14 +27,16 @@ export default function Dashboard() {
 
   const profile = useUserStore((state) => state.profile);
 
-  const [date, setDate] = useState<Date | undefined>(new Date());
+  const [fromDate, setFromDate] = useState<Date | undefined>(firstDateOfMonth());
+  const [toDate, setToDate] = useState<Date | undefined>(new Date());
+
   const [loading, setLoading] = useState<boolean>(false);
   const [stats, setStats] = useState<TransactionsStats | undefined>(undefined);
 
   const loadData = useCallback(async () => {
-    if (date && profile?.code) {
+    if (fromDate && profile?.code) {
       setLoading(true);
-      fetchStats(profile.code, date)
+      fetchStats(profile.code, fromDate, toDate)
         .then(setStats)
         .catch((e) => {
           toast.error(t('transactions.fetchError'), {
@@ -45,10 +48,10 @@ export default function Dashboard() {
           setLoading(false);
         });
     }
-  }, [t, profile, date]);
+  }, [t, profile, fromDate, toDate]);
 
   useEffect(() => {
-    loadData().then(() => {});
+    loadData().then(() => { });
   }, [loadData]);
 
   return (
@@ -60,14 +63,22 @@ export default function Dashboard() {
           <DatePicker
             title={t('dashboard.date')}
             placeholder={t('dashboard.pickDate')}
-            value={date}
+            value={fromDate}
             minDate={
               profile?.createdAt
                 ? new Date(profile.createdAt)
                 : new Date('2025-06-01')
             }
             maxDate={new Date()}
-            onChange={setDate}
+            onChange={setFromDate}
+          />
+          <DatePicker
+            title={t('dashboard.date')}
+            placeholder={t('dashboard.pickDate')}
+            value={toDate}
+            minDate={toDate}
+            maxDate={new Date()}
+            onChange={setToDate}
           />
           <Button
             variant="outline"
